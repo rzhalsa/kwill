@@ -2,16 +2,162 @@
     "object_id": "character_sheet",
     "user_id": "user_id",
     "character_id": "character_id",
-    "name": "character_name",
+    "name": "Dark Elf Barbarian/Ranger Multiclass example",
+    "background": {
+        "object_id": "background",
+        "background_id": "folk_hero_2014",
+        "name": "Folk Hero",
+        "features": {
+            "object_id": "feature",
+            "feature_id": "folk_hero",
+            "name": "Rustic Hospitality",
+            "description": [
+                "INSERT DESCRIPTION HERE, this is an example",
+                "this is an example of a second line"
+            ]
+        }
+    },
+    "level": {
+        "object_id": "operation",
+        "operation_type": "=",
+        "value": {
+            "object_id": "operation",
+            "operation_type": "+",
+            "value": "class_level"
+        }
+    },
+    "ability_scores": [
+        {
+            "object_id": "ability_scores",
+            "score_strength": "10",
+            "score_dexterity": "10",
+            "score_constitution": "10",
+            "score_intelligence": "10",
+            "score_wisdom": "10",
+            "score_charisma": "10"
+        }
+    ],
+    "race": {
+        "object_id": "race",
+        "race_id": "elf_2014",
+        "name": "Elf",
+        "traits": {
+            "object_id": "traits",
+            "speed": 30,
+            "size": "medium",
+            "languages": [
+                "common",
+                "elven"
+            ]
+        },
+        "features": [
+            {
+                "object_id": "feature",
+                "feature_id": "",
+                "name": "Ability Score Increase",
+                "score_dexterity": {
+                    "object_id": "operation",
+                    "operation_type": "+",
+                    "value": 2
+                }
+            },
+            {
+                "object_id": "feature",
+                "feature_id": "",
+                "name": "Darkvision",
+                "description": [
+                    "You can see in dim light within 60ft as if it were bright light and darkness as if it were dim light. You cannot discern color in darkness"
+                ],
+                "traits": {
+                    "object_id": "traits",
+                    "darkvision": 60
+                }
+            },
+            {
+                "object_id": "feature",
+                "feature_id": "",
+                "name": "Fey Ancestry",
+                "description": [
+                    "Advantage on saving throws against being charmed, magic cannot put you to sleep"
+                ]
+            },
+            {
+                "object_id": "feature",
+                "feature_id": "",
+                "name": "Trance",
+                "description": [
+                    "Example here, this feature makes 4 hours enough sleep for a long rest"
+                ]
+            },
+            {
+                "object_id": "feature",
+                "feature_id": "",
+                "name": "Keen Senses",
+                "traits": {
+                    "object_id": "traits",
+                    "proficiencies": [
+                        "perception"
+                    ]
+                }
+            }
+        ],
+        "race": {
+            "object_id": "race",
+            "race_id": "elf_dark_2014",
+            "name": "Dark Elf",
+            "traits": {
+                "object_id": "traits",
+                "score_charisma": {
+                        "object_id": "operation",
+                        "operation_type": "+",
+                        "value": 1
+                    }
+            },
+            "features": [
+                {
+                    "object_id": "feature",
+                    "feature_id": "superior_darkvision",
+                    "name": "Superior Darkvision",
+                    "description": [
+                        "darkvision 120ft instead of 60ft"
+                    ],
+                    "traits": {
+                        "object_id": "traits",
+                        "darkvision": {
+                            "object_id": "operation",
+                            "operation_type": "=",
+                            "value": 120
+                        }
+                    }
+                },
+                {
+                    "object_id": "feature",
+                    "feature_id": "drow_weapon_training",
+                    "name": "Drow Weapon Training",
+                    "description": [
+                        "Proficiency with rapiers, shortswords, and hand crossbows"
+                    ],
+                    "traits": {
+                        "object_id": "traits",
+                        "proficiencies": [
+                            "rapiers",
+                            "shortswords",
+                            "crossbows_hand"
+                        ]
+                    }
+                }
+            ]
+        }
+    },
     "class": [
         {
-            "object_id": "character_class",
+            "object_id": "class",
             "class_id": "barbarian_2014",
             "name": "Barbarian",
             "class_level": "1",
             "is_first_class": "true",
             "traits": {
-                "object_id": "class_traits",
+                "object_id": "traits",
                 "hit_point_die": "d12",
                 "proficiencies": [
                     "saves_strength",
@@ -25,9 +171,10 @@
                     "shields"
                 ]
             },
-            "class_features": [
+            "features": [
                 {
-                    "object_id": "class_feature",
+                    "object_id": "feature",
+                    "feature_id": "rage_barbarian_2014",
                     "name": "Rage",
                     "description": [
                         "In battle, you fight with primal ferocity. On your turn, you can enter a rage as a bonus action. While raging, you gain the following benefits if you aren't wearing heavy armor:",
@@ -42,12 +189,28 @@
                         "object_id": "operation",
                         "operation_type": "conditional",
                         "condition": "class_level",
-                        "value": [[1, 3, 6, 12, 17], [2, 3, 4, 5, 6]]
+                        "value": [
+                            [
+                                1,
+                                3,
+                                6,
+                                12,
+                                17
+                            ],
+                            [
+                                2,
+                                3,
+                                4,
+                                5,
+                                6
+                            ]
+                        ]
                     },
                     "refresh": "rest_long"
                 },
                 {
-                    "object_id": "class_feature",
+                    "object_id": "feature",
+                    "feature_id": "unarmored_defense_barbarian_2014",
                     "name": "Unarmored Defense",
                     "description": "Level 1: Unarmored Defense\nWhile you aren't wearing any armor, your base Armor Class equals 10 plus your Dexterity and Constitution modifiers. You can use a Shield and still gain this benefit.",
                     "armor_class": {
@@ -67,7 +230,7 @@
             ]
         },
         {
-            "object_id": "character_class",
+            "object_id": "class",
             "class_id": "ranger_2014",
             "name": "Ranger",
             "class_level": "1",
@@ -85,8 +248,8 @@
             },
             "class_features": [
                 {
-                    "object_id": "class_feature",
-                    "feature_id": "favored_enemy",
+                    "object_id": "feature",
+                    "feature_id": "favored_enemy_ranger_2014",
                     "name": "Favored Enemy",
                     "description": [
                         "Beginning at 1st level, you have significant experience studying, tracking, hunting, and even talking to a certain type of enemy.",
@@ -100,7 +263,8 @@
                     ]
                 },
                 {
-                    "object_id": "class_feature",
+                    "object_id": "feature",
+                    "feature_id": "natural_explorer_ranger_2014",
                     "name": "Natural Explorer",
                     "description": [
                         "You are particularly familiar with one type of natural environment and are adept at traveling and surviving in such regions. Choose one type of favored terrain: arctic, coast, desert, forest, grassland, mountain, or swamp. When you make an Intelligence or Wisdom check related to your favored terrain, your proficiency bonus is doubled if you are using a skill that you're proficient in.",

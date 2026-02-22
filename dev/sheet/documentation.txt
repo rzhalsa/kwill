@@ -1,39 +1,48 @@
 Key | Description
 
-object_id       | Used to denote what type of json object this object is. Valid types include: character_sheet, character_class, class_traits, class_feature, operation
+object_id       | Used to denote what type of json object this object is. Valid types include: character_sheet, race, class, traits, feature, operation, ability_scores
 user_id         | Used for associating a user with a character.
 character_id    | Used to differentiate characters from each other; to sort the characters in the database.
 name            | The string associated with this object. ex:A character_sheet object with the name "Thalen". A character_class object with the class_id barbarian_2014 has the associated name of "Barbarian".
+class           | 
 class_id        | Used to denote the specific class referenced by the object in the database.
-class_level           | The number of levels the character has in the class this key resides in.
+class_level     | The number of levels the character has in the class this key resides in.
 is_first_class  | A boolean used to determine whether this is the starting class of a character. Useful for multiclassing purposes.
 traits          | A json object containing traits.
 hit_point_die   | A trait used to define what die is given for each level in the class encapsulating it. ex: d12, d10, d8, d6
 proficiencies   | A trait that holds an array of proficiencies to be applied to the character sheet. Duplicate values are allowed both internally and across different class/traits/proficiencies arrays.
-class_features  | An array of json objects of the type class_feature.
+features        | An array of json objects of the type feature. The object this is found in determines what the feature belongs too. ex: race, class, feat
 description     | An array of strings. Each new string is considered to be a new line. This is what would appear on a character sheet after hovering over the name of a class class feature or spell.
 uses            | A number or operation that determines how many times a feature may be used before these uses are reset.
 operation_type  | A string determining what type of operation to do. ex: +-*/^ TODO: refine documentation. 
 value           | Used in an object of type operation. Takes an integer or string associated with a value related to the character. ex: 10, "modifier_dexterity", "proficiency_bonus"
 condition       | A string refering to a value related to the character or class. ex: "class_level" Used specifically in an object of type operation in order to modify the way value works. When used value will take an array of two arrays of equal size. The condition is checked against the first array and whatever index has the highest number that is still lesser than the condition is the index taken as the value from the second array.
 refresh         | A string that corresponds to a type of rest or period of time at which the number of uses are reset. Used in a feature that has limited uses. ex: "rest_long", "rest_short"
+race            | A json object of type character_race. If it is within a larger race object it is a subrace.
+race_id         | Used to denote the specific race referenced by the object in the database.
+speed           | Int - a character's walking speed in ft.
+darkvision      | Int - the distance of darkvision the character has.
+
+
+
+
 
 
 
 ID | Description
 
 character_sheet | 
-character_class | This denotes that the keys in this object all belong to the class associated with it. ex: level refers to the number of levels in this class specifically.
-class_traits    | This denotes that the keys in this object are to be parsed as separate traits applicable to the character.
-class_feature   | 
+class           | This denotes that the keys in this object all belong to the class associated with it. ex: level refers to the number of levels in this class specifically.
+traits          | This denotes that the keys in this object are to be parsed as separate traits applicable to the character.
+feature         | This is used for a ability or trait that has a description and therefore a tooltip?
 operation       | 
-
+ability_scores  | This denotes an object containing the characters original stats before any modifiers are added.
 
 
 
 Operation | Description
 
-+               | 
++               | makes value accept an int, an array of ints, or a string matching a key found in the json
 -               | 
 *               | 
 /               | 
