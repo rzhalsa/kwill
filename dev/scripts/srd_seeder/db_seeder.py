@@ -1,6 +1,6 @@
 """
 Kwill — MongoDB SRD Database Seeder
-Seeds parsed SRD data into MongoDB. See USAGE.txt for setup instructions.
+Seeds parsed SRD data into MongoDB
 """
 
 import os
