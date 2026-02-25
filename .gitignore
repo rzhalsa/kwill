@@ -6,3 +6,6 @@ __pycache__/
 .env
 # SRD Seeder generated data
 dev/scripts/srd_seeder/data/
+
+dev/backend/Backend/obj
+dev/backend/Backend/bin
