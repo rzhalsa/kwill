@@ -1,3 +1,7 @@
+using Kwill.Api;
+using MongoDB.Bson;
+using MongoDB.Driver;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
@@ -19,8 +23,14 @@ builder.Services.AddSingleton<KwillDB.KwillDB>(); // ASP.NET creates the instanc
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<KwillDB.KwillDB>();
+    await MongoIndexes.EnsureAsync(db);
+}
+
 app.UseCors("AllowAll");
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

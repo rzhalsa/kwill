@@ -21,11 +21,11 @@ namespace KwillDB
             db = client.GetDatabase(DatabaseName);
         }
 
-        public IMongoCollection<SrdData> SrdData =>
-            db.GetCollection<SrdData>("srdData");
+        public IMongoCollection<BsonDocument> SrdData =>
+            db.GetCollection<BsonDocument>("srdData");
 
-        public IMongoCollection<CharacterSheet> CharacterSheets =>
-            db.GetCollection<CharacterSheet>("characterSheets");
+        public IMongoCollection<BsonDocument> CharacterSheets =>
+            db.GetCollection<BsonDocument>("characterSheets");
     }
 }
 
