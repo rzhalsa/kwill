@@ -11,9 +11,3 @@
 <script setup>
 import Navbar from './layouts/Navbar.vue'
 </script>
-
-<style>
-body, html, #app {
-  font-family: 'Playwrite NZ Basic', sans-serif;
-}
-</style>

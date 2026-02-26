@@ -13,7 +13,7 @@ export default createVuetify({
         dark: true, //to turn dark mode on and off
         colors: {
           primary: '#2c9e0f',   
-          secondary: '#009688', 
+          secondary: '#158f44', 
           accent: '#FFC107',    
           error: '#f44336',     
           info: '#2196F3',
