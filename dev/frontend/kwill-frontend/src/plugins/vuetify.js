@@ -12,7 +12,7 @@ export default createVuetify({
       kwillTheme: {
         dark: true, //to turn dark mode on and off
         colors: {
-          primary: '#FF5722',   
+          primary: '#2c9e0f',   
           secondary: '#009688', 
           accent: '#FFC107',    
           error: '#f44336',     
