@@ -2,7 +2,7 @@
     <v-app-bar app class="gradient-navbar">
         <v-toolbar-title style="font-weight: 700;" >
             <router-link to="/" style="text-decoration: none; color: inherit;">
-            {{title}}
+            <img src="../assets/icon.png" style="width: 100px; height: 100px;"/>
             </router-link>
         </v-toolbar-title>
         <v-spacer/>
