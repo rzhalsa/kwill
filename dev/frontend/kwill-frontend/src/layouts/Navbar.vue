@@ -15,6 +15,5 @@
 </template>
 <script setup>
     import {ref} from 'vue';
-    import icon from '@/assets/icons/icon.png';
     const title = ref('Kwill')
 </script>
