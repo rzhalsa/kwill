@@ -15,6 +15,7 @@
 
         }
 
+
         .toolbar {
             width: 100%;
             background: #aaa;
@@ -35,55 +36,167 @@
             gap: 10px;
         }
 
-
         .toolbar-label {
             font-size: 24px;
             font-weight: bold;
         }
 
-        .page-wrapper {
-            margin-bottom: 40px;
-            display: flex;
-            justify-content: center;
-        }
 
         .kwill-logo {
             position: absolute;
             top: -50px;
             left: 10px;
-            width: 300px;
-            height: 300px;
-
+            pointer-events: none;
         }
+
+
+        .page-wrapper {
+            margin-bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+        }
+
 
         .sheet {
             position: relative;
             background: #ffffff;
+            background-size: cover;
             width: 816px;
             height: 1056px;
             padding: 0px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+            align-items: center;
+
 
             /* zoom: 0.65; */
             transform-origin: top center;
         }
 
+        .sheet-top-row {
+            position: relative;
+            height: 200px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 140px;
 
-
-
-
-        @media print {
-
-            .toolbar,
-            .toolbar-section,
-            .toolbar-label {
-                display: none;
-            }
-
-            .sheet {
-                background: #ffffff;
-            }
         }
+
+        .sheet-top-col {
+            position: relative;
+            left: 90px;
+            margin-bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 35px;
+
+        }
+
+        .sheet1-top-input-field {
+            position: absolute;
+            background: #ffffff;
+            font-size: 18px;
+            width: 100px;
+            height: 25px;
+            border: 2px solid #000;
+        }
+
+        .sheet1-input-field {
+            background: #ffffff;
+            font-size: 18px;
+            width: 100px;
+            height: 25px;
+            border: 2px solid #000;
+        }
+
+
+        .stat-box {
+            border: 2px solid #000;
+            padding: 10px;
+            margin-bottom: -15px;
+            /* margin-left: 35px; */
+            height: 75px;
+            width: 60px;
+        }
+
+        .ability-score {
+            border: 2px solid #000;
+            height: 30px;
+            width: 30px;
+            margin-top: -7px;
+            text-align: center;
+
+        }
+
+        .ability-modifier {
+            border: 2px solid #000;
+            height: 50px;
+            width: 50px;
+            margin-top: -7px;
+            text-align: center;
+
+        }
+
+
+        .proficiency-box {
+            border: 2px solid #000;
+            padding: 10px;
+            margin-left: 10px;
+            height: 75px;
+            width: 75px;
+        }
+
+        .row {
+            display: flex;
+            margin-bottom: 20px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .col {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .box {
+            border: 2px solid #000;
+            display: flex;
+        }
+
+
+
+
+@media print {
+
+    body * {
+        visibility: hidden;
+    }
+
+    .sheet, .sheet * {
+        visibility: visible;
+    }
+
+    .sheet {
+        position: static; /* <-- FIX: keep it in normal flow */
+        box-shadow: none;
+        page-break-after: always;
+        margin: 0 auto; /* center on page */
+    }
+
+    .toolbar,
+    .toolbar-section,
+    .toolbar-label {
+        display: none;
+    }
+}
+
     </style>
 </head>
 
@@ -101,10 +214,308 @@
 
     <div class="page-wrapper">
         <div class="sheet">
-            <div class="kwill-logo">
-                <img src="assets/kwill.svg" alt="" width="300" height="300">
+            <img class="kwill-logo" src="assets/kwill.svg" alt="Kwill Logo" width="300" height="300">
+
+
+
+
+            <div class="sheet-top-row">
+                <input name="character_name_field" placeholder="Character name here"
+                    style="position: absolute; font-size: 18px; top: 75px; left: 130px; width: 200px; height: 30px; border: 2px solid #000;">
+
+                <div class="sheet-top-col">
+
+                    <div>
+                        <input class="sheet1-top-input-field" name="class_level_field" placeholder="class & level"
+                            autocomplete="off">
+                    </div>
+                    <div>
+                        <input class="sheet1-top-input-field" name="race_field" placeholder="race" autocomplete="off">
+                    </div>
+
+                </div>
+
+                <div class="sheet-top-col">
+
+                    <div>
+                        <input class="sheet1-top-input-field" name="allignment_field" placeholder="allignment"
+                            autocomplete="off">
+                    </div>
+                    <div>
+                        <input class="sheet1-top-input-field" name="background_field" placeholder="background"
+                            autocomplete="off">
+                    </div>
+
+                </div>
+
+                <div class="sheet-top-col">
+
+                    <div>
+                        <input class="sheet1-top-input-field" name="player_name_field" placeholder="player"
+                            autocomplete="off">
+                    </div>
+                    <div>
+                        <input class="sheet1-top-input-field" name="exp_field" placeholder="exp" autocomplete="off">
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="row">
+                <!-- Left Column -->
+                <!-- Ability Scores and Modifiers -->
+                <div class="col">
+
+                    <div class="row">
+                        <div class="stat-box">
+                            <div class="col">
+                                <input class="ability-modifier" name="ability_modifier_strength" type="text"
+                                    inputmode="numeric"
+                                    oninput="this.value=this.value.replace(/[^0-9+\-]/g,'').replace(/(?!^)[+\-]/g,'')"">
+                                <input class=" ability-score" name="ability_score_strength" type="number"
+                                    autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="proficiency-box">
+                            <div>Strength</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="stat-box">
+                            <div class="col">
+                                <input class="ability-modifier" name="ability_modifier_dexterity" type="text"
+                                    inputmode="numeric"
+                                    oninput="this.value=this.value.replace(/[^0-9+\-]/g,'').replace(/(?!^)[+\-]/g,'')"">
+                                <input class=" ability-score" name="ability_score_dexterity" type="number"
+                                    autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="proficiency-box">
+                            <div>Dexterity</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="stat-box">
+                            <div class="col">
+                                <input class="ability-modifier" name="ability_modifier_constitution" type="text"
+                                    inputmode="numeric"
+                                    oninput="this.value=this.value.replace(/[^0-9+\-]/g,'').replace(/(?!^)[+\-]/g,'')"">
+                                <input class=" ability-score" name="ability_score_constitution" type="number"
+                                    autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="proficiency-box">
+                            <div>Constitution</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="stat-box">
+                            <div class="col">
+                                <input class="ability-modifier" name="ability_modifier_intelligence" type="text"
+                                    inputmode="numeric"
+                                    oninput="this.value=this.value.replace(/[^0-9+\-]/g,'').replace(/(?!^)[+\-]/g,'')"">
+                                <input class=" ability-score" name="ability_score_intelligence" type="number"
+                                    autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="proficiency-box">
+                            <div>Intelligence</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="stat-box">
+                            <div class="col">
+                                <input class="ability-modifier" name="ability_modifier_wisdom" type="text"
+                                    inputmode="numeric"
+                                    oninput="this.value=this.value.replace(/[^0-9+\-]/g,'').replace(/(?!^)[+\-]/g,'')"">
+                                <input class=" ability-score" name="ability_score_wisdom" type="number"
+                                    autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="proficiency-box">
+                            <div>Wisdom</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="stat-box">
+                            <div class="col">
+                                <input class="ability-modifier" name="ability_modifier_charisma" type="text"
+                                    inputmode="numeric"
+                                    oninput="this.value=this.value.replace(/[^0-9+\-]/g,'').replace(/(?!^)[+\-]/g,'')"">
+                                <input class=" ability-score" name="ability_score_charisma" type="number"
+                                    autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="proficiency-box">
+                            <div>Charisma</div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <!-- Middle Column -->
+                <div class="col">
+                    <div class="col">
+                        <!-- AC Initiative Speed -->
+                        <div class="row">
+                            <div> <input name="armor_class" autocomplete="off"
+                                    oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+                                    style="width: 50px; height: 50px; border: 2px solid #000; display: flex; margin: 5px; text-align: center;">
+                                <div style="text-align: center;">AC</div>
+                            </div>
+                            <div>
+                                <input name="initiative" autocomplete="off" type="text" inputmode="numeric"
+                                    oninput="this.value=this.value.replace(/[^0-9+\-]/g,'').replace(/(?!^)[+\-]/g,'')"
+                                    style="width: 50px; height: 50px; border: 2px solid #000; display: flex; margin: 5px; text-align: center;">
+                                <div style="text-align: center;">Initiative</div>
+                            </div>
+                            <div><input name="speed" autocomplete="off"
+                                    oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+                                    style="width: 50px; height: 50px; border: 2px solid #000; display: flex; margin: 5px; text-align: center;">
+                                <div style="text-align: center;">Speed</div>
+
+                            </div>
+                        </div>
+
+
+                        <!-- HP, Hit Dice, Death Saves -->
+                        <div
+                            style="width: 200px; height: 100px; border: 2px solid #000; display: flex; margin: -3px; margin-top: -10px;">
+                            <div style="text-align: center;">Current Hitpoints:
+                                <div> <input name="hitpoints" type="number" autocomplete="off"
+                                        style="width: 50px; height: 50px; border: 2px solid #000; display: flex; margin-left: 20px; text-align: center;">
+                                </div>
+                            </div>
+                            <div style="text-align: center;">Hitpoint Maximum:
+                                <div> <input name="max_hitpoints" autocomplete="off" type="number"
+                                        style="width: 50px; height: 50px; border: 2px solid #000; display: flex; margin-left: 25px; text-align: center;">
+                                </div>
+                            </div>
+                        </div>
+                        <div style="position: relative; width: 200px; align-items: center; margin-left: -6px;">
+                            <span
+                                style="position: absolute; top: 2px; left: 48px; background: white; padding: 0 4px; font-size: 12px; text-align: center;">
+                                Temporary Hitpoints
+                            </span>
+
+                            <input name="temporary_hitpoints" autocomplete="off" type="number"
+                                style="width: 100%; height: 40px; border: 2px solid #000; text-align: center; text-anchor: middle;">
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col"
+                                style="width: 50px; height: 65px; border: 2px solid #000; display: flex; margin: 5px; text-align: center;">
+
+                            </div>
+
+                            <div class="col"
+                                style="width: 50px; height: 65px; border: 2px solid #000; display: flex; margin: 5px; text-align: center;">
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col">
+
+                        <div
+                            style="width: 200px; height: 100px; border: 2px solid #000; display: flex; margin-top: -30px; text-align: center;">
+
+                        </div>
+                        <div
+                            style="width: 200px; height: 270px; border: 2px solid #000; display: flex; text-align: center;">
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+                <!-- Right Column -->
+                <div class="col">
+                    <div class="col" style="margin-top: 0px;">
+                        <textarea name="text_personality"
+                            style="height: 60px; width: 200px; border: 2px solid #000;"></textarea>
+                        <textarea name="text_ideals"
+                            style="height: 60px; width: 200px; border: 2px solid #000;"></textarea>
+                        <textarea name="text_bonds"
+                            style="height: 60px; width: 200px; border: 2px solid #000;"></textarea>
+                        <textarea name="text_flaws"
+                            style="height: 60px; width: 200px; border: 2px solid #000;"></textarea>
+
+                    </div>
+                    <div class="col">
+                        <textarea name="text_features"
+                            style="height: 400px; width: 200px; margin-top: -50px; border: 2px solid #000;"></textarea>
+                    </div>
+                </div>
 
             </div>
+
+
+        </div>
+
+
+        <div class="sheet">
+            <img class="kwill-logo" src="assets/kwill.svg" alt="Kwill Logo" width="300" height="300">
+
+                        <div class="sheet-top-row">
+                <input name="character_name_field" placeholder="Character name here"
+                    style="position: absolute; font-size: 18px; top: 75px; left: 130px; width: 200px; height: 30px; border: 2px solid #000;">
+
+                <div class="sheet-top-col">
+
+                    <div>
+                        <input class="sheet1-top-input-field" name="age_field" placeholder="age"
+                            autocomplete="off">
+                    </div>
+                    <div>
+                        <input class="sheet1-top-input-field" name="eyesfield" placeholder="eyes" autocomplete="off">
+                    </div>
+
+                </div>
+
+                <div class="sheet-top-col">
+
+                    <div>
+                        <input class="sheet1-top-input-field" name="height_field" placeholder="height"
+                            autocomplete="off">
+                    </div>
+                    <div>
+                        <input class="sheet1-top-input-field" name="skin_field" placeholder="skin"
+                            autocomplete="off">
+                    </div>
+
+                </div>
+
+                <div class="sheet-top-col">
+
+                    <div>
+                        <input class="sheet1-top-input-field" name="weight_field" placeholder="weight"
+                            autocomplete="off">
+                    </div>
+                    <div>
+                        <input class="sheet1-top-input-field" name="hair_field" placeholder="hair" autocomplete="off">
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="sheet">
+            <img class="kwill-logo" src="assets/kwill.svg" alt="Kwill Logo" width="300" height="300">
+
         </div>
 
     </div>

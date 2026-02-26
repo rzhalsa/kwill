@@ -26,17 +26,255 @@
             "value": "class_level"
         }
     },
-    "ability_scores": [
-        {
-            "object_id": "ability_scores",
-            "score_strength": "10",
-            "score_dexterity": "10",
-            "score_constitution": "10",
-            "score_intelligence": "10",
-            "score_wisdom": "10",
-            "score_charisma": "10"
+    "proficiency_bonus": {
+        "object_id": "operation",
+        "operation_type": "conditional",
+        "condition": "level",
+        "value": [
+            [
+                1,
+                5,
+                9,
+                13,
+                17
+            ],
+            [
+                2,
+                3,
+                4,
+                5,
+                6
+            ]
+        ]
+    },
+    "score_strength": "10",
+    "score_dexterity": "10",
+    "score_constitution": "10",
+    "score_intelligence": "10",
+    "score_wisdom": "10",
+    "score_charisma": "10",
+    "modifier_strength": {
+        "object_id": "operation",
+        "operation_type": "=",
+        "value": {
+            "object_id": "operation",
+            "operation_type": "conditional",
+            "condition": "score_strength",
+            "value": [
+                [
+                    0,
+                    2,
+                    4,
+                    6,
+                    8,
+                    10,
+                    12,
+                    14,
+                    16,
+                    18,
+                    20
+                ],
+                [
+                    -5,
+                    -5,
+                    -3,
+                    -2,
+                    -1,
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            ]
         }
-    ],
+    },
+    "modifier_dexterity": {
+        "object_id": "operation",
+        "operation_type": "=",
+        "value": {
+            "object_id": "operation",
+            "operation_type": "conditional",
+            "condition": "score_dexterity",
+            "value": [
+                [
+                    0,
+                    2,
+                    4,
+                    6,
+                    8,
+                    10,
+                    12,
+                    14,
+                    16,
+                    18,
+                    20
+                ],
+                [
+                    -5,
+                    -5,
+                    -3,
+                    -2,
+                    -1,
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            ]
+        }
+    },
+    "modifier_constitution": {
+        "object_id": "operation",
+        "operation_type": "=",
+        "value": {
+            "object_id": "operation",
+            "operation_type": "conditional",
+            "condition": "score_constitution",
+            "value": [
+                [
+                    0,
+                    2,
+                    4,
+                    6,
+                    8,
+                    10,
+                    12,
+                    14,
+                    16,
+                    18,
+                    20
+                ],
+                [
+                    -5,
+                    -5,
+                    -3,
+                    -2,
+                    -1,
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            ]
+        }
+    },
+    "modifier_intelligence": {
+        "object_id": "operation",
+        "operation_type": "=",
+        "value": {
+            "object_id": "operation",
+            "operation_type": "conditional",
+            "condition": "score_intelligence",
+            "value": [
+                [
+                    0,
+                    2,
+                    4,
+                    6,
+                    8,
+                    10,
+                    12,
+                    14,
+                    16,
+                    18,
+                    20
+                ],
+                [
+                    -5,
+                    -5,
+                    -3,
+                    -2,
+                    -1,
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            ]
+        }
+    },
+    "modifier_wisdom": {
+        "object_id": "operation",
+        "operation_type": "=",
+        "value": {
+            "object_id": "operation",
+            "operation_type": "conditional",
+            "condition": "score_wisdom",
+            "value": [
+                [
+                    0,
+                    2,
+                    4,
+                    6,
+                    8,
+                    10,
+                    12,
+                    14,
+                    16,
+                    18,
+                    20
+                ],
+                [
+                    -5,
+                    -5,
+                    -3,
+                    -2,
+                    -1,
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            ]
+        }
+    },
+    "modifier_charisma": {
+        "object_id": "operation",
+        "operation_type": "=",
+        "value": {
+            "object_id": "operation",
+            "operation_type": "conditional",
+            "condition": "score_charisma",
+            "value": [
+                [
+                    0,
+                    2,
+                    4,
+                    6,
+                    8,
+                    10,
+                    12,
+                    14,
+                    16,
+                    18,
+                    20
+                ],
+                [
+                    -5,
+                    -5,
+                    -3,
+                    -2,
+                    -1,
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            ]
+        }
+    },
     "race": {
         "object_id": "race",
         "race_id": "elf_2014",
@@ -108,10 +346,10 @@
             "traits": {
                 "object_id": "traits",
                 "score_charisma": {
-                        "object_id": "operation",
-                        "operation_type": "+",
-                        "value": 1
-                    }
+                    "object_id": "operation",
+                    "operation_type": "+",
+                    "value": 1
+                }
             },
             "features": [
                 {
