@@ -8,9 +8,11 @@ namespace Kwill.Api
     {
         public static async Task EnsureAsync(KwillDB.KwillDB db)
         {
-            // SRD: unique key
+            // SRD: unique Key + Data.index combination
             var srdIndex = new CreateIndexModel<BsonDocument>(
-                Builders<BsonDocument>.IndexKeys.Ascending("key"),
+                Builders<BsonDocument>.IndexKeys
+                    .Ascending("Key")
+                    .Ascending("Data.index"),
                 new CreateIndexOptions { Unique = true, Name = "uniq_srd_key" }
             );
             await db.SrdData.Indexes.CreateOneAsync(srdIndex);
