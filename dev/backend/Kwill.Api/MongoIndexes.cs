@@ -3,6 +3,7 @@ using MongoDB.Driver;
 
 namespace Kwill.Api
 {
+    // The Kwill db will reject any entry with a duplicate key or duplicate userId + characterId pair
     public static class MongoIndexes
     {
         public static async Task EnsureAsync(KwillDB.KwillDB db)

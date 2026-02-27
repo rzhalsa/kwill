@@ -2,6 +2,7 @@ using Kwill.Api;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
+// look in properties/launchSettings.json for ports.
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
@@ -36,10 +37,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-
-
-
 
 app.UseHttpsRedirection();
 
