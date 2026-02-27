@@ -23,4 +23,22 @@
 </template>
 
 <script setup>
+/** 
+    const charName = ref("");
+    const charClass = ref("");
+    const charRace = ref("");
+    const charAllignment = ref("");
+    const charBackground = ref("");
+    const charPlayer = ref("");
+    const charExp = ref("");
+    const statStr = ref("");
+    const statDex = ref("");
+    const statCon = ref("");
+    const statInt = ref("");
+    const statWis = ref("");
+    const statChar = ref("");
+    const statAC = ref("");
+    const statInitiative = ref("");
+    const statSpeed = ref("");
+    */
 </script>
