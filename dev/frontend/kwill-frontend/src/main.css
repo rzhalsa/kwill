@@ -1,0 +1,9 @@
+.v-application * {
+  font-family: 'Playwrite NZ Basic', sans-serif !important;
+}
+.gradient-navbar {
+  background: linear-gradient(150deg, #157a08, #02350d) !important;
+  }
+.gradient-card {
+background: linear-gradient(to bottom, #272727 0%, #222222 50%, #272727 100%) !important;
+}

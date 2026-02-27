@@ -1,2 +1,11 @@
 # Files to ignore in commits will be listed in here
 /.vs
+# Python
+__pycache__/
+*.pyc
+.env
+# SRD Seeder generated data
+dev/scripts/srd_seeder/data/
+
+dev/backend/Backend/obj
+dev/backend/Backend/bin
