@@ -10,7 +10,7 @@ namespace KwillDB
     public sealed class KwillDB 
     {
         private const string ConnectionUri = "mongodb://localhost:27017"; // hard coded local db
-        private const string DatabaseName = "kwill";
+        private const string DatabaseName = "Kwill";
 
         private readonly IMongoDatabase db;
 
