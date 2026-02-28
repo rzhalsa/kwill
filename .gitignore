@@ -1,5 +1,6 @@
 # Files to ignore in commits will be listed in here
 /.vs
+/.vscode
 # Python
 __pycache__/
 *.pyc
