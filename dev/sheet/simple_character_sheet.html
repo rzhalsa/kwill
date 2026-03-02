@@ -20,6 +20,7 @@
             width: 100%;
             background: #aaa;
             padding: 10px 20px;
+            /* display: none; removes toolbar, flex is default */
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -119,8 +120,8 @@
             padding: 10px;
             margin-bottom: -15px;
             /* margin-left: 35px; */
-            height: 75px;
-            width: 60px;
+            height: auto;
+            width: auto;
         }
 
         .ability-score {
@@ -145,9 +146,12 @@
         .proficiency-box {
             border: 2px solid #000;
             padding: 10px;
+            padding-left: 4px;
             margin-left: 10px;
-            height: 75px;
-            width: 75px;
+            height: auto;
+            width: 130px;
+            font-size: 12px;
+            margin-bottom: auto;
         }
 
         .money-pieces {
@@ -179,8 +183,41 @@
             display: flex;
         }
 
+        .line-input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid #000;
+            outline: none;
+            box-sizing: border-box;
+        }
 
+        .skill-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 3px;
+            width: 100%;
+            padding-left: 0;
+            margin-left: 0;
+        }
 
+        .skill-row input[type="checkbox"] {
+            flex: 0 0 auto;
+            margin: 0;
+            padding: 0;
+        }
+
+        .skill-row input[type="number"] {
+            flex: 0 0 35px;
+            width: 35px;
+            min-width: 0;
+        }
+
+        .skill-row span {
+            flex: 0 0 auto;
+            text-align: right;
+            white-space: nowrap;
+        }
 
         @media print {
 
@@ -217,7 +254,7 @@
     <div class="toolbar">
         <div class="toolbar-section">
 
-            <!-- ThIS IS FOR LOADING AND SAVING LOCALLY -->
+            <!-- THIS IS FOR LOADING AND SAVING LOCALLY -->
 
             <input type="file" id="folderInput" style="display: none;" webkitdirectory multiple>
             <label for="folderInput" class="folder-button"
@@ -259,7 +296,7 @@
                 <div class="page-top-col">
 
                     <div>
-                        <input class="page1-top-input-value" id="class_level_value" placeholder="class & level"
+                        <input class="page1-top-input-value" id="classlevel_value" placeholder="class & level"
                             autocomplete="off">
                     </div>
                     <div>
@@ -295,14 +332,17 @@
 
 
             <!-- Page 1 body -->
-            <div class="row">
+            <div class="row" style="justify-content: center; align-items: flex-start; gap: 20px; padding: 10px;">
                 <!-- Left Column -->
-                <!-- Ability Scores and Modifiers -->
-                <div class="col">
+                <!-- Left Column: Ability Scores + Proficiencies -->
+                <div
+                    style="display: flex; flex-direction: row; align-items: flex-start; gap: 0px; flex: 0 0 auto; margin-left: -20px;">
+                    <!-- Stat boxes -->
+                    <div style="display: flex; flex-direction: column; gap: 15px; align-items: center;">
 
-                    <div class="row">
                         <div class="stat-box">
                             <div class="col">
+                                <span data-label style="font-size: 11px; font-weight: bold;">STR</span>
                                 <input class="ability-modifier" id="ability_strength_modifier_calculated" type="text"
                                     autocomplete="off"
                                     value="=ability_strength_score [0,3,4,6,8,10,12,14,16,18,20][-5,-4,-3,-2,-1,0,1,2,3,4,5]">
@@ -310,14 +350,10 @@
                                     autocomplete="off">
                             </div>
                         </div>
-                        <div class="proficiency-box">
-                            <div data-label>Strength</div>
-                        </div>
-                    </div>
 
-                    <div class="row">
                         <div class="stat-box">
                             <div class="col">
+                                <span data-label style="font-size: 11px; font-weight: bold;">DEX</span>
                                 <input class="ability-modifier" id="ability_dexterity_modifier_calculated" type="text"
                                     autocomplete="off"
                                     value="=ability_dexterity_score [0,3,4,6,8,10,12,14,16,18,20][-5,-4,-3,-2,-1,0,1,2,3,4,5]">
@@ -325,14 +361,10 @@
                                     autocomplete="off">
                             </div>
                         </div>
-                        <div class="proficiency-box">
-                            <div data-label>Dexterity</div>
-                        </div>
-                    </div>
 
-                    <div class="row">
                         <div class="stat-box">
                             <div class="col">
+                                <span data-label style="font-size: 11px; font-weight: bold;">CON</span>
                                 <input class="ability-modifier" id="ability_constitution_modifier_calculated"
                                     type="text" autocomplete="off"
                                     value="=ability_constitution_score [0,3,4,6,8,10,12,14,16,18,20][-5,-4,-3,-2,-1,0,1,2,3,4,5]">
@@ -340,14 +372,10 @@
                                     autocomplete="off">
                             </div>
                         </div>
-                        <div class="proficiency-box">
-                            <div data-label>Constitution</div>
-                        </div>
-                    </div>
 
-                    <div class="row">
                         <div class="stat-box">
                             <div class="col">
+                                <span data-label style="font-size: 11px; font-weight: bold;">INT</span>
                                 <input class="ability-modifier" id="ability_intelligence_modifier_calculated"
                                     type="text" autocomplete="off"
                                     value="=ability_intelligence_score [0,3,4,6,8,10,12,14,16,18,20][-5,-4,-3,-2,-1,0,1,2,3,4,5]">
@@ -355,14 +383,10 @@
                                     autocomplete="off">
                             </div>
                         </div>
-                        <div class="proficiency-box">
-                            <div data-label>Intelligence</div>
-                        </div>
-                    </div>
 
-                    <div class="row">
                         <div class="stat-box">
                             <div class="col">
+                                <span data-label style="font-size: 11px; font-weight: bold;">WIS</span>
                                 <input class="ability-modifier" id="ability_wisdom_modifier_calculated" type="text"
                                     autocomplete="off"
                                     value="=ability_wisdom_score [0,3,4,6,8,10,12,14,16,18,20][-5,-4,-3,-2,-1,0,1,2,3,4,5]">
@@ -370,14 +394,10 @@
                                     autocomplete="off">
                             </div>
                         </div>
-                        <div class="proficiency-box">
-                            <div data-label>Wisdom</div>
-                        </div>
-                    </div>
 
-                    <div class="row">
                         <div class="stat-box">
                             <div class="col">
+                                <span data-label style="font-size: 11px; font-weight: bold;">CHA</span>
                                 <input class="ability-modifier" id="ability_charisma_modifier_calculated" type="text"
                                     autocomplete="off"
                                     value="=ability_charisma_score [0,3,4,6,8,10,12,14,16,18,20][-5,-4,-3,-2,-1,0,1,2,3,4,5]">
@@ -385,15 +405,179 @@
                                     autocomplete="off">
                             </div>
                         </div>
+
+                    </div>
+
+                    <!-- Proficiency boxes -->
+                    <div style="display: flex; flex-direction: column; gap: 5px; align-items: flex-start;">
+
                         <div class="proficiency-box">
-                            <div data-label>Charisma</div>
+                            <div data-label style="text-align: center; font-weight: bold; margin-bottom: 5px;">Strength
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 4px; width: 100%;">
+                                <div class="skill-row">
+                                    <input type="checkbox" id="saves_strength_proficiency_value">
+                                    <input class="line-input" type="number" id="saves_strength_modifier_value">
+                                    <span data-label>Saves</span>
+                                </div>
+                                <div class="skill-row">
+                                    <input type="checkbox" id="skills_athletics_proficiency_value">
+                                    <input class="line-input" type="number" id="skills_athletics_modifier_value">
+                                    <span data-label>Athletics</span>
+                                </div>
+                            </div>
                         </div>
+
+                        <div class="proficiency-box">
+                            <div data-label style="text-align: center; font-weight: bold; margin-bottom: 5px;">Dexterity
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 4px; width: 100%;">
+                                <div class="skill-row">
+                                    <input type="checkbox" id="saves_dexterity_proficiency_value">
+                                    <input class="line-input" type="number" id="saves_dexterity_modifier_value">
+                                    <span data-label>Saves</span>
+                                </div>
+                                <div class="skill-row">
+                                    <input type="checkbox" id="skills_acrobatics_proficiency_value">
+                                    <input class="line-input" type="number" id="skills_acrobatics_modifier_value">
+                                    <span data-label>Acrobatics</span>
+                                </div>
+                                <div class="skill-row">
+                                    <input type="checkbox" id="skills_sleightofhand_proficiency_value">
+                                    <input class="line-input" type="number" id="skills_sleightofhand_modifier_value">
+                                    <span data-label>Sleight of Hand</span>
+                                </div>
+                                <div class="skill-row">
+                                    <input type="checkbox" id="skills_stealth_proficiency_value">
+                                    <input class="line-input" type="number" id="skills_stealth_modifier_value">
+                                    <span data-label>Stealth</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="proficiency-box">
+                            <div data-label style="text-align: center; font-weight: bold; margin-bottom: 5px;">
+                                Constitution</div>
+                            <div style="display: flex; flex-direction: column; gap: 4px; width: 100%;">
+                                <div class="skill-row">
+                                    <input type="checkbox" id="saves_constitution_proficiency_value">
+                                    <input class="line-input" type="number" id="saves_constitution_modifier_value">
+                                    <span data-label>Saves</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="proficiency-box">
+                            <div data-label style="text-align: center; font-weight: bold; margin-bottom: 5px;">
+                                Intelligence</div>
+                            <div style="display: flex; flex-direction: column; gap: 4px; width: 100%;">
+                                <div class="skill-row">
+                                    <input type="checkbox" id="saves_intelligence_proficiency_value">
+                                    <input class="line-input" type="number" id="saves_intelligence_modifier_value">
+                                    <span data-label>Saves</span>
+                                </div>
+                                <div class="skill-row">
+                                    <input type="checkbox" id="skills_arcana_proficiency_value">
+                                    <input class="line-input" type="number" id="skills_arcana_modifier_value">
+                                    <span data-label>Arcana</span>
+                                </div>
+                                <div class="skill-row">
+                                    <input type="checkbox" id="skills_history_proficiency_value">
+                                    <input class="line-input" type="number" id="skills_history_modifier_value">
+                                    <span data-label>History</span>
+                                </div>
+                                <div class="skill-row">
+                                    <input type="checkbox" id="skills_investigation_proficiency_value">
+                                    <input class="line-input" type="number" id="skills_investigation_modifier_value">
+                                    <span data-label>Investigation</span>
+                                </div>
+                                <div class="skill-row">
+                                    <input type="checkbox" id="skills_nature_proficiency_value">
+                                    <input class="line-input" type="number" id="skills_nature_modifier_value">
+                                    <span data-label>Nature</span>
+                                </div>
+                                <div class="skill-row">
+                                    <input type="checkbox" id="skills_religion_proficiency_value">
+                                    <input class="line-input" type="number" id="skills_religion_modifier_value">
+                                    <span data-label>Religion</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="proficiency-box">
+                            <div data-label style="text-align: center; font-weight: bold; margin-bottom: 5px;">Wisdom
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 4px; width: 100%;">
+                                <div class="skill-row">
+                                    <input type="checkbox" id="saves_wisdom_proficiency_value">
+                                    <input class="line-input" type="number" id="saves_wisdom_modifier_value">
+                                    <span data-label>Saves</span>
+                                </div>
+                                <div class="skill-row">
+                                    <input type="checkbox" id="skills_animalhandling_proficiency_value">
+                                    <input class="line-input" type="number" id="skills_animalhandling_modifier_value">
+                                    <span data-label>Animal Handling</span>
+                                </div>
+                                <div class="skill-row">
+                                    <input type="checkbox" id="skills_insight_proficiency_value">
+                                    <input class="line-input" type="number" id="skills_insight_modifier_value">
+                                    <span data-label>Insight</span>
+                                </div>
+                                <div class="skill-row">
+                                    <input type="checkbox" id="skills_medicine_proficiency_value">
+                                    <input class="line-input" type="number" id="skills_medicine_modifier_value">
+                                    <span data-label>Medicine</span>
+                                </div>
+                                <div class="skill-row">
+                                    <input type="checkbox" id="skills_perception_proficiency_value">
+                                    <input class="line-input" type="number" id="skills_perception_modifier_value">
+                                    <span data-label>Perception</span>
+                                </div>
+                                <div class="skill-row">
+                                    <input type="checkbox" id="skills_survival_proficiency_value">
+                                    <input class="line-input" type="number" id="skills_survival_modifier_value">
+                                    <span data-label>Survival</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="proficiency-box">
+                            <div data-label style="text-align: center; font-weight: bold; margin-bottom: 5px;">Charisma
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 4px; width: 100%;">
+                                <div class="skill-row">
+                                    <input type="checkbox" id="saves_charisma_proficiency_value">
+                                    <input class="line-input" type="number" id="saves_charisma_modifier_value">
+                                    <span data-label>Saves</span>
+                                </div>
+                                <div class="skill-row">
+                                    <input type="checkbox" id="skills_deception_proficiency_value">
+                                    <input class="line-input" type="number" id="skills_deception_modifier_value">
+                                    <span data-label>Deception</span>
+                                </div>
+                                <div class="skill-row">
+                                    <input type="checkbox" id="skills_intimidation_proficiency_value">
+                                    <input class="line-input" type="number" id="skills_intimidation_modifier_value">
+                                    <span data-label>Intimidation</span>
+                                </div>
+                                <div class="skill-row">
+                                    <input type="checkbox" id="skills_performance_proficiency_value">
+                                    <input class="line-input" type="number" id="skills_performance_modifier_value">
+                                    <span data-label>Performance</span>
+                                </div>
+                                <div class="skill-row">
+                                    <input type="checkbox" id="skills_persuasion_proficiency_value">
+                                    <input class="line-input" type="number" id="skills_persuasion_modifier_value">
+                                    <span data-label>Persuasion</span>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
-
                 <!-- Middle Column -->
-                <div class="col">
+                <div class="col" style="flex: 0 0 auto;">
                     <div class="col">
                         <!-- AC Initiative Speed -->
                         <div class="row">
@@ -444,7 +628,7 @@
 
                         <div class="row">
                             <div class="col"
-                                style="width: 120px; height: 65px; border: 2px solid #000; display: flex; flex-direction: column; margin-right: 5px; text-align: center;">
+                                style="width: 120px; height: 65px; border: 2px solid #000; display: flex; flex-direction: column; margin-right: 5px; text-align: center; margin-bottom: 15px;">
                                 <span data-label>Hit Dice</span>
                                 <div
                                     style="display: flex; flex-direction: row; align-items: center; gap: 7px; margin-top: -10px;">
@@ -483,8 +667,8 @@
 
                     <div class="col">
 
-                        <textarea id="attacks_value" placeholder="Attacks and Spellcasting"
-                            style="width: 200px; height: 100px; border: 2px solid #000; display: flex; margin-top: -30px; text-align: left;"></textarea>
+                        <textarea id="attacks_value" placeholder="Attacks and Spellcasting" 
+                            style="width: 200px; height: 125px; border: 2px solid #000; display: flex; margin-top: -30px; text-align: left; margin-bottom: 5px; resize: none;"></textarea>
                         <div class="row">
                             <div class="col" style="margin-top: 8px; margin-right: 5px;">
                                 <span style="margin-top: -10px; margin-bottom: -2px;" data-label>Cp</span>
@@ -504,7 +688,7 @@
 
                             </div>
                             <textarea id="equipment_value" placeholder="Equipment"
-                                style="width: 160px; height: 270px; border: 2px solid #000; display: flex; text-align: left;"></textarea>
+                                style="width: 160px; height: 270px; border: 2px solid #000; display: flex; text-align: left; resize: none;"></textarea>
                         </div>
 
                     </div>
@@ -512,22 +696,17 @@
 
 
                 <!-- Right Column -->
-                <div class="col">
-                    <div class="col" style="margin-top: 0px;">
-                        <textarea id="text_personality_value" placeholder="Personality"
-                            style="height: 60px; width: 200px; border: 2px solid #000;"></textarea>
-                        <textarea id="text_ideals_value" placeholder="Ideals"
-                            style="height: 60px; width: 200px; border: 2px solid #000;"></textarea>
-                        <textarea id="text_bonds_value" placeholder="Bonds"
-                            style="height: 60px; width: 200px; border: 2px solid #000;"></textarea>
-                        <textarea id="text_flaws_value" placeholder="Flaws"
-                            style="height: 60px; width: 200px; border: 2px solid #000;"></textarea>
-
-                    </div>
-                    <div class="col">
-                        <textarea id="text_features_value" placeholder="Features"
-                            style="height: 400px; width: 200px; margin-top: -50px; border: 2px solid #000;"></textarea>
-                    </div>
+                <div class="col" style="flex: 0 0 auto; gap: 10px; align-items: flex-start;">
+                    <textarea id="text_personality_value" placeholder="Personality"
+                        style="height: 75px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
+                    <textarea id="text_ideals_value" placeholder="Ideals"
+                        style="height: 75px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
+                    <textarea id="text_bonds_value" placeholder="Bonds"
+                        style="height: 75px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
+                    <textarea id="text_flaws_value" placeholder="Flaws"
+                        style="height: 75px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
+                    <textarea id="text_features_value" placeholder="Features"
+                        style="height: 407px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
                 </div>
 
             </div>
@@ -589,21 +768,21 @@
 
                 <div class="col">
                     <textarea id="appearance_value" placeholder="Appearance"
-                        style="height: 260px; width: 200px; border: 2px solid #000;"></textarea>
+                        style="height: 260px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
 
                     <textarea id="backstory_value" placeholder="Backstory"
-                        style="height: 538px; width: 200px; border: 2px solid #000;"></textarea>
+                        style="height: 538px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
                 </div>
 
                 <div class="col" style="margin-left: -25px;">
                     <textarea id="alliesAndOrganizations_value" placeholder="Allies and Organizations"
-                        style="height: 260px; width: 500px; border: 2px solid #000;"></textarea>
+                        style="height: 260px; width: 500px; border: 2px solid #000; resize: none;"></textarea>
 
-                    <textarea id="features_aditional_value" placeholder="Aditional Features and Traits" 
-                    style="height: 260px; width: 500px; border: 2px solid #000;"></textarea>
+                    <textarea id="features_aditional_value" placeholder="Aditional Features and Traits"
+                        style="height: 260px; width: 500px; border: 2px solid #000; resize: none;"></textarea>
 
                     <textarea id="treasure_value" placeholder="Treasure"
-                    style="height: 260px; width: 500px; border: 2px solid #000;"></textarea>
+                        style="height: 260px; width: 500px; border: 2px solid #000; resize: none;"></textarea>
                 </div>
             </div>
 
@@ -623,8 +802,8 @@
 
                 <div class="page-top-col">
                     <div>
-                        <input class="page1-top-input-value" id="spell_castingAbility_value"
-                            placeholder="spell abi" autocomplete="off">
+                        <input class="page1-top-input-value" id="spell_castingAbility_value" placeholder="spell abi"
+                            autocomplete="off">
                     </div>
                 </div>
                 <div class="page-top-col">
@@ -642,496 +821,729 @@
             </div>
 
             <!-- Page 3 body -->
+            <!-- Spells -->
             <div class="row">
 
                 <div class="col">
-                    <div id="" style="height: 195px; width: 200px; border: 2px solid #000;"></div>
+                    <div
+                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px;">
 
-                    <div id="" style="height: 300px; width: 200px; border: 2px solid #000;"></div>
+                        <span style="text-align: center;" data-label>Cantrips</span>
+                        <div class="row" style="gap: 10px;">
+                            <div class="col">
+                                <input id="spells_cantrip1_value" type="text" class="line-input">
+                                <input id="spells_cantrip2_value" type="text" class="line-input">
+                                <input id="spells_cantrip3_value" type="text" class="line-input">
+                                <input id="spells_cantrip4_value" type="text" class="line-input">
+                                <input id="spells_cantrip5_value" type="text" class="line-input">
+                                <input id="spells_cantrip6_value" type="text" class="line-input">
+                            </div>
+                            <div class="col">
+                                <input id="spells_cantrip7_value" type="text" class="line-input">
+                                <input id="spells_cantrip8_value" type="text" class="line-input">
+                                <input id="spells_cantrip9_value" type="text" class="line-input">
+                                <input id="spells_cantrip10_value" type="text" class="line-input">
+                                <input id="spells_cantrip11_value" type="text" class="line-input">
+                                <input id="spells_cantrip12_value" type="text" class="line-input">
+                            </div>
+                        </div>
 
-                    <div id="" style="height: 300px; width: 200px; border: 2px solid #000;"></div>
+                    </div>
 
+
+                    <div
+                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                        <span style="text-align: center;" data-label>1st Level</span>
+                        <div class="row" style="gap: 5px; align-items: flex-start;">
+                            <div class="col" style="flex: 0 0 auto;">
+                                <input type="checkbox" id="spells_1st_prepared1_value">
+                                <input type="checkbox" id="spells_1st_prepared2_value">
+                                <input type="checkbox" id="spells_1st_prepared3_value">
+                                <input type="checkbox" id="spells_1st_prepared4_value">
+                                <input type="checkbox" id="spells_1st_prepared5_value">
+                                <input type="checkbox" id="spells_1st_prepared6_value">
+                                <input type="checkbox" id="spells_1st_prepared7_value">
+                                <input type="checkbox" id="spells_1st_prepared8_value">
+                                <input type="checkbox" id="spells_1st_prepared9_value">
+                            </div>
+                            <div class="col" style="flex: 1;">
+                                <input type="text" class="line-input" id="spells_1st_spell1_value">
+                                <input type="text" class="line-input" id="spells_1st_spell2_value">
+                                <input type="text" class="line-input" id="spells_1st_spell3_value">
+                                <input type="text" class="line-input" id="spells_1st_spell4_value">
+                                <input type="text" class="line-input" id="spells_1st_spell5_value">
+                                <input type="text" class="line-input" id="spells_1st_spell6_value">
+                                <input type="text" class="line-input" id="spells_1st_spell7_value">
+                                <input type="text" class="line-input" id="spells_1st_spell8_value">
+                                <input type="text" class="line-input" id="spells_1st_spell9_value">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                        <span style="text-align: center;" data-label>2nd Level</span>
+                        <div class="row" style="gap: 5px; align-items: flex-start;">
+                            <div class="col" style="flex: 0 0 auto;">
+                                <input type="checkbox" id="spells_2nd_prepared1_value">
+                                <input type="checkbox" id="spells_2nd_prepared2_value">
+                                <input type="checkbox" id="spells_2nd_prepared3_value">
+                                <input type="checkbox" id="spells_2nd_prepared4_value">
+                                <input type="checkbox" id="spells_2nd_prepared5_value">
+                                <input type="checkbox" id="spells_2nd_prepared6_value">
+                                <input type="checkbox" id="spells_2nd_prepared7_value">
+                                <input type="checkbox" id="spells_2nd_prepared8_value">
+                                <input type="checkbox" id="spells_2nd_prepared9_value">
+                            </div>
+                            <div class="col" style="flex: 1;">
+                                <input type="text" class="line-input" id="spells_2nd_spell1_value">
+                                <input type="text" class="line-input" id="spells_2nd_spell2_value">
+                                <input type="text" class="line-input" id="spells_2nd_spell3_value">
+                                <input type="text" class="line-input" id="spells_2nd_spell4_value">
+                                <input type="text" class="line-input" id="spells_2nd_spell5_value">
+                                <input type="text" class="line-input" id="spells_2nd_spell6_value">
+                                <input type="text" class="line-input" id="spells_2nd_spell7_value">
+                                <input type="text" class="line-input" id="spells_2nd_spell8_value">
+                                <input type="text" class="line-input" id="spells_2nd_spell9_value">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
 
                 <div class="col">
-                    <div id="" style="height: 300px; width: 200px; border: 2px solid #000;"></div>
+                    <div
+                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                        <span style="text-align: center;" data-label>3rd Level</span>
+                        <div style="display: flex; flex-direction: row; gap: 5px; align-items: flex-start;">
+                            <div style="display: flex; flex-direction: column; flex: 0 0 auto; gap: 5px;">
+                                <input type="checkbox" id="spells_3rd_prepared1_value">
+                                <input type="checkbox" id="spells_3rd_prepared2_value">
+                                <input type="checkbox" id="spells_3rd_prepared3_value">
+                                <input type="checkbox" id="spells_3rd_prepared4_value">
+                                <input type="checkbox" id="spells_3rd_prepared5_value">
+                                <input type="checkbox" id="spells_3rd_prepared6_value">
+                                <input type="checkbox" id="spells_3rd_prepared7_value">
+                                <input type="checkbox" id="spells_3rd_prepared8_value">
+                                <input type="checkbox" id="spells_3rd_prepared9_value">
+                                <input type="checkbox" id="spells_3rd_prepared10_value">
+                            </div>
+                            <div style="display: flex; flex-direction: column; flex: 1; gap: 5px;">
+                                <input type="text" class="line-input" id="spells_3rd_spell1_value">
+                                <input type="text" class="line-input" id="spells_3rd_spell2_value">
+                                <input type="text" class="line-input" id="spells_3rd_spell3_value">
+                                <input type="text" class="line-input" id="spells_3rd_spell4_value">
+                                <input type="text" class="line-input" id="spells_3rd_spell5_value">
+                                <input type="text" class="line-input" id="spells_3rd_spell6_value">
+                                <input type="text" class="line-input" id="spells_3rd_spell7_value">
+                                <input type="text" class="line-input" id="spells_3rd_spell8_value">
+                                <input type="text" class="line-input" id="spells_3rd_spell9_value">
+                                <input type="text" class="line-input" id="spells_3rd_spell10_value">
+                            </div>
+                        </div>
+                    </div>
 
-                    <div id="" style="height: 300px; width: 200px; border: 2px solid #000;"></div>
+                    <div
+                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                        <span style="text-align: center;" data-label>4th Level</span>
+                        <div style="display: flex; flex-direction: row; gap: 5px; align-items: flex-start;">
+                            <div style="display: flex; flex-direction: column; flex: 0 0 auto; gap: 5px;">
+                                <input type="checkbox" id="spells_4th_prepared1_value">
+                                <input type="checkbox" id="spells_4th_prepared2_value">
+                                <input type="checkbox" id="spells_4th_prepared3_value">
+                                <input type="checkbox" id="spells_4th_prepared4_value">
+                                <input type="checkbox" id="spells_4th_prepared5_value">
+                                <input type="checkbox" id="spells_4th_prepared6_value">
+                                <input type="checkbox" id="spells_4th_prepared7_value">
+                                <input type="checkbox" id="spells_4th_prepared8_value">
+                                <input type="checkbox" id="spells_4th_prepared9_value">
+                                <input type="checkbox" id="spells_4th_prepared10_value">
+                            </div>
+                            <div style="display: flex; flex-direction: column; flex: 1; gap: 5px;">
+                                <input type="text" class="line-input" id="spells_4th_spell1_value">
+                                <input type="text" class="line-input" id="spells_4th_spell2_value">
+                                <input type="text" class="line-input" id="spells_4th_spell3_value">
+                                <input type="text" class="line-input" id="spells_4th_spell4_value">
+                                <input type="text" class="line-input" id="spells_4th_spell5_value">
+                                <input type="text" class="line-input" id="spells_4th_spell6_value">
+                                <input type="text" class="line-input" id="spells_4th_spell7_value">
+                                <input type="text" class="line-input" id="spells_4th_spell8_value">
+                                <input type="text" class="line-input" id="spells_4th_spell9_value">
+                                <input type="text" class="line-input" id="spells_4th_spell10_value">
+                            </div>
+                        </div>
+                    </div>
 
-                    <div id="" style="height: 195px; width: 200px; border: 2px solid #000;"></div>
+                    <div
+                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                        <span style="text-align: center;" data-label>5th Level</span>
+                        <div style="display: flex; flex-direction: row; gap: 5px; align-items: flex-start;">
+                            <div style="display: flex; flex-direction: column; flex: 0 0 auto; gap: 5px;">
+                                <input type="checkbox" id="spells_5th_prepared1_value">
+                                <input type="checkbox" id="spells_5th_prepared2_value">
+                                <input type="checkbox" id="spells_5th_prepared3_value">
+                                <input type="checkbox" id="spells_5th_prepared4_value">
+                                <input type="checkbox" id="spells_5th_prepared5_value">
+                                <input type="checkbox" id="spells_5th_prepared6_value">
+                            </div>
+                            <div style="display: flex; flex-direction: column; flex: 1; gap: 5px;">
+                                <input type="text" class="line-input" id="spells_5th_spell1_value">
+                                <input type="text" class="line-input" id="spells_5th_spell2_value">
+                                <input type="text" class="line-input" id="spells_5th_spell3_value">
+                                <input type="text" class="line-input" id="spells_5th_spell4_value">
+                                <input type="text" class="line-input" id="spells_5th_spell5_value">
+                                <input type="text" class="line-input" id="spells_5th_spell6_value">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
 
                 <div class="col">
-                    <div id="" style="height: 195px; width: 200px; border: 2px solid #000;"></div>
+                    <div
+                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                        <span style="text-align: center;" data-label>6th Level</span>
+                        <div style="display: flex; flex-direction: row; gap: 5px; align-items: flex-start;">
+                            <div style="display: flex; flex-direction: column; flex: 0 0 auto; gap: 5px;">
+                                <input type="checkbox" id="spells_6th_prepared1_value">
+                                <input type="checkbox" id="spells_6th_prepared2_value">
+                                <input type="checkbox" id="spells_6th_prepared3_value">
+                                <input type="checkbox" id="spells_6th_prepared4_value">
+                                <input type="checkbox" id="spells_6th_prepared5_value">
+                                <input type="checkbox" id="spells_6th_prepared6_value">
+                            </div>
+                            <div style="display: flex; flex-direction: column; flex: 1; gap: 5px;">
+                                <input type="text" class="line-input" id="spells_6th_spell1_value">
+                                <input type="text" class="line-input" id="spells_6th_spell2_value">
+                                <input type="text" class="line-input" id="spells_6th_spell3_value">
+                                <input type="text" class="line-input" id="spells_6th_spell4_value">
+                                <input type="text" class="line-input" id="spells_6th_spell5_value">
+                                <input type="text" class="line-input" id="spells_6th_spell6_value">
+                            </div>
+                        </div>
+                    </div>
 
-                    <div id="" style="height: 195px; width: 200px; border: 2px solid #000;"></div>
+                    <div
+                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                        <span style="text-align: center;" data-label>7th Level</span>
+                        <div style="display: flex; flex-direction: row; gap: 5px; align-items: flex-start;">
+                            <div style="display: flex; flex-direction: column; flex: 0 0 auto; gap: 5px;">
+                                <input type="checkbox" id="spells_7th_prepared1_value">
+                                <input type="checkbox" id="spells_7th_prepared2_value">
+                                <input type="checkbox" id="spells_7th_prepared3_value">
+                                <input type="checkbox" id="spells_7th_prepared4_value">
+                                <input type="checkbox" id="spells_7th_prepared5_value">
+                                <input type="checkbox" id="spells_7th_prepared6_value">
+                            </div>
+                            <div style="display: flex; flex-direction: column; flex: 1; gap: 5px;">
+                                <input type="text" class="line-input" id="spells_7th_spell1_value">
+                                <input type="text" class="line-input" id="spells_7th_spell2_value">
+                                <input type="text" class="line-input" id="spells_7th_spell3_value">
+                                <input type="text" class="line-input" id="spells_7th_spell4_value">
+                                <input type="text" class="line-input" id="spells_7th_spell5_value">
+                                <input type="text" class="line-input" id="spells_7th_spell6_value">
+                            </div>
+                        </div>
+                    </div>
 
-                    <div id="" style="height: 195px; width: 200px; border: 2px solid #000;"></div>
+                    <div
+                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                        <span style="text-align: center;" data-label>8th Level</span>
+                        <div style="display: flex; flex-direction: row; gap: 5px; align-items: flex-start;">
+                            <div style="display: flex; flex-direction: column; flex: 0 0 auto; gap: 5px;">
+                                <input type="checkbox" id="spells_8th_prepared1_value">
+                                <input type="checkbox" id="spells_8th_prepared2_value">
+                                <input type="checkbox" id="spells_8th_prepared3_value">
+                                <input type="checkbox" id="spells_8th_prepared4_value">
+                                <input type="checkbox" id="spells_8th_prepared5_value">
+                                <input type="checkbox" id="spells_8th_prepared6_value">
+                            </div>
+                            <div style="display: flex; flex-direction: column; flex: 1; gap: 5px;">
+                                <input type="text" class="line-input" id="spells_8th_spell1_value">
+                                <input type="text" class="line-input" id="spells_8th_spell2_value">
+                                <input type="text" class="line-input" id="spells_8th_spell3_value">
+                                <input type="text" class="line-input" id="spells_8th_spell4_value">
+                                <input type="text" class="line-input" id="spells_8th_spell5_value">
+                                <input type="text" class="line-input" id="spells_8th_spell6_value">
+                            </div>
+                        </div>
+                    </div>
 
-                    <div id="" style="height: 195px; width: 200px; border: 2px solid #000;"></div>
+                    <div
+                        style="height: 200px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                        <span style="text-align: center;" data-label>9th Level</span>
+                        <div style="display: flex; flex-direction: row; gap: 5px; align-items: flex-start;">
+                            <div style="display: flex; flex-direction: column; flex: 0 0 auto; gap: 5px;">
+                                <input type="checkbox" id="spells_9th_prepared1_value">
+                                <input type="checkbox" id="spells_9th_prepared2_value">
+                                <input type="checkbox" id="spells_9th_prepared3_value">
+                                <input type="checkbox" id="spells_9th_prepared4_value">
+                                <input type="checkbox" id="spells_9th_prepared5_value">
+                                <input type="checkbox" id="spells_9th_prepared6_value">
+                            </div>
+                            <div style="display: flex; flex-direction: column; flex: 1; gap: 5px;">
+                                <input type="text" class="line-input" id="spells_9th_spell1_value">
+                                <input type="text" class="line-input" id="spells_9th_spell2_value">
+                                <input type="text" class="line-input" id="spells_9th_spell3_value">
+                                <input type="text" class="line-input" id="spells_9th_spell4_value">
+                                <input type="text" class="line-input" id="spells_9th_spell5_value">
+                                <input type="text" class="line-input" id="spells_9th_spell6_value">
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
 
-            </div>
 
+                <script>
+                    const folderInput = document.getElementById("folderInput");
+                    const folderLabel = document.getElementById("selectedFolder");
+                    const characterSelect = document.getElementById("characterSelect");
+                    const saveButton = document.getElementById("saveButton");
 
-        </div>
+                    let characters = {};
 
-
-        
-        <script>
-            const folderInput = document.getElementById("folderInput");
-            const folderLabel = document.getElementById("selectedFolder");
-            const characterSelect = document.getElementById("characterSelect");
-            const saveButton = document.getElementById("saveButton");
-
-            let characters = {};
-
-            // Reset input to allow reselect
-            folderInput.addEventListener("click", () => {
-                folderInput.value = null;
-            });
-
-            // Handle folder selection
-            folderInput.addEventListener("change", () => {
-                const files = Array.from(folderInput.files);
-                if (files.length > 0) {
-                    const folderid = files[0].webkitRelativePath.split("/")[0];
-                    folderLabel.textContent = `Selected folder: ${folderid}`;
-
-                    // Filter JSON files
-                    const jsonFiles = files.filter(f => f.name.endsWith(".json"));
-                    characters = {}; // clear previous characters
-
-                    // Read each JSON file
-                    jsonFiles.forEach(file => {
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            try {
-                                characters[file.name] = JSON.parse(e.target.result);
-                                populateDropdown();
-                            } catch (err) {
-                                console.error(`Error parsing ${file.name}:`, err);
-                            }
-                        };
-                        reader.readAsText(file);
+                    // Reset input to allow reselect
+                    folderInput.addEventListener("click", () => {
+                        folderInput.value = null;
                     });
-                } else {
-                    folderLabel.textContent = "No folder selected";
-                    characters = {};
-                    populateDropdown();
-                }
-            });
 
-            // Populate dropdown with character names
-            function populateDropdown() {
-                characterSelect.innerHTML = "";
+                    // Handle folder selection
+                    folderInput.addEventListener("change", () => {
+                        const files = Array.from(folderInput.files);
+                        if (files.length > 0) {
+                            const folderid = files[0].webkitRelativePath.split("/")[0];
+                            folderLabel.textContent = `Selected folder: ${folderid}`;
 
-                const placeholder = document.createElement("option");
-                placeholder.value = "";
-                placeholder.textContent = "New Character";
-                placeholder.selected = true;
-                placeholder.id = "placeholder-option";
-                characterSelect.appendChild(placeholder);
+                            // Filter JSON files
+                            const jsonFiles = files.filter(f => f.name.endsWith(".json"));
+                            characters = {}; // clear previous characters
 
-                for (let fileName in characters) {
-                    const option = document.createElement("option");
-                    option.value = fileName;
-                    const charName = characters[fileName].name;
-                    option.textContent = (typeof charName === 'string' ? charName : null) || fileName.replace(".json", "");
-                    characterSelect.appendChild(option);
-                }
-            }
-
-            // Show selected character JSON and populate sheet
-            characterSelect.addEventListener("change", () => {
-                const selected = characterSelect.value;
-                clearSheet();
-                if (selected && characters[selected]) {
-                    populateSheet(); // must call here AFTER selection
-                }
-            });
-
-            // Save JSON without refreshing
-            // Save JSON without refreshing
-            saveButton.addEventListener("click", (e) => {
-                e.preventDefault();
-
-                let selected = characterSelect.value;
-                const container = document.getElementById('character-sheet');
-
-                // Always merge with existing to preserve stale-proof formulas
-                const characterData = populateJsonFromHtml(characters[selected] || {});
-
-                // Get character name
-                const nameEl = container.querySelector('#name_value');
-                const charName = nameEl?.value?.trim();
-
-                if (!charName) {
-                    alert("Please fill in a character name before saving.");
-                    return;
-                }
-
-                // Use existing filename or create new one
-                if (!selected || !characters[selected]) {
-                    selected = charName + ".json";
-                    populateDropdown();
-                }
-
-                // Update in memory
-                characters[selected] = characterData;
-
-                // Save to file
-                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(characterData, null, 2));
-                const a = document.createElement('a');
-                a.href = dataStr;
-                a.download = selected;
-                a.click();
-            });
-
-
-            // Clears the character sheet
-            function clearSheet() {
-                const container = document.getElementById('character-sheet');
-                if (!container) return;
-
-                container.querySelectorAll('input, textarea, select').forEach(el => {
-                    if (el.id?.endsWith('_calculated')) return;
-                    if (el.hasAttribute('data-label')) return;
-                    const type = (el.type || '').toLowerCase();
-                    if (type === 'checkbox' || type === 'radio') el.checked = false;
-                    else el.value = '';
-                });
-
-                container.querySelectorAll('*').forEach(el => {
-                    if (el.hasAttribute('data-label')) return;
-                    const tag = el.tagName.toUpperCase();
-                    if (!['INPUT', 'TEXTAREA', 'SELECT'].includes(tag) && el.children.length === 0) {
-                        el.textContent = '';
-                    }
-                });
-            }
-
-
-            function setNested(json, parts, value, overwrite = false) {
-                if (parts.length === 1) {
-                    const existing = json[parts[0]];
-                    // never overwrite an existing operation with a non-operation
-                    if (existing?.object_id === 'operation' && value?.object_id !== 'operation') return;
-                    if (overwrite || existing === undefined || existing === '') {
-                        json[parts[0]] = value;
-                    }
-                    return;
-                }
-
-                const field = parts[parts.length - 1];
-                const stat = parts[parts.length - 2];
-                const objectId = parts.slice(0, -2).join('_');
-
-                if (!objectId) {
-                    if (!json[stat]) json[stat] = {};
-                    const existing = json[stat][field];
-                    if (existing?.object_id === 'operation' && value?.object_id !== 'operation') return;
-                    if (overwrite || existing === undefined || existing === '') {
-                        json[stat][field] = value;
-                    }
-                    return;
-                }
-
-                if (!json[objectId]) json[objectId] = { object_id: objectId };
-                if (!json[objectId][stat]) json[objectId][stat] = {};
-
-                const existing = json[objectId][stat][field];
-                if (existing?.object_id === 'operation' && value?.object_id !== 'operation') return;
-                if (existing !== undefined && existing !== '' && value === '') return;
-                if (overwrite || existing === undefined || existing === '') {
-                    json[objectId][stat][field] = value;
-                }
-            }
-
-
-            // Populate the character sheet
-            function populateSheet() {
-                const selected = characterSelect.value;
-                if (!selected || !characters[selected]) return;
-
-                const characterData = characters[selected];
-
-                function setElementValue(el, value) {
-                    if (!el) return;
-                    if (el.hasAttribute('data-label')) return;
-                    const tag = el.tagName.toUpperCase();
-                    if (tag === 'INPUT' && (el.type === 'checkbox' || el.type === 'radio')) {
-                        el.checked = value === true || value === 'true';
-                    } else if (['INPUT', 'TEXTAREA', 'SELECT'].includes(tag)) {
-                        el.value = value ?? '';
-                    } else {
-                        el.textContent = value ?? '';
-                    }
-                }
-
-                function walkObject(obj, parentId = null) {
-                    if (!obj || typeof obj !== 'object') return;
-
-                    let effectiveParent;
-                    if (parentId === null && obj.object_id === 'character') {
-                        effectiveParent = null;
-                    } else {
-                        effectiveParent = obj.object_id ?? parentId;
-                    }
-
-                    Object.keys(obj).forEach(key => {
-                        if (key === 'object_id') return;
-                        const value = obj[key];
-
-                        const fullId = effectiveParent ? `${effectiveParent}_${key}` : key;
-                        const elCalculated = document.getElementById(`${fullId}_calculated`);
-                        const elValue = document.getElementById(`${fullId}_value`);
-                        const elNormal = document.getElementById(fullId);
-
-                        if (value && typeof value === 'object' && value.object_id === 'operation') {
-                            const result = evaluateOperation(value, characterData);
-                            if (elCalculated) setElementValue(elCalculated, result);
-                            else if (elValue) setElementValue(elValue, result);
-                            else if (elNormal) setElementValue(elNormal, result);
-
-                        } else if (value && typeof value === 'object') {
-                            walkObject(value, fullId);
-
-                        } else {
-                            if (elCalculated) setElementValue(elCalculated, value);
-                            else if (elValue) setElementValue(elValue, value);
-                            else if (elNormal) setElementValue(elNormal, value);
-                        }
-                    });
-                }
-
-                walkObject(characterData);
-
-                // Second pass: re-evaluate all _calculated fields from their default formula
-                document.querySelectorAll('[id$="_calculated"]').forEach(el => {
-                    if (el.hasAttribute('data-label')) return;
-                    const formula = el.defaultValue?.trim();
-                    if (!formula?.startsWith('=')) return;
-
-                    const formulaText = formula.slice(1).trim();
-                    let operationObj;
-
-                    if (formulaText.startsWith('>')) {
-                        operationObj = {
-                            object_id: 'operation',
-                            operation_type: 'mirror',
-                            condition: formulaText.slice(1).trim()
-                        };
-                    } else {
-                        const condMatch = formulaText.match(/^([a-zA-Z_][\w]*)\s*\[([^\]]*)\]\s*\[([^\]]*)\]$/);
-                        if (condMatch) {
-                            const parseList = (str) => str.split(',').map(s => {
-                                const t = s.trim();
-                                const n = parseFloat(t);
-                                return isNaN(n) ? t : n;
+                            // Read each JSON file
+                            jsonFiles.forEach(file => {
+                                const reader = new FileReader();
+                                reader.onload = (e) => {
+                                    try {
+                                        characters[file.name] = JSON.parse(e.target.result);
+                                        populateDropdown();
+                                    } catch (err) {
+                                        console.error(`Error parsing ${file.name}:`, err);
+                                    }
+                                };
+                                reader.readAsText(file);
                             });
-                            operationObj = {
-                                object_id: 'operation',
-                                operation_type: 'conditional',
-                                condition: condMatch[1].trim(),
-                                thresholds: parseList(condMatch[2]),
-                                results: parseList(condMatch[3])
-                            };
                         } else {
-                            operationObj = {
-                                object_id: 'operation',
-                                operation_type: '=',
-                                value: formulaText
-                            };
+                            folderLabel.textContent = "No folder selected";
+                            characters = {};
+                            populateDropdown();
+                        }
+                    });
+
+                    // Populate dropdown with character names
+                    function populateDropdown() {
+                        characterSelect.innerHTML = "";
+
+                        const placeholder = document.createElement("option");
+                        placeholder.value = "";
+                        placeholder.textContent = "New Character";
+                        placeholder.selected = true;
+                        placeholder.id = "placeholder-option";
+                        characterSelect.appendChild(placeholder);
+
+                        for (let fileName in characters) {
+                            const option = document.createElement("option");
+                            option.value = fileName;
+                            const charName = characters[fileName].name;
+                            option.textContent = (typeof charName === 'string' ? charName : null) || fileName.replace(".json", "");
+                            characterSelect.appendChild(option);
                         }
                     }
 
-                    el.value = evaluateOperation(operationObj, characterData);
-                });
-            }
+                    // Show selected character JSON and populate sheet
+                    characterSelect.addEventListener("change", () => {
+                        const selected = characterSelect.value;
+                        clearSheet();
+                        if (selected && characters[selected]) {
+                            populateSheet(); // must call here AFTER selection
+                        }
+                    });
+
+                    // Save JSON without refreshing
+                    // Save JSON without refreshing
+                    saveButton.addEventListener("click", (e) => {
+                        e.preventDefault();
+
+                        let selected = characterSelect.value;
+                        const container = document.getElementById('character-sheet');
+
+                        // Always merge with existing to preserve stale-proof formulas
+                        const characterData = populateJsonFromHtml(characters[selected] || {});
+
+                        // Get character name
+                        const nameEl = container.querySelector('#name_value');
+                        const charName = nameEl?.value?.trim();
+
+                        if (!charName) {
+                            alert("Please fill in a character name before saving.");
+                            return;
+                        }
+
+                        // Use existing filename or create new one
+                        if (!selected || !characters[selected]) {
+                            selected = charName + ".json";
+                            populateDropdown();
+                        }
+
+                        // Update in memory
+                        characters[selected] = characterData;
+
+                        // Save to file
+                        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(characterData, null, 2));
+                        const a = document.createElement('a');
+                        a.href = dataStr;
+                        a.download = selected;
+                        a.click();
+                    });
 
 
+                    // Clears the character sheet
+                    function clearSheet() {
+                        const container = document.getElementById('character-sheet');
+                        if (!container) return;
 
-            // Populate the JSON with the names and values in the html sheet.
-            function populateJsonFromHtml(existingJson = {}) {
-                const container = document.getElementById('character-sheet');
-                if (!container) return structuredClone(existingJson);
+                        container.querySelectorAll('input, textarea, select').forEach(el => {
+                            if (el.id?.endsWith('_calculated')) return;
+                            if (el.hasAttribute('data-label')) return;
+                            const type = (el.type || '').toLowerCase();
+                            if (type === 'checkbox' || type === 'radio') el.checked = false;
+                            else el.value = '';
+                        });
 
-                const base = existingJson.object_id === 'character'
-                    ? structuredClone(existingJson)
-                    : { object_id: 'character', ...structuredClone(existingJson) };
-
-                container.querySelectorAll('[id]').forEach(el => {
-                    let id = el.id?.trim();
-                    if (!id) return;
-
-                    // Read value based on element type
-                    let value;
-                    if (el.type === 'checkbox' || el.type === 'radio') {
-                        value = el.checked;
-                    } else {
-                        value = el.value !== undefined ? el.value : (el.textContent?.trim() ?? '');
+                        container.querySelectorAll('*').forEach(el => {
+                            if (el.hasAttribute('data-label')) return;
+                            const tag = el.tagName.toUpperCase();
+                            if (!['INPUT', 'TEXTAREA', 'SELECT'].includes(tag) && el.children.length === 0) {
+                                el.textContent = '';
+                            }
+                        });
                     }
 
-                    const isCalculated = id.endsWith('_calculated');
-                    const isValue = id.endsWith('_value');
-                    const isName = id.endsWith('_name');
 
-                    if (isCalculated) id = id.slice(0, -'_calculated'.length);
-                    else if (isValue) id = id.slice(0, -'_value'.length);
-                    else if (isName) {
-                        id = id.slice(0, -'_name'.length);
-                        if (!base[id]) base[id] = { object_id: id };
-                        base[id].name = value;
-                        return;
+                    function setNested(json, parts, value, overwrite = false) {
+                        if (parts.length === 1) {
+                            const existing = json[parts[0]];
+                            // never overwrite an existing operation with a non-operation
+                            if (existing?.object_id === 'operation' && value?.object_id !== 'operation') return;
+                            if (overwrite || existing === undefined || existing === '') {
+                                json[parts[0]] = value;
+                            }
+                            return;
+                        }
+
+                        const field = parts[parts.length - 1];
+                        const stat = parts[parts.length - 2];
+                        const objectId = parts.slice(0, -2).join('_');
+
+                        if (!objectId) {
+                            if (!json[stat]) json[stat] = {};
+                            const existing = json[stat][field];
+                            if (existing?.object_id === 'operation' && value?.object_id !== 'operation') return;
+                            if (overwrite || existing === undefined || existing === '') {
+                                json[stat][field] = value;
+                            }
+                            return;
+                        }
+
+                        if (!json[objectId]) json[objectId] = { object_id: objectId };
+                        if (!json[objectId][stat]) json[objectId][stat] = {};
+
+                        const existing = json[objectId][stat][field];
+                        if (existing?.object_id === 'operation' && value?.object_id !== 'operation') return;
+                        if (existing !== undefined && existing !== '' && value === '') return;
+                        if (overwrite || existing === undefined || existing === '') {
+                            json[objectId][stat][field] = value;
+                        }
                     }
 
-                    if (isCalculated) {
-                        const trimmed = (value + '').trim();
-                        if (!trimmed.startsWith('=')) return;
 
-                        if (trimmed.startsWith('=>')) {
-                            value = {
-                                object_id: 'operation',
-                                operation_type: 'mirror',
-                                condition: trimmed.slice(2).trim()
-                            };
-                        } else {
-                            const formulaText = trimmed.slice(1).trim();
-                            const condMatch = formulaText.match(/^([a-zA-Z_][\w]*)\s*\[([^\]]*)\]\s*\[([^\]]*)\]$/);
+                    // Populate the character sheet
+                    function populateSheet() {
+                        const selected = characterSelect.value;
+                        if (!selected || !characters[selected]) return;
 
-                            if (condMatch) {
-                                const parseList = (str) => str.split(',').map(s => {
-                                    const t = s.trim();
-                                    const n = parseFloat(t);
-                                    return isNaN(n) ? t : n;
-                                });
-                                value = {
+                        const characterData = characters[selected];
+
+                        function setElementValue(el, value) {
+                            if (!el) return;
+                            if (el.hasAttribute('data-label')) return;
+                            const tag = el.tagName.toUpperCase();
+                            if (tag === 'INPUT' && (el.type === 'checkbox' || el.type === 'radio')) {
+                                el.checked = value === true || value === 'true';
+                            } else if (['INPUT', 'TEXTAREA', 'SELECT'].includes(tag)) {
+                                el.value = value ?? '';
+                            } else {
+                                el.textContent = value ?? '';
+                            }
+                        }
+
+                        function walkObject(obj, parentId = null) {
+                            if (!obj || typeof obj !== 'object') return;
+
+                            let effectiveParent;
+                            if (parentId === null && obj.object_id === 'character') {
+                                effectiveParent = null;
+                            } else {
+                                effectiveParent = obj.object_id ?? parentId;
+                            }
+
+                            Object.keys(obj).forEach(key => {
+                                if (key === 'object_id') return;
+                                const value = obj[key];
+
+                                const fullId = effectiveParent ? `${effectiveParent}_${key}` : key;
+                                const elCalculated = document.getElementById(`${fullId}_calculated`);
+                                const elValue = document.getElementById(`${fullId}_value`);
+                                const elNormal = document.getElementById(fullId);
+
+                                if (value && typeof value === 'object' && value.object_id === 'operation') {
+                                    const result = evaluateOperation(value, characterData);
+                                    if (elCalculated) setElementValue(elCalculated, result);
+                                    else if (elValue) setElementValue(elValue, result);
+                                    else if (elNormal) setElementValue(elNormal, result);
+
+                                } else if (value && typeof value === 'object') {
+                                    walkObject(value, fullId);
+
+                                } else {
+                                    if (elCalculated) setElementValue(elCalculated, value);
+                                    else if (elValue) setElementValue(elValue, value);
+                                    else if (elNormal) setElementValue(elNormal, value);
+                                }
+                            });
+                        }
+
+                        walkObject(characterData);
+
+                        // Second pass: re-evaluate all _calculated fields from their default formula
+                        document.querySelectorAll('[id$="_calculated"]').forEach(el => {
+                            if (el.hasAttribute('data-label')) return;
+                            const formula = el.defaultValue?.trim();
+                            if (!formula?.startsWith('=')) return;
+
+                            const formulaText = formula.slice(1).trim();
+                            let operationObj;
+
+                            if (formulaText.startsWith('>')) {
+                                operationObj = {
                                     object_id: 'operation',
-                                    operation_type: 'conditional',
-                                    condition: condMatch[1].trim(),
-                                    thresholds: parseList(condMatch[2]),
-                                    results: parseList(condMatch[3])
+                                    operation_type: 'mirror',
+                                    condition: formulaText.slice(1).trim()
                                 };
                             } else {
-                                value = {
-                                    object_id: 'operation',
-                                    operation_type: '=',
-                                    value: formulaText
-                                };
+                                const condMatch = formulaText.match(/^([a-zA-Z_][\w]*)\s*\[([^\]]*)\]\s*\[([^\]]*)\]$/);
+                                if (condMatch) {
+                                    const parseList = (str) => str.split(',').map(s => {
+                                        const t = s.trim();
+                                        const n = parseFloat(t);
+                                        return isNaN(n) ? t : n;
+                                    });
+                                    operationObj = {
+                                        object_id: 'operation',
+                                        operation_type: 'conditional',
+                                        condition: condMatch[1].trim(),
+                                        thresholds: parseList(condMatch[2]),
+                                        results: parseList(condMatch[3])
+                                    };
+                                } else {
+                                    operationObj = {
+                                        object_id: 'operation',
+                                        operation_type: '=',
+                                        value: formulaText
+                                    };
+                                }
                             }
+
+                            el.value = evaluateOperation(operationObj, characterData);
+                        });
+                    }
+
+
+
+                    // Populate the JSON with the names and values in the html sheet.
+                    function populateJsonFromHtml(existingJson = {}) {
+                        const container = document.getElementById('character-sheet');
+                        if (!container) return structuredClone(existingJson);
+
+                        const base = existingJson.object_id === 'character'
+                            ? structuredClone(existingJson)
+                            : { object_id: 'character', ...structuredClone(existingJson) };
+
+                        container.querySelectorAll('[id]').forEach(el => {
+                            let id = el.id?.trim();
+                            if (!id) return;
+
+                            // Read value based on element type
+                            let value;
+                            if (el.type === 'checkbox' || el.type === 'radio') {
+                                value = el.checked;
+                            } else {
+                                value = el.value !== undefined ? el.value : (el.textContent?.trim() ?? '');
+                            }
+
+                            const isCalculated = id.endsWith('_calculated');
+                            const isValue = id.endsWith('_value');
+                            const isName = id.endsWith('_name');
+
+                            if (isCalculated) id = id.slice(0, -'_calculated'.length);
+                            else if (isValue) id = id.slice(0, -'_value'.length);
+                            else if (isName) {
+                                id = id.slice(0, -'_name'.length);
+                                if (!base[id]) base[id] = { object_id: id };
+                                base[id].name = value;
+                                return;
+                            }
+
+                            if (isCalculated) {
+                                const trimmed = (value + '').trim();
+                                if (!trimmed.startsWith('=')) return;
+
+                                if (trimmed.startsWith('=>')) {
+                                    value = {
+                                        object_id: 'operation',
+                                        operation_type: 'mirror',
+                                        condition: trimmed.slice(2).trim()
+                                    };
+                                } else {
+                                    const formulaText = trimmed.slice(1).trim();
+                                    const condMatch = formulaText.match(/^([a-zA-Z_][\w]*)\s*\[([^\]]*)\]\s*\[([^\]]*)\]$/);
+
+                                    if (condMatch) {
+                                        const parseList = (str) => str.split(',').map(s => {
+                                            const t = s.trim();
+                                            const n = parseFloat(t);
+                                            return isNaN(n) ? t : n;
+                                        });
+                                        value = {
+                                            object_id: 'operation',
+                                            operation_type: 'conditional',
+                                            condition: condMatch[1].trim(),
+                                            thresholds: parseList(condMatch[2]),
+                                            results: parseList(condMatch[3])
+                                        };
+                                    } else {
+                                        value = {
+                                            object_id: 'operation',
+                                            operation_type: '=',
+                                            value: formulaText
+                                        };
+                                    }
+                                }
+                            }
+
+                            const parts = id.split('_');
+                            setNested(base, parts, value, isCalculated);
+                        });
+
+                        return base;
+                    }
+
+
+
+                    // Handles oobjects of type operation
+                    function evaluateOperation(operationObj, jsonData) {
+                        if (!operationObj || operationObj.object_id !== 'operation') return '';
+
+                        function resolveByPath(obj, pathStr) {
+                            const parts = pathStr.split('_');
+                            for (let i = parts.length; i >= 1; i--) {
+                                const key = parts.slice(0, i).join('_');
+                                const remainder = parts.slice(i);
+                                if (obj[key] !== undefined) {
+                                    if (remainder.length === 0) return obj[key];
+                                    const nested = resolveByPath(obj[key], remainder.join('_'));
+                                    if (nested !== undefined) return nested;
+                                }
+                            }
+                            return undefined;
+                        }
+
+                        function resolveByKey(obj, key) {
+                            if (!obj || typeof obj !== 'object') return undefined;
+                            if (obj[key] !== undefined) return obj[key];
+                            for (const k in obj) {
+                                const val = resolveByKey(obj[k], key);
+                                if (val !== undefined) return val;
+                            }
+                            return undefined;
+                        }
+
+                        function resolveVar(name) {
+                            const clean = name.replace(/_(value|calculated)$/, '');
+                            let val = resolveByPath(jsonData, clean);
+                            if (val === undefined) val = resolveByKey(jsonData, clean);
+                            if (val && typeof val === 'object' && val.object_id === 'operation') {
+                                val = evaluateOperation(val, jsonData);
+                            }
+                            if (val && typeof val === 'object') return 0;
+                            return (val === undefined || val === '' || val === null) ? 0 : Number(val) || 0;
+                        }
+
+                        function resolveString(name) {
+                            const clean = name.replace(/_(value|calculated)$/, '');
+                            let val = resolveByPath(jsonData, clean);
+                            if (val === undefined) val = resolveByKey(jsonData, clean);
+                            if (val && typeof val === 'object' && val.object_id === 'operation') {
+                                val = evaluateOperation(val, jsonData);
+                            }
+                            return val ?? '';
+                        }
+
+                        // ── mirror ─────────────────────────────────────────────────────────────
+                        if (operationObj.operation_type === 'mirror') {
+                            return resolveString(operationObj.condition);
+                        }
+
+                        // ── conditional ────────────────────────────────────────────────────────
+                        if (operationObj.operation_type === 'conditional') {
+                            const condVal = resolveVar(operationObj.condition);
+                            const thresholds = operationObj.thresholds || [];
+                            const results = operationObj.results || [];
+
+                            let matchIndex = -1;
+                            for (let i = 0; i < thresholds.length; i++) {
+                                if (condVal >= parseFloat(thresholds[i])) matchIndex = i;
+                            }
+
+                            return matchIndex === -1 ? '' : (results[matchIndex] ?? '');
+                        }
+
+                        // ── arithmetic ─────────────────────────────────────────────────────────
+                        const BUILTINS = new Set([
+                            'Math', 'floor', 'ceil', 'round', 'abs', 'max', 'min', 'sqrt', 'pow',
+                            'parseInt', 'parseFloat', 'isNaN', 'isFinite', 'Number', 'String',
+                            'Boolean', 'true', 'false', 'null', 'undefined', 'Infinity', 'NaN'
+                        ]);
+
+                        let formula = (operationObj.value ?? '').trim();
+                        if (!formula) return '';
+
+                        formula = formula.replace(/\b[a-zA-Z_][a-zA-Z0-9_]*\b/g, (match) => {
+                            if (BUILTINS.has(match)) return match;
+                            return resolveVar(match);
+                        });
+
+                        if (/[^0-9a-zA-Z_+\-*/(). \t]/.test(formula)) {
+                            console.warn('Unsafe characters in formula:', formula);
+                            return '';
+                        }
+
+                        try {
+                            return Function(`"use strict"; return (${formula})`)();
+                        } catch (err) {
+                            console.warn('Failed to evaluate formula:', formula, err);
+                            return '';
                         }
                     }
 
-                    const parts = id.split('_');
-                    setNested(base, parts, value, isCalculated);
-                });
 
-                return base;
-            }
-
-
-
-            // Handles oobjects of type operation
-            function evaluateOperation(operationObj, jsonData) {
-                if (!operationObj || operationObj.object_id !== 'operation') return '';
-
-                function resolveByPath(obj, pathStr) {
-                    const parts = pathStr.split('_');
-                    for (let i = parts.length; i >= 1; i--) {
-                        const key = parts.slice(0, i).join('_');
-                        const remainder = parts.slice(i);
-                        if (obj[key] !== undefined) {
-                            if (remainder.length === 0) return obj[key];
-                            const nested = resolveByPath(obj[key], remainder.join('_'));
-                            if (nested !== undefined) return nested;
-                        }
-                    }
-                    return undefined;
-                }
-
-                function resolveByKey(obj, key) {
-                    if (!obj || typeof obj !== 'object') return undefined;
-                    if (obj[key] !== undefined) return obj[key];
-                    for (const k in obj) {
-                        const val = resolveByKey(obj[k], key);
-                        if (val !== undefined) return val;
-                    }
-                    return undefined;
-                }
-
-                function resolveVar(name) {
-                    const clean = name.replace(/_(value|calculated)$/, '');
-                    let val = resolveByPath(jsonData, clean);
-                    if (val === undefined) val = resolveByKey(jsonData, clean);
-                    if (val && typeof val === 'object' && val.object_id === 'operation') {
-                        val = evaluateOperation(val, jsonData);
-                    }
-                    if (val && typeof val === 'object') return 0;
-                    return (val === undefined || val === '' || val === null) ? 0 : Number(val) || 0;
-                }
-
-                function resolveString(name) {
-                    const clean = name.replace(/_(value|calculated)$/, '');
-                    let val = resolveByPath(jsonData, clean);
-                    if (val === undefined) val = resolveByKey(jsonData, clean);
-                    if (val && typeof val === 'object' && val.object_id === 'operation') {
-                        val = evaluateOperation(val, jsonData);
-                    }
-                    return val ?? '';
-                }
-
-                // ── mirror ─────────────────────────────────────────────────────────────
-                if (operationObj.operation_type === 'mirror') {
-                    return resolveString(operationObj.condition);
-                }
-
-                // ── conditional ────────────────────────────────────────────────────────
-                if (operationObj.operation_type === 'conditional') {
-                    const condVal = resolveVar(operationObj.condition);
-                    const thresholds = operationObj.thresholds || [];
-                    const results = operationObj.results || [];
-
-                    let matchIndex = -1;
-                    for (let i = 0; i < thresholds.length; i++) {
-                        if (condVal >= parseFloat(thresholds[i])) matchIndex = i;
-                    }
-
-                    return matchIndex === -1 ? '' : (results[matchIndex] ?? '');
-                }
-
-                // ── arithmetic ─────────────────────────────────────────────────────────
-                const BUILTINS = new Set([
-                    'Math', 'floor', 'ceil', 'round', 'abs', 'max', 'min', 'sqrt', 'pow',
-                    'parseInt', 'parseFloat', 'isNaN', 'isFinite', 'Number', 'String',
-                    'Boolean', 'true', 'false', 'null', 'undefined', 'Infinity', 'NaN'
-                ]);
-
-                let formula = (operationObj.value ?? '').trim();
-                if (!formula) return '';
-
-                formula = formula.replace(/\b[a-zA-Z_][a-zA-Z0-9_]*\b/g, (match) => {
-                    if (BUILTINS.has(match)) return match;
-                    return resolveVar(match);
-                });
-
-                if (/[^0-9a-zA-Z_+\-*/(). \t]/.test(formula)) {
-                    console.warn('Unsafe characters in formula:', formula);
-                    return '';
-                }
-
-                try {
-                    return Function(`"use strict"; return (${formula})`)();
-                } catch (err) {
-                    console.warn('Failed to evaluate formula:', formula, err);
-                    return '';
-                }
-            }
-
-
-        </script>
+                </script>
 
 </body>

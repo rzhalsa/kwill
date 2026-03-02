@@ -1,0 +1,557 @@
+{
+  "object_id": "character",
+  "name": "Complete Character Sheet",
+  "race": {
+    "object_id": "race",
+    "name": "Human"
+  },
+  "allignment": "good",
+  "background": {
+    "object_id": "background",
+    "name": "Scholar"
+  },
+  "player": "Me",
+  "exp": "12345",
+  "ability": {
+    "object_id": "ability",
+    "strength": {
+      "modifier": {
+        "object_id": "operation",
+        "operation_type": "conditional",
+        "condition": "ability_strength_score",
+        "thresholds": [
+          0,
+          3,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20
+        ],
+        "results": [
+          -5,
+          -4,
+          -3,
+          -2,
+          -1,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "score": "12"
+    },
+    "dexterity": {
+      "modifier": {
+        "object_id": "operation",
+        "operation_type": "conditional",
+        "condition": "ability_dexterity_score",
+        "thresholds": [
+          0,
+          3,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20
+        ],
+        "results": [
+          -5,
+          -4,
+          -3,
+          -2,
+          -1,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "score": "12"
+    },
+    "constitution": {
+      "modifier": {
+        "object_id": "operation",
+        "operation_type": "conditional",
+        "condition": "ability_constitution_score",
+        "thresholds": [
+          0,
+          3,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20
+        ],
+        "results": [
+          -5,
+          -4,
+          -3,
+          -2,
+          -1,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "score": "12"
+    },
+    "intelligence": {
+      "modifier": {
+        "object_id": "operation",
+        "operation_type": "conditional",
+        "condition": "ability_intelligence_score",
+        "thresholds": [
+          0,
+          3,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20
+        ],
+        "results": [
+          -5,
+          -4,
+          -3,
+          -2,
+          -1,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "score": "12"
+    },
+    "wisdom": {
+      "modifier": {
+        "object_id": "operation",
+        "operation_type": "conditional",
+        "condition": "ability_wisdom_score",
+        "thresholds": [
+          0,
+          3,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20
+        ],
+        "results": [
+          -5,
+          -4,
+          -3,
+          -2,
+          -1,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "score": "12"
+    },
+    "charisma": {
+      "modifier": {
+        "object_id": "operation",
+        "operation_type": "conditional",
+        "condition": "ability_charisma_score",
+        "thresholds": [
+          0,
+          3,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20
+        ],
+        "results": [
+          -5,
+          -4,
+          -3,
+          -2,
+          -1,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "score": "12"
+    }
+  },
+  "saves": {
+    "object_id": "saves",
+    "strength": {
+      "proficiency": false,
+      "modifier": "1"
+    },
+    "dexterity": {
+      "proficiency": true,
+      "modifier": "3"
+    },
+    "constitution": {
+      "proficiency": true,
+      "modifier": "3"
+    },
+    "intelligence": {
+      "proficiency": false,
+      "modifier": "1"
+    },
+    "wisdom": {
+      "proficiency": false,
+      "modifier": "1"
+    },
+    "charisma": {
+      "proficiency": false,
+      "modifier": "1"
+    }
+  },
+  "skills": {
+    "object_id": "skills",
+    "athletics": {
+      "proficiency": true,
+      "modifier": "3"
+    },
+    "acrobatics": {
+      "proficiency": false,
+      "modifier": "1"
+    },
+    "sleightofhand": {
+      "proficiency": false,
+      "modifier": "1"
+    },
+    "stealth": {
+      "proficiency": false,
+      "modifier": "1"
+    },
+    "arcana": {
+      "proficiency": true,
+      "modifier": "3"
+    },
+    "history": {
+      "proficiency": false,
+      "modifier": "1"
+    },
+    "investigation": {
+      "proficiency": false,
+      "modifier": "1"
+    },
+    "nature": {
+      "proficiency": false,
+      "modifier": "1"
+    },
+    "religion": {
+      "proficiency": true,
+      "modifier": "3"
+    },
+    "animalhandling": {
+      "proficiency": false,
+      "modifier": "1"
+    },
+    "insight": {
+      "proficiency": false,
+      "modifier": "1"
+    },
+    "medicine": {
+      "proficiency": false,
+      "modifier": "1"
+    },
+    "perception": {
+      "proficiency": false,
+      "modifier": "1"
+    },
+    "survival": {
+      "proficiency": false,
+      "modifier": "1"
+    },
+    "deception": {
+      "proficiency": false,
+      "modifier": "1"
+    },
+    "intimidation": {
+      "proficiency": false,
+      "modifier": "1"
+    },
+    "performance": {
+      "proficiency": false,
+      "modifier": "1"
+    },
+    "persuasion": {
+      "proficiency": false,
+      "modifier": "1"
+    }
+  },
+  "ac": "16",
+  "initiative": "+1",
+  "speed": "30",
+  "hitpoints": {
+    "current": "7",
+    "maximum": "10",
+    "temporary": "2"
+  },
+  "hitDice": {
+    "total": "1d6",
+    "current": "1"
+  },
+  "death": {
+    "object_id": "death",
+    "saves": {
+      "success1": true,
+      "success2": false,
+      "success3": true,
+      "failure1": false,
+      "failure2": true,
+      "failure3": false
+    }
+  },
+  "attacks": "Pen 1d1 ink",
+  "coins": {
+    "copper": "-5",
+    "silver": "1",
+    "electrum": "2",
+    "gold": "1"
+  },
+  "equipment": "Pen\nBackpack\netc",
+  "text": {
+    "personality": "Present\nPresent",
+    "ideals": "Good stuff\nGood Stuff",
+    "bonds": "Yes\nYes",
+    "flaws": "yes\nyes",
+    "features": "Can code\nCan code some more"
+  },
+  "name2": {
+    "object_id": "operation",
+    "operation_type": "mirror",
+    "condition": "name"
+  },
+  "age": "Yeah",
+  "eyes": "Color",
+  "height": "about 6",
+  "skin": "yes",
+  "weight": "there",
+  "hair": "yes",
+  "appearance": "Described",
+  "backstory": "Born and raised",
+  "alliesAndOrganizations": "Kwill team",
+  "features": {
+    "aditional": "a few"
+  },
+  "treasure": ":)\nThere are those I treasure.",
+  "spellcasting": {
+    "class": "Programmer"
+  },
+  "spell": {
+    "castingAbility": "Int",
+    "saveDc": "11",
+    "attackBonus": "+1"
+  },
+  "spells": {
+    "cantrip1": "1",
+    "cantrip2": "22",
+    "cantrip3": "333",
+    "cantrip4": "4444",
+    "cantrip5": "55555",
+    "cantrip6": "666666",
+    "cantrip7": "7777777",
+    "cantrip8": "88888888",
+    "cantrip9": "999999999",
+    "cantrip10": "1010101010",
+    "cantrip11": "111111111111",
+    "cantrip12": "121212121212",
+    "1st": {
+      "prepared1": true,
+      "prepared2": true,
+      "prepared3": true,
+      "prepared4": true,
+      "prepared5": false,
+      "prepared6": false,
+      "prepared7": false,
+      "prepared8": false,
+      "prepared9": false,
+      "spell1": "y",
+      "spell2": "y",
+      "spell3": "y",
+      "spell4": "y",
+      "spell5": "n",
+      "spell6": "n",
+      "spell7": "n",
+      "spell8": "n",
+      "spell9": "n"
+    },
+    "2nd": {
+      "prepared1": false,
+      "prepared2": false,
+      "prepared3": false,
+      "prepared4": false,
+      "prepared5": false,
+      "prepared6": true,
+      "prepared7": true,
+      "prepared8": true,
+      "prepared9": false,
+      "spell1": "n",
+      "spell2": "n",
+      "spell3": "n",
+      "spell4": "n",
+      "spell5": "n",
+      "spell6": "y",
+      "spell7": "y",
+      "spell8": "y",
+      "spell9": "n"
+    },
+    "3rd": {
+      "prepared1": false,
+      "prepared2": false,
+      "prepared3": false,
+      "prepared4": false,
+      "prepared5": false,
+      "prepared6": false,
+      "prepared7": false,
+      "prepared8": false,
+      "prepared9": true,
+      "prepared10": true,
+      "spell1": "n",
+      "spell2": "n",
+      "spell3": "n",
+      "spell4": "n",
+      "spell5": "n",
+      "spell6": "n",
+      "spell7": "n",
+      "spell8": "n",
+      "spell9": "y",
+      "spell10": "y"
+    },
+    "4th": {
+      "prepared1": false,
+      "prepared2": true,
+      "prepared3": true,
+      "prepared4": false,
+      "prepared5": false,
+      "prepared6": false,
+      "prepared7": false,
+      "prepared8": false,
+      "prepared9": false,
+      "prepared10": false,
+      "spell1": "n",
+      "spell2": "y",
+      "spell3": "y",
+      "spell4": "n",
+      "spell5": "n",
+      "spell6": "n",
+      "spell7": "n",
+      "spell8": "n",
+      "spell9": "n",
+      "spell10": "n"
+    },
+    "5th": {
+      "prepared1": true,
+      "prepared2": false,
+      "prepared3": false,
+      "prepared4": false,
+      "prepared5": true,
+      "prepared6": true,
+      "spell1": "y",
+      "spell2": "n",
+      "spell3": "n",
+      "spell4": "n",
+      "spell5": "y",
+      "spell6": "n"
+    },
+    "6th": {
+      "prepared1": false,
+      "prepared2": false,
+      "prepared3": true,
+      "prepared4": false,
+      "prepared5": true,
+      "prepared6": true,
+      "spell1": "n",
+      "spell2": "n",
+      "spell3": "y",
+      "spell4": "n",
+      "spell5": "y",
+      "spell6": "y"
+    },
+    "7th": {
+      "prepared1": false,
+      "prepared2": true,
+      "prepared3": false,
+      "prepared4": false,
+      "prepared5": false,
+      "prepared6": true,
+      "spell1": "n",
+      "spell2": "y",
+      "spell3": "n",
+      "spell4": "n",
+      "spell5": "n",
+      "spell6": "y"
+    },
+    "8th": {
+      "prepared1": false,
+      "prepared2": false,
+      "prepared3": true,
+      "prepared4": false,
+      "prepared5": true,
+      "prepared6": false,
+      "spell1": "n",
+      "spell2": "n",
+      "spell3": "y",
+      "spell4": "n",
+      "spell5": "y",
+      "spell6": "n"
+    },
+    "9th": {
+      "prepared1": false,
+      "prepared2": false,
+      "prepared3": false,
+      "prepared4": true,
+      "prepared5": true,
+      "prepared6": false,
+      "spell1": "n",
+      "spell2": "n",
+      "spell3": "n",
+      "spell4": "y",
+      "spell5": "y",
+      "spell6": "n"
+    }
+  },
+  "classlevel": "Wizard 1"
+}
