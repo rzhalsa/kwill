@@ -17,11 +17,11 @@ namespace Kwill.Api
             );
             await db.SrdData.Indexes.CreateOneAsync(srdIndex);
 
-            // CharacterSheets: unique userId + characterId
+            // CharacterSheets: unique user_id + character_id
             var csIndex = new CreateIndexModel<BsonDocument>(
                 Builders<BsonDocument>.IndexKeys
-                    .Ascending("userId")
-                    .Ascending("characterId"),
+                    .Ascending("user_id")
+                    .Ascending("character_id"),
                 new CreateIndexOptions { Unique = true, Name = "uniq_user_character" }
             );
             await db.CharacterSheets.Indexes.CreateOneAsync(csIndex);
