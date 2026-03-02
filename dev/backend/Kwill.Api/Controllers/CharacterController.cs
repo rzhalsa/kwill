@@ -38,6 +38,16 @@ public class CharacterController : ControllerBase
         );
     }
 
+    //Returns all characters realted to a userID
+    [HttpGet("user/{userId}")]
+    public async Task<IActionResult> GetAllByUser(string userId) {
+        var filter = Builders<BsonDocument>.Filter.Eq("userId", userId);
+        var doc = await _db.CharacterSheets.Find(filter).ToListAsync();
+        if (doc == null)
+            return NotFound();
+        return Ok(doc);
+    }
+
     // POST (create)
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] JsonElement body)

@@ -13,7 +13,9 @@
                 </template>
                 <v-list>
                     <v-list-item v-for="(item, index) in items" :key="index" :value="index" class="menu-item">
-                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                        <router-link :to="item.route" style="text-decoration: none; color: inherit;">
+                        <v-list-item-title>{{ item.title }}</v-list-item-title>
+                        </router-link>
                     </v-list-item>
                 </v-list>
             </v-menu>
@@ -28,13 +30,14 @@
 </template>
 <script setup>
     import {ref} from 'vue';
+import router from '../router';
     const title = ref('Kwill');
     const items =[
-        {title: 'Characters'},
-        {title: 'Community'},
-        {title: 'Account'},
-        {title: 'Guides'},
-        {title: 'About'},
+        {title: 'Characters', route:'/characters'},
+        {title: 'Community',route:'/characters'},
+        {title: 'Account',route:'/characters'},
+        {title: 'Guides',route:'/characters'},
+        {title: 'About',route:'/info'},
     ]
 </script>
 <style>

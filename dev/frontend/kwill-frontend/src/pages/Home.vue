@@ -82,8 +82,18 @@
       <v-card class="gradient-card mt-n6" style=" padding-bottom: 10%;">
         <v-card-title class="ma-4 text-h4" style="padding-left: 45%;">About</v-card-title>
         <v-divider style="margin-left: 3%; margin-right: 3%;"></v-divider>
-        <v-card-item style="padding-top: 2%;">
-        </v-card-item>
+        <v-card-text style="padding-top: 2%;" class="text-center text-accent text-h5" >
+            <div class="mb-2">Kwill is a webapp which can generate, store, and update user-created smart D&D character sheets.</div>
+            <div class="mb-2">Once released, Kwill will support the following features:</div>
+            <div class="mb-2">Generating user-specified smart D&D character sheets automatically. </div>
+            <div class="mb-2">Smart character sheets will support features such as:</div>
+            <div class="mb-2">Fields being automatically populated with calculated values.</div>
+            <div class="mb-2">Tooltips on mouse hover for features and spells.</div>
+            <div class="mb-2">Built-in tools to aid in tasks such as skill checks, attacks, rests, or level ups.</div>
+            <div class="mb-2">Allowing users to view all their created character sheets on their account dashboard.</div>
+            <div class="mb-2">Allowing users to export a character sheet locally to their own machine.</div>
+            <div class="mb-2">Allowing users to import a locally stored character sheet to the webapp.</div>
+        </v-card-text>
       </v-card>
     </v-col>
   </v-row>
