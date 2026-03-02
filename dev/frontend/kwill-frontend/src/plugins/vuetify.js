@@ -10,7 +10,7 @@ export default createVuetify({
     defaultTheme: 'kwillTheme',
     themes: {
       kwillTheme: {
-        dark: true, //to turn dark mode on and off
+        dark: false, //to turn dark mode on and off
         colors: {
           primary: '#2c9e0f',   
           secondary: '#158f44', 
