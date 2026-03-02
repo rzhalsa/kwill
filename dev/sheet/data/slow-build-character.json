@@ -1,0 +1,137 @@
+{
+  "object_id": "character",
+  "name": "SlowBuild",
+  "class_level_field": "",
+  "race": {
+    "object_id": "race",
+    "name": ""
+  },
+  "allignment": "",
+  "background": {
+    "object_id": "background",
+    "name": ""
+  },
+  "player": {
+    "object_id": "player",
+    "name": ""
+  },
+  "character": {
+    "exp": ""
+  },
+  "ability": {
+    "object_id": "ability",
+    "strength": {
+      "score": "10",
+      "modifier": {
+        "object_id": "operation",
+        "operation_type": "=",
+        "value": "23",
+        "raw": "=23"
+      }
+    },
+    "dexterity": {
+      "modifier": {
+        "object_id": "operation",
+        "operation_type": "=",
+        "value": "12",
+        "raw": "=12"
+      },
+      "score": ""
+    },
+    "constitution": {
+      "modifier": "",
+      "score": ""
+    },
+    "intelligence": {
+      "modifier": "",
+      "score": ""
+    },
+    "wisdom": {
+      "modifier": "",
+      "score": ""
+    },
+    "charisma": {
+      "modifier": "",
+      "score": ""
+    }
+  },
+  "ac": "",
+  "initiative": "",
+  "speed": "",
+  "hitpoints": {
+    "current": "",
+    "maximum": "",
+    "temporary": ""
+  },
+  "text_personality": "",
+  "text_ideals": "",
+  "text_bonds": "",
+  "text_flaws": "",
+  "text_features": "",
+  "age_field": "",
+  "eyesfield": "",
+  "height_field": "",
+  "skin_field": "",
+  "weight_field": "",
+  "hair_field": "",
+  "allies_and_organizations_field": "",
+  "spellcasting_class_field": "",
+  "spellcasting_ability_field": "",
+  "spell_save_dc_field": "",
+  "spell_attack_bonus_field": "",
+  "class": {
+    "object_id": "class",
+    "level": {
+      "field": ""
+    }
+  },
+  "text": {
+    "personality": "",
+    "ideals": "",
+    "bonds": "",
+    "flaws": "",
+    "features": ""
+  },
+  "age": {
+    "field": ""
+  },
+  "height": {
+    "field": ""
+  },
+  "skin": {
+    "field": ""
+  },
+  "weight": {
+    "field": ""
+  },
+  "hair": {
+    "field": ""
+  },
+  "allies_and": {
+    "object_id": "allies_and",
+    "organizations": {
+      "field": ""
+    }
+  },
+  "spellcasting": {
+    "object_id": "spellcasting",
+    "class": {
+      "field": ""
+    },
+    "ability": {
+      "field": ""
+    }
+  },
+  "spell_save": {
+    "object_id": "spell_save",
+    "dc": {
+      "field": ""
+    }
+  },
+  "spell_attack": {
+    "object_id": "spell_attack",
+    "bonus": {
+      "field": ""
+    }
+  }
+}

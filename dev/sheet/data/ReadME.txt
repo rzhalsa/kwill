@@ -1,0 +1,1 @@
+These files are characters and are temporary for texting purposes.
