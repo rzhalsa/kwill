@@ -1,2 +1,4 @@
 # Files to ignore in commits will be listed in here
 /.vs
+.continue/
+.editorconfig

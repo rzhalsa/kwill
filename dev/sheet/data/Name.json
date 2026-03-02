@@ -1,0 +1,296 @@
+{
+  "object_id": "character",
+  "name": "name",
+  "class": {
+    "level": "test"
+  },
+  "race": {
+    "object_id": "race",
+    "name": ""
+  },
+  "allignment": "",
+  "background": {
+    "object_id": "background",
+    "name": ""
+  },
+  "player": "",
+  "exp": "",
+  "ability": {
+    "object_id": "ability",
+    "strength": {
+      "modifier": {
+        "object_id": "operation",
+        "operation_type": "conditional",
+        "condition": "ability_strength_score",
+        "thresholds": [
+          0,
+          3,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20
+        ],
+        "results": [
+          -5,
+          -4,
+          -3,
+          -2,
+          -1,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "score": ""
+    },
+    "dexterity": {
+      "modifier": {
+        "object_id": "operation",
+        "operation_type": "conditional",
+        "condition": "ability_dexterity_score",
+        "thresholds": [
+          0,
+          3,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20
+        ],
+        "results": [
+          -5,
+          -4,
+          -3,
+          -2,
+          -1,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "score": ""
+    },
+    "constitution": {
+      "modifier": {
+        "object_id": "operation",
+        "operation_type": "conditional",
+        "condition": "ability_constitution_score",
+        "thresholds": [
+          0,
+          3,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20
+        ],
+        "results": [
+          -5,
+          -4,
+          -3,
+          -2,
+          -1,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "score": ""
+    },
+    "intelligence": {
+      "modifier": {
+        "object_id": "operation",
+        "operation_type": "conditional",
+        "condition": "ability_intelligence_score",
+        "thresholds": [
+          0,
+          3,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20
+        ],
+        "results": [
+          -5,
+          -4,
+          -3,
+          -2,
+          -1,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "score": ""
+    },
+    "wisdom": {
+      "modifier": {
+        "object_id": "operation",
+        "operation_type": "conditional",
+        "condition": "ability_wisdom_score",
+        "thresholds": [
+          0,
+          3,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20
+        ],
+        "results": [
+          -5,
+          -4,
+          -3,
+          -2,
+          -1,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "score": ""
+    },
+    "charisma": {
+      "modifier": {
+        "object_id": "operation",
+        "operation_type": "conditional",
+        "condition": "ability_charisma_score",
+        "thresholds": [
+          0,
+          3,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20
+        ],
+        "results": [
+          -5,
+          -4,
+          -3,
+          -2,
+          -1,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "score": ""
+    }
+  },
+  "ac": "",
+  "initiative": "",
+  "speed": "",
+  "hitpoints": {
+    "current": "",
+    "maximum": "",
+    "temporary": ""
+  },
+  "text": {
+    "personality": "wow\nlines\nstacked",
+    "ideals": "",
+    "bonds": "",
+    "flaws": "",
+    "features": ""
+  },
+  "name2": {
+    "object_id": "operation",
+    "operation_type": "mirror",
+    "condition": "name"
+  },
+  "age": "blue",
+  "eyes": "bluer",
+  "height": "",
+  "skin": "",
+  "weight": "",
+  "hair": "",
+  "allies": {
+    "object_id": "allies",
+    "and": {
+      "organizations": ""
+    }
+  },
+  "spellcasting": {
+    "class": "",
+    "ability": ""
+  },
+  "spell": {
+    "object_id": "spell",
+    "save": {
+      "dc": ""
+    },
+    "attack": {
+      "bonus": ""
+    }
+  },
+  "death": {
+    "object_id": "death",
+    "saves": {
+      "success1": true,
+      "success2": true,
+      "success3": true,
+      "failure1": false,
+      "failure2": false,
+      "failure3": false
+    }
+  },
+  "hitDice": {
+    "total": "",
+    "current": ""
+  },
+  "attacks": "",
+  "coins": {
+    "copper": "6",
+    "silver": "35",
+    "electrum": "123",
+    "gold": "1100"
+  },
+  "equipment": "",
+  "appearance": "",
+  "backstory": "",
+  "alliesAndOrganizations": ""
+}
