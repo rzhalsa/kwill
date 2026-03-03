@@ -11,6 +11,7 @@
         <v-divider vertical class="mt-3 mb-3"></v-divider>
         <v-btn icon="mdi-cog" class="mx-2"></v-btn>
         <v-btn icon="mdi-account" class="mr-2"></v-btn>
+        <v-btn to="/login" class="mr-2">Login</v-btn>
     </v-app-bar>
 </template>
 <script setup>
