@@ -23,6 +23,9 @@
 
 <script setup>
     import { ref } from 'vue'
+    import { onMounted } from 'vue'
+    import { onBeforeUnmount } from 'vue';
+    const emit = defineEmits(['update:toggle'])
     const email = ref('')
     const password = ref('')
 
@@ -39,6 +42,24 @@
             console.log("Incorrect credentials")
         }
     }
+
+    const initialize = () => {
+        console.log("Page loaded")
+        emit('update:toggle', false)
+    }
+
+    const reloadNavbar = () => {
+        console.log("Leaving page")
+        emit('update:toggle', true)
+    }
+
+    onMounted(() => {
+        initialize()
+    })
+
+    onBeforeUnmount(() => {
+        reloadNavbar()
+    })
 </script>
 
 <style>

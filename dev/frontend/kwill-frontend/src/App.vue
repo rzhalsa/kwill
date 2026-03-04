@@ -1,7 +1,7 @@
 
 <template>
    <v-app>
-    <Navbar />
+    <Navbar v-if="showNavbar"/>
     <v-main>
       <router-view />
     </v-main>
@@ -9,5 +9,14 @@
 </template>
 
 <script setup>
-import Navbar from './layouts/Navbar.vue'
+  import { ref } from 'vue'
+  import Navbar from './layouts/Navbar.vue'
+  import Login from './pages/Login.vue'
+  
+  const showNavbar = ref(true)
+
+  function toggleNavbar(show) {
+    console.log(show)
+    showNavbar.value = show
+  }
 </script>

@@ -17,6 +17,12 @@
 <script setup>
     import {ref} from 'vue';
     const title = ref('Kwill')
+    const emit = defineEmits(['update:toggle'])
+
+    function toggleNavbar() {
+        console.log("in toggle navbar")
+        emit('update:toggle', false)
+    }
 </script>
 <style>
 
