@@ -25,7 +25,7 @@ load_dotenv()
 # ─────────────────────────────────────────────────────────────
 
 MONGO_URI   = os.getenv("MONGO_URI", "mongodb://localhost:27017")
-DB_NAME     = os.getenv("MONGO_DB_NAME", "kwill")
+DB_NAME     = os.getenv("MONGO_DB_NAME", "Kwill")
 PARSED_DIR  = Path(__file__).parent / "data" / "parsed"
 BATCH_SIZE  = 100
 
@@ -57,26 +57,10 @@ ENDPOINT_KEYS: dict[str, str] = {
     "monsters":        "monsters",
 }
 
-# Indexes for single srdData collection
-# Index on Key field for fast filtering by type
-INDEXES: list = [
-    [("Key", 1)],                          # Find all spells/classes/etc quickly
-    [("Data.index", 1)],                   # Find by index within Data
-]
 
-
-
+# ─────────────────────────────────────────────────────────────
 # SEEDER
-
-def ensure_indexes(db):
-    """Create indexes on srdData collection"""
-    coll = db[SRD_COLLECTION]
-    for key_list in INDEXES:
-        try:
-            coll.create_index(key_list, background=True)
-        except Exception as e:
-            log.warning(f"  Index creation warning: {e}")
-
+# ─────────────────────────────────────────────────────────────
 
 def upsert_collection(db, endpoint: str, documents: list[dict], dry_run: bool) -> dict:
     """Insert documents into srdData collection with Key field"""
@@ -86,9 +70,6 @@ def upsert_collection(db, endpoint: str, documents: list[dict], dry_run: bool) -
     if dry_run:
         log.info(f"  [DRY RUN] Would upsert {len(documents)} docs with Key='{key}'")
         return {"upserted": 0, "modified": 0, "dry_run": True}
-
-    # Ensure indexes exist (only needs to run once)
-    ensure_indexes(db)
 
     total_upserted = 0
     total_modified = 0
@@ -188,8 +169,9 @@ def run_seed(only: str | None = None, dry_run: bool = False):
     log.info("Seeding complete. MongoDB connection closed.")
 
 
-
+# ─────────────────────────────────────────────────────────────
 # CLI
+# ─────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
