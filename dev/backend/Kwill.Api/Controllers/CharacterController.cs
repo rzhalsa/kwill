@@ -17,11 +17,10 @@ public class CharacterController : ControllerBase
     }
 
 // GET one
-[HttpGet("{userId}/{characterId}")]
+[HttpGet("{characterId}")]
 public async Task<IActionResult> Get(string userId, string characterId)
 {
     var filter = Builders<BsonDocument>.Filter.And(
-        Builders<BsonDocument>.Filter.Eq("user_id", userId),        // ← Changed from "userId"
         Builders<BsonDocument>.Filter.Eq("character_id", characterId) // ← Changed from "characterId"
     );
 
@@ -90,8 +89,7 @@ public async Task<IActionResult> Create([FromBody] JsonElement body)
 [HttpPut("{userId}/{characterId}")]
 public async Task<IActionResult> Update(string userId, string characterId, [FromBody] JsonElement body)
 {
-    var filter = Builders<BsonDocument>.Filter.And(
-        Builders<BsonDocument>.Filter.Eq("user_id", userId),        // ← Changed
+    var filter = Builders<BsonDocument>.Filter.And(        
         Builders<BsonDocument>.Filter.Eq("character_id", characterId) // ← Changed
     );
 
@@ -106,7 +104,15 @@ public async Task<IActionResult> Update(string userId, string characterId, [From
         {
             return BadRequest(new { errors = validation.Errors });
         }
-        
+
+        var existing = await _db.CharacterSheets.Find(filter).FirstOrDefaultAsync();
+
+        if (existing == null)
+            return NotFound();
+        // checks to make sure user_id has ownership over sheet.
+        if (!existing.Contains("user_id") || existing["user_id"].AsString != userId)
+            return Forbid();
+
         // Only update if validation passes
         await _db.CharacterSheets.ReplaceOneAsync(filter, doc);
 
@@ -124,9 +130,16 @@ public async Task<IActionResult> Update(string userId, string characterId, [From
 public async Task<IActionResult> Delete(string userId, string characterId)
 {
     var filter = Builders<BsonDocument>.Filter.And(
-        Builders<BsonDocument>.Filter.Eq("user_id", userId),        // ← Changed
         Builders<BsonDocument>.Filter.Eq("character_id", characterId) // ← Changed
     );
+
+        var existing = await _db.CharacterSheets.Find(filter).FirstOrDefaultAsync();
+
+        if (existing == null)
+            return NotFound();
+        //checks to make sure user_id has ownership over sheet.
+        if (!existing.Contains("user_id") || existing["user_id"].AsString != userId)
+            return Forbid();
 
         await _db.CharacterSheets.DeleteOneAsync(filter);
 

@@ -17,14 +17,21 @@ namespace Kwill.Api
             );
             await db.SrdData.Indexes.CreateOneAsync(srdIndex);
 
-            // CharacterSheets: unique user_id + character_id
+            // CharacterSheets: unique characterId only (globally unique)
             var csIndex = new CreateIndexModel<BsonDocument>(
-                Builders<BsonDocument>.IndexKeys
-                    .Ascending("user_id")
+                 Builders<BsonDocument>.IndexKeys
                     .Ascending("character_id"),
-                new CreateIndexOptions { Unique = true, Name = "uniq_user_character" }
+                new CreateIndexOptions { Unique = true, Name = "uniq_character_id" }
             );
             await db.CharacterSheets.Indexes.CreateOneAsync(csIndex);
+
+            // Users: unique user_id
+            var userIndex = new CreateIndexModel<BsonDocument>(
+                 Builders<BsonDocument>.IndexKeys
+                    .Ascending("user_id"),
+                 new CreateIndexOptions { Unique = true, Name = "uniq_user_id" }
+            );
+            await db.Users.Indexes.CreateOneAsync(userIndex);
         }
     }
 }

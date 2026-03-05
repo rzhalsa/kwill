@@ -26,6 +26,9 @@ namespace KwillDB
 
         public IMongoCollection<BsonDocument> CharacterSheets =>
             db.GetCollection<BsonDocument>("characterSheets");
+
+        public IMongoCollection<BsonDocument> Users =>
+           db.GetCollection<BsonDocument>("users");
     }
 }
 
