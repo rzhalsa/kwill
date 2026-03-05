@@ -1,7 +1,7 @@
 
 <template>
    <v-app>
-    <Navbar v-if="showNavbar"/>
+    <Navbar v-if="navbarState"/>
     <v-main>
       <router-view />
     </v-main>
@@ -9,14 +9,10 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
+  import { computed, ref } from 'vue'
+  import { useNavbarStore } from './stores/navbar_state'
   import Navbar from './layouts/Navbar.vue'
-  import Login from './pages/Login.vue'
   
-  const showNavbar = ref(true)
-
-  function toggleNavbar(show) {
-    console.log(show)
-    showNavbar.value = show
-  }
+  const store = useNavbarStore()
+  const navbarState = computed(() => store.getUseNavBar)
 </script>

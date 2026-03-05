@@ -25,9 +25,15 @@
     import { ref } from 'vue'
     import { onMounted } from 'vue'
     import { onBeforeUnmount } from 'vue';
+    import { useNavbarStore } from '../stores/navbar_state';
     const emit = defineEmits(['update:toggle'])
     const email = ref('')
     const password = ref('')
+    const store = useNavbarStore()
+
+    const toggleNavbar = () => {
+        store.toggleNavbar()
+    }
 
     /* Activates upon the login button being clicked. Currently will log the user in if the default email
      * and password match. Otherwise shows an alert dialog box informing the user they entered invalid
@@ -44,13 +50,11 @@
     }
 
     const initialize = () => {
-        console.log("Page loaded")
-        emit('update:toggle', false)
+        toggleNavbar()
     }
 
     const reloadNavbar = () => {
-        console.log("Leaving page")
-        emit('update:toggle', true)
+        toggleNavbar()
     }
 
     onMounted(() => {
