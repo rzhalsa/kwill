@@ -25,8 +25,12 @@
         </v-menu>
         <v-divider vertical class="mt-3 mb-3"></v-divider>
         <v-btn icon="mdi-cog" class="mx-2"></v-btn>
-        <v-btn icon="mdi-account" class="mr-2"></v-btn>
-        <v-btn to="/login" class="mr-2">Login</v-btn>
+        <div class="oval">
+            <v-btn color="black" small to="/login">
+                <v-icon left>mdi-account</v-icon>
+                Sign in
+            </v-btn>
+        </div>
     </v-app-bar>
 </template>
 <script setup>
@@ -42,5 +46,9 @@
     ]
 </script>
 <style>
-
+    .oval {
+        background-color: white;
+        border-radius: 100px;
+        margin-right: 1vw;
+    }
 </style>
