@@ -8,18 +8,20 @@ namespace Kwill.Api
     {
         public static async Task EnsureAsync(KwillDB.KwillDB db)
         {
-            // SRD: unique key
+            // SRD: unique Key + Data.index combination
             var srdIndex = new CreateIndexModel<BsonDocument>(
-                Builders<BsonDocument>.IndexKeys.Ascending("key"),
+                Builders<BsonDocument>.IndexKeys
+                    .Ascending("Key")
+                    .Ascending("Data.index"),
                 new CreateIndexOptions { Unique = true, Name = "uniq_srd_key" }
             );
             await db.SrdData.Indexes.CreateOneAsync(srdIndex);
 
-            // CharacterSheets: unique userId + characterId
+            // CharacterSheets: unique user_id + character_id
             var csIndex = new CreateIndexModel<BsonDocument>(
                 Builders<BsonDocument>.IndexKeys
-                    .Ascending("userId")
-                    .Ascending("characterId"),
+                    .Ascending("user_id")
+                    .Ascending("character_id"),
                 new CreateIndexOptions { Unique = true, Name = "uniq_user_character" }
             );
             await db.CharacterSheets.Indexes.CreateOneAsync(csIndex);
