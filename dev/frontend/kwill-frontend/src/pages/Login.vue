@@ -4,23 +4,29 @@
             <!-- Login Menu -->
             <v-row>
                 <!-- Logo and Title + Subtitle -->
-                <v-col>
-                    <img src="../assets/icon2.png" style="height:16vh; width: 8vw;" />
-                    <v-card-title class="text-h4 text-white">Sign in</v-card-title>
-                    <v-card-subtitle class="text-white">to continue to Kwill</v-card-subtitle>
+                <v-col class="ml-1 mr-16 text-center">
+                    <img class="mt-2" src="../assets/icon2-small-margin.png" style="height:130px; width: 200px;" />
+                    <v-card-title class="text-h3 text-white">Sign in</v-card-title>
+                    <v-card-subtitle class="text-subtitle-1 text-white">to continue to Kwill</v-card-subtitle>
                 </v-col>
                 <!-- Login fields -->
-                <v-col class="text-center">
-                        <!-- Username Field -->
-                        <p class="ma-12 text-h4">
-                            <input type="text" required placeholder="Email" v-model="email" class="login-input">
+                <v-col style="width: 20vw">
+                    <v-col>
+                        <!--Email Field -->
+                        <p class="mt-16 mx-12 text-body-1">
+                            <input type="text" required placeholder="Email" v-model="email" class="login-input px-2 py-2" style="border-radius: 12px;">
                         </p>
                         <!-- Password Field -->
-                        <p class="ma-12 text-h4">
-                            <input type="password" required placeholder="Password" v-model="password" class="login-input">
+                        <p class="my-5 mx-12 text-body-1">
+                            <input type="password" required placeholder="Password" v-model="password" class="login-input px-2 py-2" style="border-radius: 12px;">
                         </p>
+                    </v-col>    
+                    <v-row class="ma-1" justify="end">
+                        <!-- Create Account Button -->
+                        <v-btn variant="text" class="my-4 text-white text-button">Create account</v-btn>
                         <!-- Login Button-->
-                        <v-btn large @click="login" color="secondary" class="ma-4">Login</v-btn>
+                        <v-btn large @click="login" color="secondary" class="ma-4 text-button">Sign in</v-btn>
+                    </v-row>
                 </v-col>
             </v-row>
         </v-card>
@@ -52,18 +58,18 @@
         // Check if the entered email and password are valid. This will be changed to a database query match
         // later on
         if(email.value == "admin@kwill.com" && password.value == "12345") {
-            console.log("Logged in!")
             router.push('/')
         } else {
-            console.log("Incorrect credentials")
+            alert('Invalid credentials')
         }
     }
 
-    // Handle the keydown event, try to login in if the user pressed 'Enter'
+    // Handle the keydown event, try to login in if the user pressed 'Enter', return otherwise
     const handleEnter = (event) => {
-        if(event.key === 'Enter') {
-            login()
+        if(event.key !== 'Enter') {
+            return
         }
+        login()
         
     }
 
@@ -86,6 +92,7 @@
     // Called before the logic page in unmounted
     onBeforeUnmount(() => {
         reloadNavbar()
+        window.removeEventListener('keydown', handleEnter)
     })
 </script>
 
@@ -99,5 +106,6 @@
     .login-input {
         color: black;
         background-color: white;
+        width: 12vw;
     }
 </style>
