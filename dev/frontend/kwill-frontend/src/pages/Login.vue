@@ -34,12 +34,13 @@
 </template>
 
 <script setup>
+    // Var declarations
     import { ref } from 'vue'
     import { onMounted } from 'vue'
     import { onBeforeUnmount } from 'vue';
     import { useNavbarStore } from '../stores/navbar_state';
     import { useRouter } from 'vue-router'
-    const emit = defineEmits(['update:toggle'])
+    const user = ref(JSON.parse(localStorage.getItem('user')))
     const email = ref('')
     const password = ref('')
     const store = useNavbarStore()
@@ -50,46 +51,76 @@
         store.toggleNavbar()
     }
 
-    /* Activates upon the login button being clicked. Currently will log the user in if the default email
+    /**
+     * Activates upon the login button being clicked. Currently will log the user in if the default email
      * and password match. Otherwise shows an alert dialog box informing the user they entered invalid
      * credentials.
      */
-    function login() {
+    const login = () => {
         // Check if the entered email and password are valid. This will be changed to a database query match
         // later on
         if(email.value == "admin@kwill.com" && password.value == "12345") {
-            router.push('/')
+            createTempUser()
+            router.replace('/')
         } else {
             alert('Invalid credentials')
         }
     }
 
-    // Handle the keydown event, try to login in if the user pressed 'Enter', return otherwise
+    /**
+     * Creates a temporary logged in user for testing the login page. This will obviously be changed as we 
+     * move to a legitimate authentication structure via a database.
+     */
+    const createTempUser = () => {
+        const userId = crypto.randomUUID()
+        const user = {
+            username: 'temp_user',
+            email: email.value,
+            id: userId
+        }
+        localStorage.setItem('user', JSON.stringify(user))
+    }
+
+    
+    /**
+     * Handles keydown events. If the pressed key it not 'Enter', return, otherwise call login().
+     * @param event the keydown event to handle
+     */
     const handleEnter = (event) => {
         if(event.key !== 'Enter') {
             return
         }
         login()
-        
     }
 
-    // Logic to execute when the Login page is mounted
+    /**
+     * Logic to execute when the login page is mounted.
+     */
     const initialize = () => {
         toggleNavbar()
     }
 
-    // Logic to execute before the logic page in unmounted
+    /** 
+     * Logic to execute before the login page in unmounted.
+     */ 
     const reloadNavbar = () => {
         toggleNavbar()
     }
 
-    // Called when the login page is mounted
+    /**
+     * Called automatically when the login page is mounted.
+     */ 
     onMounted(() => {
         initialize()
+        if(user.value) {
+            router.replace('/')
+        }
         window.addEventListener('keydown', handleEnter)
     })
 
-    // Called before the logic page in unmounted
+    /** 
+     * Called automatically before the login page in unmounted.
+     */
     onBeforeUnmount(() => {
         reloadNavbar()
         window.removeEventListener('keydown', handleEnter)

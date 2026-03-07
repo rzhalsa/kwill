@@ -7,6 +7,7 @@
         </v-toolbar-title>
         <v-spacer/>
         <div class="text-center mr-2">
+            <!-- Menu drop down -->
             <v-menu open-on-hover>
                 <template v-slot:activator="{ props }">
                     <v-btn v-bind="props" append-icon="mdi-chevron-down">Menu</v-btn>
@@ -25,8 +26,24 @@
         </v-menu>
         <v-divider vertical class="mt-3 mb-3"></v-divider>
         <v-btn icon="mdi-cog" class="mx-2"></v-btn>
-        <div class="oval">
-            <v-btn color="black" small to="/login">
+        <div>
+            <!-- Account drop down -->
+            <v-menu open-on-hover color="black" v-if="user">
+                <template v-slot:activator="{ props }">
+                    <v-btn v-bind="props" color="white" variant="outlined" rounded="pill" class="mr-2" icon="mdi-account" size="x-small"></v-btn>
+                </template>
+                <v-list>
+                    <v-list-subheader>{{ user.username }}</v-list-subheader>
+                    <v-list-item v-for="item in account_items" :key="item.title" class="menu-item" @click="item.exec()">
+                        <v-list-item-title>
+                            <v-icon>{{ item.icon }}</v-icon>
+                            {{ item.title }}
+                        </v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
+            <!-- Sign in button -->
+            <v-btn variant="elevated" rounded="pill" small to="/login" class="mr-2" v-else>
                 <v-icon left>mdi-account</v-icon>
                 Sign in
             </v-btn>
@@ -37,6 +54,7 @@
     import {ref} from 'vue';
     import router from '../router';
     const title = ref('Kwill');
+    // List of items to show on the Menu drop down
     const items =[
         {title: 'Characters', route:'/characters'},
         {title: 'Community',route:'/characters'},
@@ -44,11 +62,17 @@
         {title: 'Guides',route:'/characters'},
         {title: 'About',route:'/info'},
     ]
-</script>
-<style>
-    .oval {
-        background-color: white;
-        border-radius: 100px;
-        margin-right: 1vw;
+    // List of items to show on the account drop down
+    const account_items = [
+        {title: 'Log out', icon:'mdi-logout', exec: logout}
+    ]
+    const user = ref(JSON.parse(localStorage.getItem('user')))
+
+    function logout() {
+        localStorage.removeItem('user')
+        user.value = null
     }
+</script>
+
+<style>
 </style>
