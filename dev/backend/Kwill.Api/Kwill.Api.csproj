@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kwill.data\kwill.Data.csproj" />
+    <ProjectReference Include="..\Kwill.data\kwill.data.csproj" />
   </ItemGroup>
 
 </Project>

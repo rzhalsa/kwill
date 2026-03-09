@@ -19,9 +19,10 @@ jobs:
           with:
             node-version: '18'
             cache: 'npm'
+            cache-dependency-path: dev/frontend/kwill-frontend/package-lock.json
         - name: Install dependencies
-          run: |
-            cd dev/frontend/kwill-frontend
-            npm install
+          run: npm install
+          working-directory: dev/frontend/kwill-frontend
         - name: Run Frontend Tests
           run: npm run test
+          working-directory: dev/frontend/kwill-frontend
