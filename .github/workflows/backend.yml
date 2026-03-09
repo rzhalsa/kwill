@@ -18,10 +18,11 @@ jobs:
         with: 
           dotnet-version: '6.0.x'
       - name: Install dependencies
-        run: |
-          cd dev/backend
-          dotnet restore Backend.sln
+        run: dotnet restore Backend.sln
+        working-directory: dev/backend
       - name: Build Files
         run: dotnet build --configuration Release
+        working-directory: dev/backend
       - name: Run Tests
         run: dotnet test --no-build --configuration Release
+        working-directory: dev/backend
