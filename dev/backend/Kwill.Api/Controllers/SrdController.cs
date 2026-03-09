@@ -10,6 +10,8 @@ public class SrdController : ControllerBase
     private readonly KwillDB.KwillDB _db;
     public SrdController(KwillDB.KwillDB db) => _db = db;
 
+    // Get all SRD data
+    // GET /api/srd/all
     [HttpGet("all")]
     public async Task<IActionResult> GetAll()
     {
@@ -19,14 +21,156 @@ public class SrdController : ControllerBase
         return Content(json, "application/json");
     }
 
-    [HttpGet("{key}")]
-    public async Task<IActionResult> GetByKey(string key)
+    // Get all available SRD collections with counts
+    // GET /api/srd/collections
+    [HttpGet("collections")]
+    public async Task<IActionResult> GetCollections()
     {
-        var filter = Builders<BsonDocument>.Filter.Eq("key", key);
-        var doc = await _db.SrdData.Find(filter).FirstOrDefaultAsync();
-        if (doc is null) return NotFound();
+        try
+        {
+            var keys = await _db.SrdData.Distinct<string>("Key", Builders<BsonDocument>.Filter.Empty).ToListAsync();
+            
+            var collections = new List<object>();
+            foreach (var key in keys)
+            {
+                var count = await _db.SrdData.CountDocumentsAsync(
+                    Builders<BsonDocument>.Filter.Eq("Key", key)
+                );
+                collections.Add(new { name = key, count = count });
+            }
 
-        var json = doc.ToJson(new JsonWriterSettings { OutputMode = JsonOutputMode.RelaxedExtendedJson });
-        return Content(json, "application/json");
+            return Ok(new { collections = collections });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = ex.Message });
+        }
+    }
+
+    // Get spells with optional filters
+    // GET /api/srd/spells?class=wizard&level=3
+    [HttpGet("spells")]
+    public async Task<IActionResult> GetSpells(
+        [FromQuery] string? @class = null,
+        [FromQuery] int? level = null)
+    {
+        try
+        {
+            var filterBuilder = Builders<BsonDocument>.Filter;
+            var filter = filterBuilder.Eq("Key", "spells");
+
+            if (!string.IsNullOrEmpty(@class))
+            {
+                filter = filterBuilder.And(
+                    filter,
+                    filterBuilder.Eq("Data.classes", @class)
+                );
+            }
+
+            if (level.HasValue)
+            {
+                filter = filterBuilder.And(
+                    filter,
+                    filterBuilder.Eq("Data.level", level.Value)
+                );
+            }
+
+            var documents = await _db.SrdData.Find(filter).ToListAsync();
+            var results = documents.Select(doc => doc["Data"].AsBsonDocument).ToList();
+
+            var settings = new JsonWriterSettings { OutputMode = JsonOutputMode.RelaxedExtendedJson };
+            var json = "[" + string.Join(",", results.Select(d => d.ToJson(settings))) + "]";
+            return Content(json, "application/json");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = ex.Message });
+        }
+    }
+
+    // Get equipment with optional category filter
+    // GET /api/srd/equipment?category=Weapon
+    [HttpGet("equipment")]
+    public async Task<IActionResult> GetEquipment([FromQuery] string? category = null)
+    {
+        try
+        {
+            var filterBuilder = Builders<BsonDocument>.Filter;
+            var filter = filterBuilder.Eq("Key", "equipment");
+
+            if (!string.IsNullOrEmpty(category))
+            {
+                filter = filterBuilder.And(
+                    filter,
+                    filterBuilder.Eq("Data.equipment_category.name", category)
+                );
+            }
+
+            var documents = await _db.SrdData.Find(filter).ToListAsync();
+            var results = documents.Select(doc => doc["Data"].AsBsonDocument).ToList();
+
+            var settings = new JsonWriterSettings { OutputMode = JsonOutputMode.RelaxedExtendedJson };
+            var json = "[" + string.Join(",", results.Select(d => d.ToJson(settings))) + "]";
+            return Content(json, "application/json");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = ex.Message });
+        }
+    }
+
+    // Get all items from a specific SRD collection
+    // GET /api/srd/classes, /api/srd/races, etc.
+    [HttpGet("{collection}")]
+    public async Task<IActionResult> GetCollection(string collection)
+    {
+        try
+        {
+            var filter = Builders<BsonDocument>.Filter.Eq("Key", collection);
+            var documents = await _db.SrdData.Find(filter).ToListAsync();
+
+            if (documents.Count == 0)
+            {
+                return NotFound(new { message = $"Collection '{collection}' not found or empty" });
+            }
+
+            var results = documents.Select(doc => doc["Data"].AsBsonDocument).ToList();
+            var settings = new JsonWriterSettings { OutputMode = JsonOutputMode.RelaxedExtendedJson };
+            var json = "[" + string.Join(",", results.Select(d => d.ToJson(settings))) + "]";
+            return Content(json, "application/json");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = ex.Message });
+        }
+    }
+
+    // Get a specific item from an SRD collection by its index
+    // GET /api/srd/spells/fireball, /api/srd/classes/wizard
+    [HttpGet("{collection}/{id}")]
+    public async Task<IActionResult> GetItem(string collection, string id)
+    {
+        try
+        {
+            var filter = Builders<BsonDocument>.Filter.And(
+                Builders<BsonDocument>.Filter.Eq("Key", collection),
+                Builders<BsonDocument>.Filter.Eq("Data.index", id)
+            );
+
+            var document = await _db.SrdData.Find(filter).FirstOrDefaultAsync();
+
+            if (document == null)
+            {
+                return NotFound(new { message = $"Item '{id}' not found in collection '{collection}'" });
+            }
+
+            var result = document["Data"].AsBsonDocument;
+            var json = result.ToJson(new JsonWriterSettings { OutputMode = JsonOutputMode.RelaxedExtendedJson });
+            return Content(json, "application/json");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = ex.Message });
+        }
     }
 }
