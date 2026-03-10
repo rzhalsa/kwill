@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Kwill.Api.Services;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Bson.IO;
 using MongoDB.Driver;
@@ -7,13 +8,13 @@ using MongoDB.Driver;
 [Route("api/srd")]
 public class SrdController : ControllerBase
 {
-    private readonly KwillDB.KwillDB _db;
-    public SrdController(KwillDB.KwillDB db) => _db = db;
+    private readonly SrdService _srdService;
+    public SrdController( SrdService srdService) => _srdService = srdService;
 
     [HttpGet("all")]
     public async Task<IActionResult> GetAll()
     {
-        var docs = await _db.SrdData.Find(FilterDefinition<BsonDocument>.Empty).ToListAsync();
+        var docs = await _srdService.GetAllAsync();
         var settings = new JsonWriterSettings { OutputMode = JsonOutputMode.RelaxedExtendedJson };
         var json = "[" + string.Join(",", docs.Select(d => d.ToJson(settings))) + "]";
         return Content(json, "application/json");
@@ -22,8 +23,7 @@ public class SrdController : ControllerBase
     [HttpGet("{key}")]
     public async Task<IActionResult> GetByKey(string key)
     {
-        var filter = Builders<BsonDocument>.Filter.Eq("key", key);
-        var doc = await _db.SrdData.Find(filter).FirstOrDefaultAsync();
+        var doc = await _srdService.GetByKeyAsync(key);
         if (doc is null) return NotFound();
 
         var json = doc.ToJson(new JsonWriterSettings { OutputMode = JsonOutputMode.RelaxedExtendedJson });

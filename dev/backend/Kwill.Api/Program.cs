@@ -1,4 +1,5 @@
 using Kwill.Api;
+using Kwill.Api.Services;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -21,6 +22,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<KwillDB.KwillDB>(); // ASP.NET creates the instance of the singleton class.
+builder.Services.AddScoped<SrdService>();
+builder.Services.AddScoped<CharacterService>();
 
 var app = builder.Build();
 
