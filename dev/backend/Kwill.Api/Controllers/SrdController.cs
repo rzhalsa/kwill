@@ -10,7 +10,7 @@ public class SrdController : ControllerBase
     private readonly KwillDB.KwillDB _db;
     public SrdController(KwillDB.KwillDB db) => _db = db;
 
-    // Get all SRD data
+    // Get all SRD data (Kris's original endpoint)
     // GET /api/srd/all
     [HttpGet("all")]
     public async Task<IActionResult> GetAll()
@@ -48,7 +48,10 @@ public class SrdController : ControllerBase
     }
 
     // Get spells with optional filters
-    // GET /api/srd/spells?class=wizard&level=3
+    // GET /api/srd/spells?class=wizard (all wizard spells, any level)
+    // GET /api/srd/spells?level=3 (all 3rd level spells, any class)
+    // GET /api/srd/spells?class=wizard&level=3 (3rd level wizard spells)
+    // Frontend decides what to show based on character level
     [HttpGet("spells")]
     public async Task<IActionResult> GetSpells(
         [FromQuery] string? @class = null,
@@ -59,6 +62,7 @@ public class SrdController : ControllerBase
             var filterBuilder = Builders<BsonDocument>.Filter;
             var filter = filterBuilder.Eq("Key", "spells");
 
+            // Filter by class if provided (returns ALL levels for that class)
             if (!string.IsNullOrEmpty(@class))
             {
                 filter = filterBuilder.And(
@@ -67,6 +71,7 @@ public class SrdController : ControllerBase
                 );
             }
 
+            // Filter by level if provided (optional - for specific queries)
             if (level.HasValue)
             {
                 filter = filterBuilder.And(
@@ -89,7 +94,8 @@ public class SrdController : ControllerBase
     }
 
     // Get equipment with optional category filter
-    // GET /api/srd/equipment?category=Weapon
+    // GET /api/srd/equipment (all equipment)
+    // GET /api/srd/equipment?category=Weapon (just weapons)
     [HttpGet("equipment")]
     public async Task<IActionResult> GetEquipment([FromQuery] string? category = null)
     {
