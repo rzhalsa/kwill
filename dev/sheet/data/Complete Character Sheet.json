@@ -46,7 +46,7 @@
           5
         ]
       },
-      "score": "12"
+      "score": "17"
     },
     "dexterity": {
       "modifier": {
@@ -349,7 +349,7 @@
     "copper": "-5",
     "silver": "1",
     "electrum": "2",
-    "gold": "1"
+    "gold": ""
   },
   "equipment": "Pen\nBackpack\netc",
   "text": {
@@ -357,7 +357,7 @@
     "ideals": "Good stuff\nGood Stuff",
     "bonds": "Yes\nYes",
     "flaws": "yes\nyes",
-    "features": "Can code\nCan code some more"
+    "features": "this"
   },
   "name2": {
     "object_id": "operation",
