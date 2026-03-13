@@ -16,6 +16,10 @@
         </v-card-item>
       </v-card>
     </v-col>
+    <v-col>
+      <p v-if="fetchedData">Spell name: {{ fetchedData.name }}</p>
+      <p v-if="fetchedData">Spell level: {{ fetchedData.level }}</p>
+    </v-col>
   </v-row>
   <v-row>
     <v-col>
@@ -100,7 +104,21 @@
 </template>
 
 <script setup>
+  import { ref } from 'vue'
+  import { onMounted } from 'vue'
+  import axios from 'axios'
 
+  const fetchedData = ref(null)
+
+  onMounted(async () => {
+    try {
+      const response = await axios.get('http://localhost:5262/api/srd/antilife-shell')
+      console.log(response)
+      fetchedData.value = response.data.Data
+    } catch(error) {
+      console.error('Error fetching data: ', error) 
+    }
+  })
 </script>
 <style>
 </style>

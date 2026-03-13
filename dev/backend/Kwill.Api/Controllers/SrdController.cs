@@ -22,11 +22,17 @@ public class SrdController : ControllerBase
     [HttpGet("{key}")]
     public async Task<IActionResult> GetByKey(string key)
     {
-        var filter = Builders<BsonDocument>.Filter.Eq("key", key);
+        var filter = Builders<BsonDocument>.Filter.Eq("Data.index", key);
         var doc = await _db.SrdData.Find(filter).FirstOrDefaultAsync();
         if (doc is null) return NotFound();
 
         var json = doc.ToJson(new JsonWriterSettings { OutputMode = JsonOutputMode.RelaxedExtendedJson });
         return Content(json, "application/json");
+    }
+
+    [HttpGet("test")]
+    public IActionResult Test()
+    {
+        return Ok(new { message = "API is working", timestamp = DateTime.UtcNow });
     }
 }
