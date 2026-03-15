@@ -25,7 +25,9 @@
             <v-btn to="/characters" class="mr-2" append-icon="mdi-chevron-down">Menus</v-btn>
         </v-menu>
         <v-divider vertical class="mt-3 mb-3"></v-divider>
-        <v-btn icon="mdi-cog" class="mx-2"></v-btn>
+        <v-btn icon="mdi-cog" class="ml-2"></v-btn>
+        <v-btn icon="mdi-theme-light-dark" @click="toggleTheme"></v-btn>
+        <v-divider vertical class="ma-3"></v-divider>
         <div>
             <!-- Account drop down -->
             <v-menu open-on-hover color="black" v-if="user">
@@ -52,7 +54,9 @@
 </template>
 <script setup>
     import {ref} from 'vue';
+    import { useTheme } from 'vuetify'
     import router from '../router';
+    const theme = useTheme()
     const title = ref('Kwill');
     // List of items to show on the Menu drop down
     const items =[
@@ -68,9 +72,19 @@
     ]
     const user = ref(JSON.parse(localStorage.getItem('user')))
 
+    // Logs the user out
     function logout() {
         localStorage.removeItem('user')
         user.value = null
+    }
+
+    // Toggles between light and dark vuetify themes
+    function toggleTheme() {
+        if(theme.global.name.value === 'kwillTheme') {
+            theme.global.name.value = 'kwillThemeDark'
+        } else {
+            theme.global.name.value = 'kwillTheme'
+        }
     }
 </script>
 

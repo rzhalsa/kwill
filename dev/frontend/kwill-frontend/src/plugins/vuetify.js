@@ -20,7 +20,25 @@ export default createVuetify({
           success: '#4CAF50',
           warning: '#FB8C00',
         },
+        variables: {
+          // any theme variables for CSS styling go here
+        }
       },
+      kwillThemeDark: {
+        dark: true,
+        colors: {
+          primary: '#2c9e0f',   
+          secondary: '#158f44', 
+          accent: '#c0bdb4',    
+          error: '#f44336',     
+          info: '#2196F3',
+          success: '#4CAF50',
+          warning: '#FB8C00',
+        },
+        variables: {
+          // any theme variables for CSS styling go here
+        }
+      }
     },
   },
     defaults: {

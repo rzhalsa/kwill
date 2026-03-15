@@ -3,9 +3,7 @@
     <div class="isolated_wrapper">
     <div class="toolbar">
         <div class="toolbar-section">
-
             <!-- ThIS IS FOR LOADING AND SAVING LOCALLY -->
-
             <input type="file" id="folderInput" style="display: none;" webkitdirectory multiple>
             <label for="folderInput" class="folder-button"
                 style="display: inline-block; padding: 5px 8px; background-color: #ffffff; color: black; border: 2px solid #000; margin-left: 20px;"
@@ -13,29 +11,21 @@
                 onmouseout="this.style.backgroundColor='#fff'; this.style.color='black';">
                 Load Character Folder
             </label>
-
             <p id="selectedFolder">No folder selected</p>
-
             <label for="characterSelect">Character:</label>
             <select id="characterSelect">
                 <option>Select Character</option>
             </select>
-
             <button id="saveButton" type="button"
                 style="display: inline-block; padding: 5px 8px; background-color: #ffffff; color: black; border: 2px solid #000; margin-left: 20px;"
                 onmouseover="this.style.backgroundColor='#000'; this.style.color='#fff';"
                 onmouseout="this.style.backgroundColor='#fff'; this.style.color='black';">
                 Save Character
             </button>
-
             <!-- THIS WILL BE DIFFERENT ON THE WEBSITE -->
-
         </div>
-
     </div>
-
     <div class="page-wrapper" id="character-sheet">
-
         <!-- Page 1 -->
         <div class="page">
             <img class="kwill-logo" src="../assets/icon.png" alt="Kwill Logo" width="300" height="300">
@@ -44,7 +34,6 @@
                 <input id="name_value" placeholder="Character name here" autocomplete="off"
                     style="position: absolute; font-size: 18px; top: 75px; left: 130px; width: 200px; height: 30px; border: 2px solid #000;">
                 <div class="page-top-col">
-
                     <div>
                         <input class="page1-top-input-value" id="class_level_value" placeholder="class & level"
                             autocomplete="off">
@@ -52,41 +41,31 @@
                     <div>
                         <input class="page1-top-input-value" id="race_name" placeholder="race" autocomplete="off">
                     </div>
-
                 </div>
-
                 <div class="page-top-col">
-
                     <div>
-                        <input class="page1-top-input-value" id="allignment_value" placeholder="allignment"
+                        <input class="page1-top-input-value" id="alignment_value" placeholder="alignment"
                             autocomplete="off">
                     </div>
                     <div>
                         <input class="page1-top-input-value" id="background_name" placeholder="background"
                             autocomplete="off">
                     </div>
-
                 </div>
-
                 <div class="page-top-col">
-
                     <div>
                         <input class="page1-top-input-value" id="player_value" placeholder="player" autocomplete="off">
                     </div>
                     <div>
                         <input class="page1-top-input-value" id="exp_value" placeholder="exp" autocomplete="off">
                     </div>
-
                 </div>
             </div>
-
-
             <!-- Page 1 body -->
             <div class="row">
                 <!-- Left Column -->
                 <!-- Ability Scores and Modifiers -->
                 <div class="col">
-
                     <div class="row">
                         <div class="stat-box">
                             <div class="col">
@@ -101,7 +80,6 @@
                             <div data-label>Strength</div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="stat-box">
                             <div class="col">
@@ -116,7 +94,6 @@
                             <div data-label>Dexterity</div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="stat-box">
                             <div class="col">
@@ -131,7 +108,6 @@
                             <div data-label>Constitution</div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="stat-box">
                             <div class="col">
@@ -146,7 +122,6 @@
                             <div data-label>Intelligence</div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="stat-box">
                             <div class="col">
@@ -161,7 +136,6 @@
                             <div data-label>Wisdom</div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="stat-box">
                             <div class="col">
@@ -177,8 +151,6 @@
                         </div>
                     </div>
                 </div>
-
-
                 <!-- Middle Column -->
                 <div class="col">
                     <div class="col">
@@ -202,8 +174,6 @@
 
                             </div>
                         </div>
-
-
                         <!-- HP, Hit Dice, Death Saves -->
                         <div
                             style="width: 200px; height: 100px; border: 2px solid #000; display: flex; margin: -3px; margin-top: -10px;">
@@ -228,7 +198,6 @@
                             <input id="hitpoints_temporary_value" autocomplete="off" type="number"
                                 style="width: 100%; height: 40px; border: 2px solid #000; text-align: center; text-anchor: middle;">
                         </div>
-
                         <div class="row">
                             <div class="col"
                                 style="width: 120px; height: 65px; border: 2px solid #000; display: flex; flex-direction: column; margin-right: 5px; text-align: center;">
@@ -244,32 +213,27 @@
                                     <input type="text" id="hitDice_current_value" style="width: 40px;">
                                 </div>
                             </div>
-
                             <div class="col"
                                 style="width: 120px; height: 65px; border: 2px solid #000; display: flex; flex-direction: column; align-items: center; margin-left: 5px; text-align: center;">
                                 <span data-label>Death Saves</span>
                                 <div
                                     style="display: flex; flex-direction: row; align-items: center; gap: 3px; margin-top: -10px;">
                                     <span data-label>✓</span>
-                                    <input type="checkbox" id="death_saves_success1_value">
-                                    <input type="checkbox" id="death_saves_success2_value">
-                                    <input type="checkbox" id="death_saves_success3_value">
+                                    <input type="checkbox" id="death_saves_success1_value" class="no-theme-checkbox">
+                                    <input type="checkbox" id="death_saves_success2_value" class="no-theme-checkbox">
+                                    <input type="checkbox" id="death_saves_success3_value" class="no-theme-checkbox">
                                 </div>
                                 <div
                                     style="display: flex; flex-direction: row; align-items: center; gap: 3px; margin-top: -10px;">
                                     <span data-label>✗</span>
-                                    <input type="checkbox" id="death_saves_failure1_value">
-                                    <input type="checkbox" id="death_saves_failure2_value">
-                                    <input type="checkbox" id="death_saves_failure3_value">
+                                    <input type="checkbox" id="death_saves_failure1_value" class="no-theme-checkbox">
+                                    <input type="checkbox" id="death_saves_failure2_value" class="no-theme-checkbox">
+                                    <input type="checkbox" id="death_saves_failure3_value" class="no-theme-checkbox">
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
-
                     <div class="col">
-
                         <textarea id="attacks_value" placeholder="Attacks and Spellcasting"
                             style="width: 200px; height: 100px; border: 2px solid #000; display: flex; margin-top: -30px; text-align: left;"></textarea>
                         <div class="row">
@@ -288,16 +252,12 @@
 
                                 <span style="margin-top: -10px; margin-bottom: -2px;" data-label="">Pp</span>
                                 <input class="money-pieces" id="coins_gold_value" type="number" autocomplete="off">
-
                             </div>
                             <textarea id="equipment_value" placeholder="Equipment"
                                 style="width: 160px; height: 270px; border: 2px solid #000; display: flex; text-align: left;"></textarea>
                         </div>
-
                     </div>
                 </div>
-
-
                 <!-- Right Column -->
                 <div class="col">
                     <div class="col" style="margin-top: 0px;">
@@ -309,21 +269,14 @@
                             style="height: 60px; width: 200px; border: 2px solid #000;"></textarea>
                         <textarea id="text_flaws_value" placeholder="Flaws"
                             style="height: 60px; width: 200px; border: 2px solid #000;"></textarea>
-
                     </div>
                     <div class="col">
                         <textarea id="text_features_value" placeholder="Features"
                             style="height: 400px; width: 200px; margin-top: -50px; border: 2px solid #000;"></textarea>
                     </div>
                 </div>
-
             </div>
-
         </div>
-
-
-
-
         <!-- Page 2 -->
         <div class="page">
             <img class="kwill-logo" src="../assets/icon.png" alt="Kwill Logo" width="300" height="300">
@@ -333,81 +286,54 @@
                     style="position: absolute; font-size: 18px; top: 75px; left: 130px; width: 200px; height: 30px; border: 2px solid #000;">
 
                 <div class="page-top-col">
-
                     <div>
                         <input class="page1-top-input-value" id="age_value" placeholder="age" autocomplete="off">
                     </div>
                     <div>
                         <input class="page1-top-input-value" id="eyes_value" placeholder="eyes" autocomplete="off">
                     </div>
-
                 </div>
-
                 <div class="page-top-col">
-
                     <div>
                         <input class="page1-top-input-value" id="height_value" placeholder="height" autocomplete="off">
                     </div>
                     <div>
                         <input class="page1-top-input-value" id="skin_value" placeholder="skin" autocomplete="off">
                     </div>
-
                 </div>
-
                 <div class="page-top-col">
-
                     <div>
                         <input class="page1-top-input-value" id="weight_value" placeholder="weight" autocomplete="off">
                     </div>
                     <div>
                         <input class="page1-top-input-value" id="hair_value" placeholder="hair" autocomplete="off">
                     </div>
-
                 </div>
             </div>
-
-
-
-
-
             <!-- Page 2 body -->
-
             <div class="row" style="margin-left: -30px;">
-
                 <div class="col">
                     <textarea id="appearance_value" placeholder="Appearance"
                         style="height: 260px; width: 200px; border: 2px solid #000;"></textarea>
-
                     <textarea id="backstory_value" placeholder="Backstory"
                         style="height: 538px; width: 200px; border: 2px solid #000;"></textarea>
                 </div>
-
                 <div class="col" style="margin-left: -25px;">
                     <textarea id="alliesAndOrganizations_value" placeholder="Allies and Organizations"
                         style="height: 260px; width: 500px; border: 2px solid #000;"></textarea>
-
                     <textarea id="features_aditional_value" placeholder="Aditional Features and Traits" 
                     style="height: 260px; width: 500px; border: 2px solid #000;"></textarea>
-
                     <textarea id="treasure_value" placeholder="Treasure"
                     style="height: 260px; width: 500px; border: 2px solid #000;"></textarea>
                 </div>
             </div>
-
         </div>
-
-
-
-
         <!-- Page 3 -->
         <div class="page">
             <img class="kwill-logo" src="../assets/icon.png" alt="Kwill Logo" width="300" height="300">
-
-
             <div class="page-top-row">
                 <input id="spellcasting_class_value" placeholder="Spellcasting class here"
                     style="position: absolute; font-size: 18px; top: 75px; left: 130px; width: 200px; height: 30px; border: 2px solid #000;">
-
                 <div class="page-top-col">
                     <div>
                         <input class="page1-top-input-value" id="spell_castingAbility_value"
@@ -427,47 +353,30 @@
                     </div>
                 </div>
             </div>
-
             <!-- Page 3 body -->
             <div class="row">
-
                 <div class="col">
                     <div id="" style="height: 195px; width: 200px; border: 2px solid #000;"></div>
-
                     <div id="" style="height: 300px; width: 200px; border: 2px solid #000;"></div>
-
                     <div id="" style="height: 300px; width: 200px; border: 2px solid #000;"></div>
-
                 </div>
-
-
                 <div class="col">
                     <div id="" style="height: 300px; width: 200px; border: 2px solid #000;"></div>
-
                     <div id="" style="height: 300px; width: 200px; border: 2px solid #000;"></div>
-
                     <div id="" style="height: 195px; width: 200px; border: 2px solid #000;"></div>
                 </div>
-
-
                 <div class="col">
                     <div id="" style="height: 195px; width: 200px; border: 2px solid #000;"></div>
-
                     <div id="" style="height: 195px; width: 200px; border: 2px solid #000;"></div>
-
                     <div id="" style="height: 195px; width: 200px; border: 2px solid #000;"></div>
-
                     <div id="" style="height: 195px; width: 200px; border: 2px solid #000;"></div>
                 </div>
-
-
             </div>
-
-
         </div>
     </div>
     </div>
 </template>
+
 <script setup>
 import {ref} from 'vue';
     const charData = ref(null);
@@ -785,7 +694,6 @@ import {ref} from 'vue';
     }
 </script>
 
-
 <style scoped>
         body {
             background: #e0e0e0;
@@ -855,7 +763,6 @@ import {ref} from 'vue';
             gap: 40px;
         }
 
-
         .page {
             position: relative;
             background: #ffffff;
@@ -869,6 +776,14 @@ import {ref} from 'vue';
 
             /* zoom: 0.65; */
             transform-origin: top center;
+        }
+
+        .page input {
+            color: black !important;
+        }
+
+        .page textarea {
+            color: black !important;
         }
 
         .page-top-row {
@@ -925,7 +840,6 @@ import {ref} from 'vue';
             width: 30px;
             margin-top: -7px;
             text-align: center;
-
         }
 
         .ability-modifier {
@@ -934,9 +848,7 @@ import {ref} from 'vue';
             width: 50px;
             margin-top: -7px;
             text-align: center;
-
         }
-
 
         .proficiency-box {
             border: 2px solid #000;
@@ -975,8 +887,22 @@ import {ref} from 'vue';
             display: flex;
         }
 
+        .no-theme-checkbox {
+            background-color: white !important;
+            border-color: #ccc !important;
+            color: black !important;
+        }
 
+        .no-theme-checkbox:not(:checked) {
+            background-color: white !important;
+            border-color: #ccc !important;
+        }
 
+        .no-theme-checkbox:checked {
+            background-color: #2c9e0f !important;
+            border-color: #2c9e0f !important;
+            accent-color: #158f44 !important;
+        }
 
         @media print {
 
@@ -1004,4 +930,4 @@ import {ref} from 'vue';
                 display: none;
             }
         }
-    </style>
+</style>
