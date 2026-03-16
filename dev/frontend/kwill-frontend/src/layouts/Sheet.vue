@@ -376,7 +376,6 @@
     </div>
     </div>
 </template>
-
 <script setup>
 import {ref} from 'vue';
     const charData = ref(null);
@@ -417,7 +416,6 @@ import {ref} from 'vue';
             json[objectId][stat][field] = value;
         }
     }
-
 
     // Populate the character sheet
     function populateSheet(characterData) {
@@ -516,8 +514,6 @@ import {ref} from 'vue';
             el.value = evaluateOperation(operationObj, characterData);
         });
     }
-
-
 
     // Populate the JSON with the names and values in the html sheet.
     function populateJsonFromHtml(existingJson = {}) {
@@ -693,7 +689,6 @@ import {ref} from 'vue';
         }
     }
 </script>
-
 <style scoped>
         body {
             background: #e0e0e0;
@@ -899,9 +894,9 @@ import {ref} from 'vue';
         }
 
         .no-theme-checkbox:checked {
-            background-color: #2c9e0f !important;
-            border-color: #2c9e0f !important;
-            accent-color: #158f44 !important;
+            background-color: #9e0f0f !important;
+            border-color: #9e0f0f !important;
+            accent-color: #8f1515 !important;
         }
 
         @media print {

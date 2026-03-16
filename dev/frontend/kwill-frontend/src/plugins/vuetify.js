@@ -12,8 +12,8 @@ export default createVuetify({
       kwillTheme: {
         dark: false, //to turn dark mode on and off
         colors: {
-          primary: '#2c9e0f',   
-          secondary: '#158f44', 
+          primary: '#e66c63',   
+          secondary: '#bb3a3a', 
           accent: '#c0bdb4',    
           error: '#f44336',     
           info: '#2196F3',
@@ -27,8 +27,8 @@ export default createVuetify({
       kwillThemeDark: {
         dark: true,
         colors: {
-          primary: '#2c9e0f',   
-          secondary: '#158f44', 
+          primary: '#8f3933',   
+          secondary: '#8f1515', 
           accent: '#c0bdb4',    
           error: '#f44336',     
           info: '#2196F3',

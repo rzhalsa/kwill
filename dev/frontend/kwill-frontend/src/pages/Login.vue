@@ -1,6 +1,6 @@
 <template>
     <div class="center-login">
-        <v-card rounded="lg" class="gradient-card">
+        <v-card rounded="lg" class="gradient-login">
             <!-- Login Menu -->
             <v-row>
                 <!-- Logo and Title + Subtitle -->
