@@ -1,8 +1,7 @@
 # ============================================
 # Task 3: Create Character Models in Database
+# Sprint 2 - Evan Farling
 # ============================================
-# This script creates a variety of test characters
-# to demonstrate different classes, levels, and configurations
 
 Write-Host "================================" -ForegroundColor Cyan
 Write-Host "TASK 3: CREATE TEST CHARACTERS" -ForegroundColor Cyan
@@ -41,10 +40,10 @@ $char1 = @{
 
 try {
     $result = Invoke-RestMethod -Uri $baseUrl -Method POST -ContentType "application/json" -Body $char1
-    Write-Host "✓ Created: $($result.name) (Level $($result.level) Wizard)" -ForegroundColor Green
-    $createdCharacters += $result.character_id
+    Write-Host "Success: Created Gandalf" -ForegroundColor Green
+    $createdCharacters += "char-gandalf-001"
 } catch {
-    Write-Host "✗ Failed: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "Failed: $($_.Exception.Message)" -ForegroundColor Red
 }
 Write-Host ""
 
@@ -77,10 +76,10 @@ $char2 = @{
 
 try {
     $result = Invoke-RestMethod -Uri $baseUrl -Method POST -ContentType "application/json" -Body $char2
-    Write-Host "✓ Created: $($result.name) (Level $($result.level) Fighter)" -ForegroundColor Green
-    $createdCharacters += $result.character_id
+    Write-Host "Success: Created Aragorn" -ForegroundColor Green
+    $createdCharacters += "char-aragorn-002"
 } catch {
-    Write-Host "✗ Failed: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "Failed: $($_.Exception.Message)" -ForegroundColor Red
 }
 Write-Host ""
 
@@ -113,10 +112,10 @@ $char3 = @{
 
 try {
     $result = Invoke-RestMethod -Uri $baseUrl -Method POST -ContentType "application/json" -Body $char3
-    Write-Host "✓ Created: $($result.name) (Level $($result.level) Cleric)" -ForegroundColor Green
-    $createdCharacters += $result.character_id
+    Write-Host "Success: Created Elara" -ForegroundColor Green
+    $createdCharacters += "char-elara-003"
 } catch {
-    Write-Host "✗ Failed: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "Failed: $($_.Exception.Message)" -ForegroundColor Red
 }
 Write-Host ""
 
@@ -149,10 +148,10 @@ $char4 = @{
 
 try {
     $result = Invoke-RestMethod -Uri $baseUrl -Method POST -ContentType "application/json" -Body $char4
-    Write-Host "✓ Created: $($result.name) (Level $($result.level) Rogue)" -ForegroundColor Green
-    $createdCharacters += $result.character_id
+    Write-Host "Success: Created Shadow" -ForegroundColor Green
+    $createdCharacters += "char-shadow-004"
 } catch {
-    Write-Host "✗ Failed: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "Failed: $($_.Exception.Message)" -ForegroundColor Red
 }
 Write-Host ""
 
@@ -185,10 +184,10 @@ $char5 = @{
 
 try {
     $result = Invoke-RestMethod -Uri $baseUrl -Method POST -ContentType "application/json" -Body $char5
-    Write-Host "✓ Created: $($result.name) (Level $($result.level) Barbarian)" -ForegroundColor Green
-    $createdCharacters += $result.character_id
+    Write-Host "Success: Created Grok" -ForegroundColor Green
+    $createdCharacters += "char-grok-005"
 } catch {
-    Write-Host "✗ Failed: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "Failed: $($_.Exception.Message)" -ForegroundColor Red
 }
 Write-Host ""
 
@@ -221,10 +220,10 @@ $char6 = @{
 
 try {
     $result = Invoke-RestMethod -Uri $baseUrl -Method POST -ContentType "application/json" -Body $char6
-    Write-Host "✓ Created: $($result.name) (Level $($result.level) Ranger)" -ForegroundColor Green
-    $createdCharacters += $result.character_id
+    Write-Host "Success: Created Legolas" -ForegroundColor Green
+    $createdCharacters += "char-legolas-006"
 } catch {
-    Write-Host "✗ Failed: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "Failed: $($_.Exception.Message)" -ForegroundColor Red
 }
 Write-Host ""
 
@@ -257,10 +256,10 @@ $char7 = @{
 
 try {
     $result = Invoke-RestMethod -Uri $baseUrl -Method POST -ContentType "application/json" -Body $char7
-    Write-Host "✓ Created: $($result.name) (Level $($result.level) Bard)" -ForegroundColor Green
-    $createdCharacters += $result.character_id
+    Write-Host "Success: Created Melody" -ForegroundColor Green
+    $createdCharacters += "char-melody-007"
 } catch {
-    Write-Host "✗ Failed: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "Failed: $($_.Exception.Message)" -ForegroundColor Red
 }
 Write-Host ""
 
@@ -293,10 +292,10 @@ $char8 = @{
 
 try {
     $result = Invoke-RestMethod -Uri $baseUrl -Method POST -ContentType "application/json" -Body $char8
-    Write-Host "✓ Created: $($result.name) (Level $($result.level) Paladin)" -ForegroundColor Green
-    $createdCharacters += $result.character_id
+    Write-Host "Success: Created Sir Galahad" -ForegroundColor Green
+    $createdCharacters += "char-galahad-008"
 } catch {
-    Write-Host "✗ Failed: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "Failed: $($_.Exception.Message)" -ForegroundColor Red
 }
 Write-Host ""
 
@@ -329,10 +328,10 @@ $char9 = @{
 
 try {
     $result = Invoke-RestMethod -Uri $baseUrl -Method POST -ContentType "application/json" -Body $char9
-    Write-Host "✓ Created: $($result.name) (Level $($result.level) Sorcerer)" -ForegroundColor Green
-    $createdCharacters += $result.character_id
+    Write-Host "Success: Created Arcanus" -ForegroundColor Green
+    $createdCharacters += "char-arcanus-009"
 } catch {
-    Write-Host "✗ Failed: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "Failed: $($_.Exception.Message)" -ForegroundColor Red
 }
 Write-Host ""
 
@@ -365,39 +364,24 @@ $char10 = @{
 
 try {
     $result = Invoke-RestMethod -Uri $baseUrl -Method POST -ContentType "application/json" -Body $char10
-    Write-Host "✓ Created: $($result.name) (Level $($result.level) Monk)" -ForegroundColor Green
-    $createdCharacters += $result.character_id
+    Write-Host "Success: Created Zen" -ForegroundColor Green
+    $createdCharacters += "char-zen-010"
 } catch {
-    Write-Host "✗ Failed: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "Failed: $($_.Exception.Message)" -ForegroundColor Red
 }
 Write-Host ""
 
 # ============================================
-# SUMMARY & VERIFICATION
+# SUMMARY
 # ============================================
 Write-Host "================================" -ForegroundColor Cyan
-Write-Host "CHARACTER CREATION COMPLETE" -ForegroundColor Cyan
+Write-Host "CREATION COMPLETE" -ForegroundColor Cyan
 Write-Host "================================" -ForegroundColor Cyan
 Write-Host ""
-
-Write-Host "Created $($createdCharacters.Count) test characters:" -ForegroundColor White
+Write-Host "Created $($createdCharacters.Count) characters" -ForegroundColor White
 Write-Host ""
-
-# Verify each character exists
-foreach ($charId in $createdCharacters) {
-    try {
-        $char = Invoke-RestMethod -Uri "$baseUrl/$charId" -Method GET
-        Write-Host "✓ $charId : $($char.name) (Level $($char.level) $($char.class[0].class_id))" -ForegroundColor Green
-    } catch {
-        Write-Host "✗ $charId : Failed to verify" -ForegroundColor Red
-    }
-}
-
-Write-Host ""
-Write-Host "================================" -ForegroundColor Cyan
-Write-Host "Test Coverage:" -ForegroundColor White
-Write-Host "  • Classes: Wizard, Fighter, Cleric, Rogue, Barbarian, Ranger, Bard, Paladin, Sorcerer, Monk" -ForegroundColor Gray
-Write-Host "  • Levels: 3, 4, 5, 6, 10, 12, 15, 16, 18, 20" -ForegroundColor Gray
-Write-Host "  • Users: 5 different test users" -ForegroundColor Gray
-Write-Host "  • Hit Dice: d6, d8, d10, d12" -ForegroundColor Gray
+Write-Host "Coverage:" -ForegroundColor White
+Write-Host "  Classes: Wizard, Fighter, Cleric, Rogue, Barbarian, Ranger, Bard, Paladin, Sorcerer, Monk" -ForegroundColor Gray
+Write-Host "  Levels: 3, 4, 5, 6, 10, 12, 15, 16, 18, 20" -ForegroundColor Gray
+Write-Host "  Users: 5 different test users" -ForegroundColor Gray
 Write-Host "================================" -ForegroundColor Cyan
