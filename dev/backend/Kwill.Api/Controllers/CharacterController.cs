@@ -4,6 +4,7 @@ using MongoDB.Bson.IO;
 using MongoDB.Driver;
 using System.Text.Json;
 using Kwill.Validation;
+using Kwill.Api.Helpers;
 
 [ApiController]
 [Route("api/character")]
@@ -96,39 +97,70 @@ public async Task<IActionResult> Create([FromBody] JsonElement body)
     }
 }
 
-// PUT (update)
-[HttpPut("{userId}/{characterId}")]
-public async Task<IActionResult> Update(string userId, string characterId, [FromBody] JsonElement body)
+// PUT /api/character/{characterId}
+[HttpPut("{characterId}")]
+public async Task<IActionResult> Update(string characterId, [FromBody] JsonElement body)
 {
-    var filter = Builders<BsonDocument>.Filter.And(
-        Builders<BsonDocument>.Filter.Eq("user_id", userId),        // ← Changed
-        Builders<BsonDocument>.Filter.Eq("character_id", characterId) // ← Changed
-    );
-
-        var doc = BsonDocument.Parse(body.GetRawText());
+    try
+    {
+        Console.WriteLine($"=== PUT REQUEST RECEIVED for character: {characterId} ===");
+        
+        var updates = BsonDocument.Parse(body.GetRawText());
+        
+        // OPTIONAL: Validate ownership if user_id is in request
+        if (updates.Contains("user_id"))
+        {
+            string userId = updates["user_id"].AsString;
+            bool owns = await ValidationHelper.ValidateCharacterOwnership(userId, characterId, _db);
+            
+            if (!owns)
+            {
+                return StatusCode(403, new { message = "User does not own this character" });
+            }
+        }
         
         // Load SRD data for validation
         var srdData = await LoadSrdDataAsync();
         
-        // Validate character data
-        var validation = CharacterSheetValidator.ValidateCharacterSheet(doc, srdData);
+        // Validate the character
+        var validation = CharacterSheetValidator.ValidateCharacterSheet(updates, srdData);
+        
         if (!validation.IsValid)
         {
-            return BadRequest(new { errors = validation.Errors });
+            Console.WriteLine($"Validation failed: {string.Join(", ", validation.Errors)}");
+            return BadRequest(new { 
+                message = "Validation failed", 
+                errors = validation.Errors 
+            });
         }
         
-        // Only update if validation passes
-        await _db.CharacterSheets.ReplaceOneAsync(filter, doc);
-
+        Console.WriteLine("Validation passed - updating character");
+        
+        // Update the character
+        var filter = Builders<BsonDocument>.Filter.Eq("character_id", characterId);
+        var result = await _db.CharacterSheets.ReplaceOneAsync(filter, updates);
+        
+        if (result.MatchedCount == 0)
+        {
+            return NotFound(new { message = "Character not found" });
+        }
+        
+        Console.WriteLine($"Character {characterId} updated successfully");
+        
         return Content(
-            doc.ToJson(new JsonWriterSettings
+            updates.ToJson(new MongoDB.Bson.IO.JsonWriterSettings
             {
-                OutputMode = JsonOutputMode.RelaxedExtendedJson
+                OutputMode = MongoDB.Bson.IO.JsonOutputMode.RelaxedExtendedJson
             }),
             "application/json"
         );
     }
-
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error updating character: {ex.Message}");
+        return StatusCode(500, new { error = ex.Message });
+    }
+}
 // DELETE
 [HttpDelete("{userId}/{characterId}")]
 public async Task<IActionResult> Delete(string userId, string characterId)
