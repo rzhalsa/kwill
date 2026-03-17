@@ -17,11 +17,9 @@ folderInput.addEventListener("change", () => {
         const folderid = files[0].webkitRelativePath.split("/")[0];
         folderLabel.textContent = `Selected folder: ${folderid}`;
 
-        // Filter JSON files
         const jsonFiles = files.filter(f => f.name.endsWith(".json"));
-        characters = {}; // clear previous characters
+        characters = {};
 
-        // Read each JSON file
         jsonFiles.forEach(file => {
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -41,7 +39,6 @@ folderInput.addEventListener("change", () => {
     }
 });
 
-// Populate dropdown with character names
 function populateDropdown() {
     characterSelect.innerHTML = "";
 
@@ -61,27 +58,22 @@ function populateDropdown() {
     }
 }
 
-// Show selected character JSON and populate sheet
 characterSelect.addEventListener("change", () => {
     const selected = characterSelect.value;
     clearSheet();
     if (selected && characters[selected]) {
-        populateSheet(); // must call here AFTER selection
+        populateSheet();
     }
 });
 
-// Save JSON without refreshing
-// Save JSON without refreshing
 saveButton.addEventListener("click", (e) => {
     e.preventDefault();
 
     let selected = characterSelect.value;
     const container = document.getElementById('character-sheet');
 
-    // Always merge with existing to preserve stale-proof formulas
     const characterData = populateJsonFromHtml(characters[selected] || {});
 
-    // Get character name
     const nameEl = container.querySelector('#name_value');
     const charName = nameEl?.value?.trim();
 
@@ -90,26 +82,19 @@ saveButton.addEventListener("click", (e) => {
         return;
     }
 
-    // Use existing filename or create new one
     if (!selected || !characters[selected]) {
-    selected = charName + ".json";
-}
+        selected = charName + ".json";
+    }
 
-// Update in memory first
-characters[selected] = characterData;
+    characters[selected] = characterData;
+    populateDropdown();
+    characterSelect.value = selected;
 
-// Then rebuild dropdown so it has the data
-populateDropdown();
-
-// Re-select the character in the dropdown
-characterSelect.value = selected;
-
-// Save to file
-const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(characterData, null, 2));
-const a = document.createElement('a');
-a.href = dataStr;
-a.download = selected;
-a.click();
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(characterData, null, 2));
+    const a = document.createElement('a');
+    a.href = dataStr;
+    a.download = selected;
+    a.click();
 });
 
 
@@ -119,6 +104,7 @@ function clearSheet() {
     if (!container) return;
 
     container.querySelectorAll('input, textarea, select').forEach(el => {
+        if (el.closest('[id$="_panel"]')) return;
         if (el.id?.endsWith('_calculated')) return;
         if (el.hasAttribute('data-label')) return;
         const type = (el.type || '').toLowerCase();
@@ -127,19 +113,21 @@ function clearSheet() {
     });
 
     container.querySelectorAll('*').forEach(el => {
+        if (el.closest('[id$="_panel"]')) return;
         if (el.hasAttribute('data-label')) return;
         const tag = el.tagName.toUpperCase();
         if (!['INPUT', 'TEXTAREA', 'SELECT'].includes(tag) && el.children.length === 0) {
             el.textContent = '';
         }
     });
+
+    clearAllPanels();
 }
 
 
 function setNested(json, parts, value, overwrite = false) {
     if (parts.length === 1) {
         const existing = json[parts[0]];
-        // never overwrite an existing operation with a non-operation
         if (existing?.object_id === 'operation' && value?.object_id !== 'operation') return;
         if (overwrite || existing === undefined || existing === '') {
             json[parts[0]] = value;
@@ -173,7 +161,6 @@ function setNested(json, parts, value, overwrite = false) {
 }
 
 
-// Populate the character sheet
 function populateSheet() {
     const selected = characterSelect.value;
     if (!selected || !characters[selected]) return;
@@ -205,6 +192,7 @@ function populateSheet() {
 
         Object.keys(obj).forEach(key => {
             if (key === 'object_id') return;
+            if (key === 'panels') return;
             const value = obj[key];
 
             const fullId = effectiveParent ? `${effectiveParent}_${key}` : key;
@@ -233,6 +221,7 @@ function populateSheet() {
 
     // Second pass: re-evaluate all _calculated fields from their default formula
     document.querySelectorAll('[id$="_calculated"]').forEach(el => {
+        if (el.closest('[id$="_panel"]')) return;
         if (el.hasAttribute('data-label')) return;
         const formula = el.defaultValue?.trim();
         if (!formula?.startsWith('=')) return;
@@ -272,11 +261,11 @@ function populateSheet() {
 
         el.value = evaluateOperation(operationObj, characterData);
     });
+
+    loadAllPanels(characterData);
 }
 
 
-
-// Populate the JSON with the names and values in the html sheet.
 function populateJsonFromHtml(existingJson = {}) {
     const container = document.getElementById('character-sheet');
     if (!container) return structuredClone(existingJson);
@@ -286,10 +275,11 @@ function populateJsonFromHtml(existingJson = {}) {
         : { object_id: 'character', ...structuredClone(existingJson) };
 
     container.querySelectorAll('[id]').forEach(el => {
+        if (el.closest('[id$="_panel"]')) return;
+
         let id = el.id?.trim();
         if (!id) return;
 
-        // Read value based on element type
         let value;
         if (el.type === 'checkbox' || el.type === 'radio') {
             value = el.checked;
@@ -351,12 +341,169 @@ function populateJsonFromHtml(existingJson = {}) {
         setNested(base, parts, value, isCalculated || isValue);
     });
 
+    saveAllPanels(base);
+
     return base;
 }
 
 
+// ── Dynamic Panels ───────────────────────────────────────────────────────────
+//
+// Convention:
+//   HTML panel container id : "{name}_panel"
+//   HTML add button id      : "{name}_button"
+//   HTML template id        : "{name}_template"
+//   JSON saved under        : base.panels.{name}  →  array of objects
+//
+// Fields inside each template block use the same id-based conventions as the
+// main sheet: id="name_value", id="uses_calculated", id="source_name", etc.
+// On cloning, ids are stripped and replaced with data-field-key to prevent
+// duplicate id collisions in the live DOM. The template keeps ids for clarity.
+//
+// Panels are auto-detected from any div whose id ends in "_panel".
+// To add a new panel: add HTML (_panel div, _button, _template). Nothing else.
 
-// Handles oobjects of type operation
+function getPanelIds() {
+    return Array.from(document.querySelectorAll('[id$="_panel"]'))
+        .map(el => el.id.slice(0, -'_panel'.length))
+        .filter(name => name.length > 0);
+}
+
+// Wire up all + buttons after DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    getPanelIds().forEach(panelId => {
+        const btn = document.getElementById(`${panelId}_button`);
+        if (btn) {
+            btn.addEventListener('click', () => addPanelBlock(panelId));
+        } else {
+            console.warn(`Panel button not found: ${panelId}_button`);
+        }
+    });
+});
+
+function createPanelBlock(panelId, data = {}) {
+    const template = document.getElementById(`${panelId}_template`);
+    if (!template) {
+        console.warn(`Panel template not found: ${panelId}_template`);
+        return null;
+    }
+
+    const clone = template.content.cloneNode(true).firstElementChild;
+    if (!clone) {
+        console.warn(`Template cloneNode returned null for: ${panelId}_template — template may be empty`);
+        return null;
+    }
+
+    // Read ids, populate values, then replace id with data-field-key to avoid
+    // duplicate id collisions in the live DOM
+    clone.querySelectorAll('[id]').forEach(el => {
+        let key = el.id.trim();
+        const isValue      = key.endsWith('_value');
+        const isName       = key.endsWith('_name');
+        const isCalculated = key.endsWith('_calculated');
+
+        if (isValue)           key = key.slice(0, -'_value'.length);
+        else if (isName)       key = key.slice(0, -'_name'.length);
+        else if (isCalculated) key = key.slice(0, -'_calculated'.length);
+        else { el.removeAttribute('id'); return; }
+
+        // Store resolved key for saving, remove id from live DOM
+        el.dataset.fieldKey = key;
+        el.removeAttribute('id');
+
+        if (data[key] === undefined) return;
+
+        const tag = el.tagName.toUpperCase();
+        if (tag === 'INPUT' && (el.type === 'checkbox' || el.type === 'radio')) {
+            el.checked = data[key] === true || data[key] === 'true';
+        } else if (['INPUT', 'TEXTAREA', 'SELECT'].includes(tag)) {
+            el.value = data[key] ?? '';
+        } else {
+            el.textContent = data[key] ?? '';
+        }
+    });
+
+    clone.querySelector('.panel-remove-btn')
+        ?.addEventListener('click', () => clone.remove());
+
+    return clone;
+}
+
+function addPanelBlock(panelId, data = {}) {
+    const container = document.getElementById(`${panelId}_panel`);
+    if (!container) return;
+    const block = createPanelBlock(panelId, data);
+    if (block) container.appendChild(block);
+}
+
+function clearPanel(panelId) {
+    const container = document.getElementById(`${panelId}_panel`);
+    if (!container) return;
+    // Only remove live clones — never touch anything inside a <template>
+    Array.from(container.querySelectorAll('.panel-block'))
+        .filter(el => !el.closest('template'))
+        .forEach(el => el.remove());
+}
+
+function loadPanel(panelId, dataArray) {
+    clearPanel(panelId);
+    if (!Array.isArray(dataArray)) return;
+    dataArray.forEach(item => addPanelBlock(panelId, item));
+}
+
+function savePanel(panelId) {
+    const container = document.getElementById(`${panelId}_panel`);
+    if (!container) return null;
+
+    const blocks = Array.from(container.querySelectorAll('.panel-block'))
+        .filter(el => !el.closest('template'));
+    if (blocks.length === 0) return null;
+
+    return blocks.map(block => {
+        const entry = {};
+        block.querySelectorAll('[data-field-key]').forEach(el => {
+            const key = el.dataset.fieldKey;
+            if (!key) return;
+            if (el.type === 'checkbox' || el.type === 'radio') {
+                entry[key] = el.checked;
+            } else {
+                entry[key] = el.value !== undefined ? el.value.trim() : (el.textContent?.trim() ?? '');
+            }
+        });
+        return entry;
+    });
+}
+
+function saveAllPanels(base) {
+    const panelsData = {};
+    let hasAny = false;
+    getPanelIds().forEach(panelId => {
+        const data = savePanel(panelId);
+        if (data !== null) {
+            panelsData[panelId] = data;
+            hasAny = true;
+        }
+    });
+    if (hasAny) base.panels = panelsData;
+    return base;
+}
+
+function loadAllPanels(characterData) {
+    if (!characterData.panels) return;
+    getPanelIds().forEach(panelId => {
+        if (characterData.panels[panelId]) {
+            loadPanel(panelId, characterData.panels[panelId]);
+        }
+    });
+}
+
+function clearAllPanels() {
+    getPanelIds().forEach(panelId => clearPanel(panelId));
+}
+
+// ── End Dynamic Panels ───────────────────────────────────────────────────────
+
+
 function evaluateOperation(operationObj, jsonData) {
     if (!operationObj || operationObj.object_id !== 'operation') return '';
 
@@ -405,12 +552,10 @@ function evaluateOperation(operationObj, jsonData) {
         return val ?? '';
     }
 
-    // ── mirror ─────────────────────────────────────────────────────────────
     if (operationObj.operation_type === 'mirror') {
         return resolveString(operationObj.condition);
     }
 
-    // ── conditional ────────────────────────────────────────────────────────
     if (operationObj.operation_type === 'conditional') {
         const condVal = resolveVar(operationObj.condition);
         const thresholds = operationObj.thresholds || [];
@@ -424,7 +569,6 @@ function evaluateOperation(operationObj, jsonData) {
         return matchIndex === -1 ? '' : (results[matchIndex] ?? '');
     }
 
-    // ── arithmetic ─────────────────────────────────────────────────────────
     const BUILTINS = new Set([
         'Math', 'floor', 'ceil', 'round', 'abs', 'max', 'min', 'sqrt', 'pow',
         'parseInt', 'parseFloat', 'isNaN', 'isFinite', 'Number', 'String',
@@ -454,21 +598,38 @@ function evaluateOperation(operationObj, jsonData) {
 
 
 const PAGE_WIDTH = 816;
-const TARGET_FILL = 0.85;
+const TARGET_FILL = 0.95;  // tighter fit to actual page width
 
 let zoomMode = 'manual'; // 'manual' | 'width' | 'page'
 let manualScale = 1.0;
 
 function applyScale(scale) {
     document.documentElement.style.setProperty('--page-scale', scale);
-    document.getElementById('zoom_label').textContent = Math.round(scale * 100) + '%';
+    document.getElementById('zoom_label').value = Math.round(scale * 100) + '%';
 }
+
+document.getElementById('zoom_label').addEventListener('change', () => {
+    const raw = document.getElementById('zoom_label').value.replace('%', '').trim();
+    const parsed = parseFloat(raw) / 100;
+    if (!isNaN(parsed) && parsed > 0) {
+        zoomMode = 'manual';
+        manualScale = Math.round(parsed * 100) / 100;
+        updateScale();
+    } else {
+        // Reset to current scale if invalid
+        applyScale(manualScale);
+    }
+});
 
 function updateScale() {
     if (zoomMode === 'width') {
-        applyScale(Math.min(1, (window.innerWidth * TARGET_FILL) / PAGE_WIDTH));
+        const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+        const availableWidth = window.innerWidth - scrollbarWidth;
+        applyScale(availableWidth / PAGE_WIDTH * TARGET_FILL);
     } else if (zoomMode === 'page') {
-        applyScale(Math.min(1, (window.innerHeight * 0.9) / 1056));
+        const toolbar = document.querySelector('.toolbar');
+        const toolbarHeight = toolbar ? toolbar.getBoundingClientRect().height : 0;
+        applyScale((window.innerHeight - toolbarHeight) * 0.95 / 1056);
     } else {
         applyScale(manualScale);
     }
@@ -487,18 +648,16 @@ document.getElementById('zoom_in').addEventListener('click', () => {
 });
 
 document.getElementById('zoom_fit').addEventListener('click', () => {
-    if (zoomMode === 'width') {
-        zoomMode = 'page';
+    if (zoomMode === 'page') {
+        zoomMode = 'width';
         document.getElementById('zoom_fit').textContent = 'Fit Page';
-    } else if (zoomMode === 'page') {
-        zoomMode = 'width';
-        document.getElementById('zoom_fit').textContent = 'Fit Width';
     } else {
-        zoomMode = 'width';
+        zoomMode = 'page';
         document.getElementById('zoom_fit').textContent = 'Fit Width';
     }
     updateScale();
 });
+
 
 window.addEventListener('resize', updateScale);
 updateScale();
