@@ -553,5 +553,10 @@
       "spell6": "n"
     }
   },
-  "classlevel": "Wizard 1"
+  "classlevel": "Wizard 1",
+  "class": {
+    "object_id": "class",
+    "name": "Wizard",
+    "level": "1"
+  }
 }

@@ -562,6 +562,16 @@
       {
         "name": "Feature 2"
       }
+    ],
+    "cantrips": [
+      {
+        "name": "Firebolt"
+      }
     ]
+  },
+  "class": {
+    "object_id": "class",
+    "name": "Class",
+    "level": "2"
   }
 }

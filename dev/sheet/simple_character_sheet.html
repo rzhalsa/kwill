@@ -6,7 +6,7 @@
     <title>Simple Character page</title>
 
 
-  <link rel="stylesheet" type="text/css" href="assets/stylesIndependent.css">
+    <link rel="stylesheet" type="text/css" href="assets/styles.css">
 
 
 
@@ -42,9 +42,25 @@
                 Save Character
             </button>
 
-            <!-- THIS WILL BE DIFFERENT ON THE WEBSITE -->
-
+            <div style="display:flex; align-items:center; gap:6px; margin-left:20px;">
+                <button type="button" id="zoom_out"
+                    style="width:28px; height:28px; font-size:16px; cursor:pointer; border:2px solid #000; background:#fff;"
+                    onmouseover="this.style.background='#000';this.style.color='#fff'"
+                    onmouseout="this.style.background='#fff';this.style.color='#000'">−</button>
+                <input type="text" id="zoom_label" value="100%"
+                    style="width:48px; text-align:center; font-size:13px; border:2px solid #000; padding:2px 4px;">
+                <button type="button" id="zoom_in"
+                    style="width:28px; height:28px; font-size:16px; cursor:pointer; border:2px solid #000; background:#fff;"
+                    onmouseover="this.style.background='#000';this.style.color='#fff'"
+                    onmouseout="this.style.background='#fff';this.style.color='#000'">+</button>
+                <button type="button" id="zoom_fit"
+                    style="padding:4px 8px; font-size:12px; cursor:pointer; border:2px solid #000; background:#fff; margin-left:6px;"
+                    onmouseover="this.style.background='#000';this.style.color='#fff'"
+                    onmouseout="this.style.background='#fff';this.style.color='#000'">Fit Page</button>
+            </div>
         </div>
+
+    </div>
 
     </div>
 
@@ -55,13 +71,18 @@
             <img class="kwill-logo" src="assets/kwill.svg" alt="Kwill Logo" width="300" height="300">
 
             <div class="page-top-row">
-                <input id="name_value" placeholder="Character name here" autocomplete="off"
+                <input id="name_value" placeholder="Character name" autocomplete="off"
                     style="position: absolute; font-size: 18px; top: 75px; left: 130px; width: 200px; height: 30px; border: 2px solid #000;">
                 <div class="page-top-col">
 
                     <div>
-                        <input class="page1-top-input-value" id="classlevel_value" placeholder="class & level"
-                            autocomplete="off">
+                        <div style="display: flex; flex-direction: row; align-items: center; gap: 0px;">
+                            <input class="page1-top-input-value" id="class_name" placeholder="class" autocomplete="off"
+                                style="width: 70px; margin-top: 30px;">
+                            <input class="ability-score" id="class_level_value" placeholder="1" autocomplete="off"
+                                style="position: absolute; width: 25px; height: 25px; margin-left: 75px; margin-top: 30px;"
+                                type="number" autocomplete="off">
+                        </div>
                     </div>
                     <div>
                         <input class="page1-top-input-value" id="race_name" placeholder="race" autocomplete="off">
@@ -431,7 +452,7 @@
 
                     <div class="col">
 
-                        <textarea id="attacks_value" placeholder="Attacks and Spellcasting" 
+                        <textarea id="attacks_value" placeholder="Attacks and Spellcasting"
                             style="width: 200px; height: 125px; border: 2px solid #000; display: flex; margin-top: -30px; text-align: left; margin-bottom: 5px; resize: none;"></textarea>
                         <div class="row">
                             <div class="col" style="margin-top: 8px; margin-right: 5px;">
@@ -561,7 +582,7 @@
 
 
             <div class="page-top-row">
-                <input id="spellcasting_class_value" placeholder="Spellcasting class here"
+                <input id="spellcasting_class_value" placeholder="Spellcasting class"
                     style="position: absolute; font-size: 18px; top: 75px; left: 130px; width: 200px; height: 30px; border: 2px solid #000;">
 
                 <div class="page-top-col">
@@ -860,4 +881,5 @@
                 <script src="assets/scripts.js"></script>
 
 </body>
-</html> 
+
+</html>
