@@ -495,21 +495,93 @@
        box-sizing: border-box; background: #fff; position: relative;">
                         <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
                             <span style="text-align:center; flex:1;" data-label>Features</span>
-                            <button type="button" id="features_button" style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
+                            <button type="button" id="features_button"
+                                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
                         </div>
 
 
+
+
                         <template id="features_template">
-                            <div class="panel-block" style="display:flex; align-items:center; gap:4px;
+                            <div class="panel-block" style="display:flex; flex-direction:column; gap:4px;
            background:#f0e6d3; border:1px solid #8b6914; border-radius:3px;
            padding:4px 6px; flex-shrink:0;">
-                                <input type="text" id="name_value" placeholder="Feature name" style="flex:1; min-width:0; border:none; background:transparent;
-                      font-size:13px; outline:none; font-family:inherit;">
-                                <button type="button" class="panel-remove-btn" style="border:none; background:none;
-               cursor:pointer; font-size:14px; color:#666; padding:0 2px;
-               line-height:1; flex-shrink:0;">×</button>
+
+                                <!-- Main row -->
+                                <div style="display:flex; align-items:center; gap:4px;">
+                                    <input type="text" id="name_value" placeholder="Feature name" style="flex:1; min-width:0; border:none; background:transparent;
+                  font-size:13px; outline:none; font-family:inherit;">
+                                    <button type="button" class="panel-expand-btn" style="width:22px; height:22px; font-size:16px;
+                    line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
+                                </div>
+
+                                <!-- Expanded fields — hidden by default -->
+                                <div class="panel-expanded" style="display:none; flex-direction:column; gap:4px;">
+
+                                    <!-- Action type + Level -->
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Lvl:</span>
+                                        <input type="number" id="level_value" placeholder="—" style="width:28px; border:1px solid #8b6914; background:transparent;
+               font-size:12px; font-family:inherit; text-align:center; padding:2px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Action:</span>
+                                        <select id="action_value" style="flex:1; border:1px solid #8b6914; background:transparent;
+               font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="None">None</option>
+                                            <option value="Action">Action</option>
+                                            <option value="Bonus">Bonus</option>
+                                            <option value="Reaction">Reaction</option>
+                                            <option value="Movement">Movement</option>
+                                            <option value="Constant">Constant</option>
+
+                                        </select>
+                                    </div>
+
+                                    <!-- Uses row -->
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555;">Uses:</span>
+                                        <input type="number" id="uses_current_value" placeholder="0" style="width:40px; border:1px solid #8b6914; background:transparent;
+                           font-size:12px; font-family:inherit; text-align:center; padding:2px;">
+                                        <span style="font-size:11px; color:#555;">Max:</span>
+                                        <input type="number" id="uses_max_value" placeholder="0" style="width:40px; border:1px solid #8b6914; background:transparent;
+                           font-size:12px; font-family:inherit; text-align:center; padding:2px;">
+                                    </div>
+
+                                    <!-- Restore -->
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Restore:</span>
+                                        <select id="restore_value" style="flex:1; border:1px solid #8b6914; background:transparent;
+                           font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="Long Rest">Long Rest</option>
+                                            <option value="Short Rest">Short Rest</option>
+                                            <option value="Daily">Daily</option>
+                                            <option value="At Will">At Will</option>
+                                            <option value="Per Turn">Per Turn</option>
+                                            <option value="Per Round">Per Round</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Tooltip -->
+                                    <input type="text" id="tooltip_value" placeholder="Tooltip (shown on hover)" style="width:100%; border:1px solid #8b6914; background:transparent;
+                       font-size:12px; font-family:inherit; box-sizing:border-box; padding:3px;">
+
+                                    <!-- Description -->
+                                    <textarea id="description_value" placeholder="Description"
+                                        style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent;
+                       font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
+
+                                    <!-- Delete button bottom right -->
+                                    <div style="display:flex; justify-content:flex-end;">
+                                        <button type="button" class="panel-remove-btn" data-delete-label="feature"
+                                            style="border:none; background:none;
+                       cursor:pointer; font-size:14px; color:#777; padding:0 2px;
+                       line-height:1;">×</button>
+                                    </div>
+                                </div>
                             </div>
                         </template>
+
+
+
                     </div>
 
                 </div>
@@ -631,58 +703,418 @@
 
                 <div class="col">
                     <div id="cantrips_panel"
-                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto;">
+                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
                         <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
                             <span style="text-align:center; flex:1;" data-label>Cantrips</span>
-                            <button type="button" id="cantrips_button" style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
+                            <button type="button" id="cantrips_button"
+                                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
                         </div>
                         <template id="cantrips_template">
-                            <div class="panel-block" style="display:flex; align-items:center; gap:4px;
-                                background:#f0e6d3; border:1px solid #8b6914; border-radius:3px;
-                                padding:4px 6px; flex-shrink:0;">
-                                <input type="text" id="name_value" placeholder="Cantrip name" style="flex:1; min-width:0; border:none; background:transparent;
-                                    font-size:13px; outline:none; font-family:inherit;">
-                                <button type="button" class="panel-remove-btn" style="border:none; background:none;
-                                    cursor:pointer; font-size:14px; color:#666; padding:0 2px;
-                                    line-height:1; flex-shrink:0;">×</button>
+                            <div class="panel-block"
+                                style="display:flex; flex-direction:column; gap:4px; background:#f0e6d3; border:1px solid #8b6914; border-radius:3px; padding:4px 6px; flex-shrink:0;">
+                                <input type="hidden" id="level_value" value="0">
+                                <div style="display:flex; align-items:center; gap:4px;">
+                                    <input type="text" id="name_value" placeholder="Cantrip name"
+                                        style="flex:1; min-width:0; border:none; background:transparent; font-size:13px; outline:none; font-family:inherit;">
+                                    <button type="button" class="panel-expand-btn"
+                                        style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
+                                </div>
+                                <div class="panel-expanded" style="display:none; flex-direction:column; gap:4px;">
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">School:</span>
+                                        <select id="school_value"
+                                            style="flex:1; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Abjuration">Abjuration</option>
+                                            <option value="Conjuration">Conjuration</option>
+                                            <option value="Divination">Divination</option>
+                                            <option value="Enchantment">Enchantment</option>
+                                            <option value="Evocation">Evocation</option>
+                                            <option value="Illusion">Illusion</option>
+                                            <option value="Necromancy">Necromancy</option>
+                                            <option value="Transmutation">Transmutation</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Action:</span>
+                                        <select id="action_value"
+                                            style="flex:1; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">None</option>
+                                            <option value="Action">Action</option>
+                                            <option value="Bonus">Bonus</option>
+                                            <option value="Reaction">Reaction</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Type:</span>
+                                        <select id="attacksave_value"
+                                            style="width:90px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Spell Attack">Spell Attack</option>
+                                            <option value="Spell Save">Spell Save</option>
+                                        </select>
+                                        <span class="attackbonus-display"
+                                            style="font-size:11px; color:#555; flex-shrink:0; display:none;"></span>
+                                        <select id="savetype_value"
+                                            style="width:42px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; display:none;">
+                                            <option value="">—</option>
+                                            <option value="STR">STR</option>
+                                            <option value="DEX">DEX</option>
+                                            <option value="CON">CON</option>
+                                            <option value="INT">INT</option>
+                                            <option value="WIS">WIS</option>
+                                            <option value="CHA">CHA</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Dmg:</span>
+                                        <input type="text" id="damage_value" placeholder="2d6"
+                                            style="width:40px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                        <select id="damagetype_value"
+                                            style="width:72px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Acid">Acid</option>
+                                            <option value="Bludgeoning">Bludg.</option>
+                                            <option value="Cold">Cold</option>
+                                            <option value="Fire">Fire</option>
+                                            <option value="Force">Force</option>
+                                            <option value="Lightning">Lightn.</option>
+                                            <option value="Necrotic">Necro.</option>
+                                            <option value="None">None</option>
+                                            <option value="Piercing">Pierc.</option>
+                                            <option value="Poison">Poison</option>
+                                            <option value="Psychic">Psych.</option>
+                                            <option value="Radiant">Radiant</option>
+                                            <option value="Slashing">Slash.</option>
+                                            <option value="Thunder">Thunder</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
+                                            <input type="text" id="range_value" placeholder="e.g. 60ft"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
+                                            <input type="text" id="duration_value" placeholder="e.g. 1 min"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
+                                            <select id="areashape_value"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                                <option value="">—</option>
+                                                <option value="Cone">Cone</option>
+                                                <option value="Sphere">Sphere</option>
+                                                <option value="Cube">Cube</option>
+                                                <option value="Cylinder">Cylinder</option>
+                                                <option value="Line">Line</option>
+                                            </select>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
+                                            <input type="text" id="areasize_value" placeholder="e.g. 30ft"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                    </div>
+                                    <input type="text" id="tooltip_value" placeholder="Tooltip (shown on hover)"
+                                        style="width:100%; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; box-sizing:border-box; padding:3px;">
+                                    <textarea id="description_value" placeholder="Description"
+                                        style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                        <label
+                                            style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
+                                            <input type="checkbox" id="showstats_value" checked> Stats in tooltip
+                                        </label>
+                                        <button type="button" class="panel-remove-btn" data-delete-label="cantrip"
+                                            style="border:none; background:none; cursor:pointer; font-size:14px; color:#777; padding:0 2px; line-height:1;">×</button>
+                                    </div>
+                                </div>
                             </div>
                         </template>
                     </div>
 
                     <div id="spells_first_panel"
-                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto;">
+                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
                         <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
                             <span style="text-align:center; flex:1;" data-label>1st Level</span>
-                            <button type="button" id="spells_first_button" style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
+                            <button type="button" id="spells_first_button"
+                                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
                         </div>
                         <template id="spells_first_template">
-                            <div class="panel-block" style="display:flex; align-items:center; gap:4px;
-                                background:#f0e6d3; border:1px solid #8b6914; border-radius:3px;
-                                padding:4px 6px; flex-shrink:0;">
-                                <input type="text" id="name_value" placeholder="Spell name" style="flex:1; min-width:0; border:none; background:transparent;
-                                    font-size:13px; outline:none; font-family:inherit;">
-                                <button type="button" class="panel-remove-btn" style="border:none; background:none;
-                                    cursor:pointer; font-size:14px; color:#666; padding:0 2px;
-                                    line-height:1; flex-shrink:0;">×</button>
+                            <div class="panel-block"
+                                style="display:flex; flex-direction:column; gap:4px; background:#f0e6d3; border:1px solid #8b6914; border-radius:3px; padding:4px 6px; flex-shrink:0;">
+                                <input type="hidden" id="level_value" value="1">
+                                <div style="display:flex; align-items:center; gap:4px;">
+                                    <input type="text" id="name_value" placeholder="Spell name"
+                                        style="flex:1; min-width:0; border:none; background:transparent; font-size:13px; outline:none; font-family:inherit;">
+                                    <button type="button" class="panel-expand-btn"
+                                        style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
+                                </div>
+                                <div class="panel-expanded" style="display:none; flex-direction:column; gap:4px;">
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">School:</span>
+                                        <select id="school_value"
+                                            style="flex:1; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Abjuration">Abjuration</option>
+                                            <option value="Conjuration">Conjuration</option>
+                                            <option value="Divination">Divination</option>
+                                            <option value="Enchantment">Enchantment</option>
+                                            <option value="Evocation">Evocation</option>
+                                            <option value="Illusion">Illusion</option>
+                                            <option value="Necromancy">Necromancy</option>
+                                            <option value="Transmutation">Transmutation</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Action:</span>
+                                        <select id="action_value"
+                                            style="flex:1; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">None</option>
+                                            <option value="Action">Action</option>
+                                            <option value="Bonus">Bonus</option>
+                                            <option value="Reaction">Reaction</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Type:</span>
+                                        <select id="attacksave_value"
+                                            style="width:90px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Spell Attack">Spell Attack</option>
+                                            <option value="Spell Save">Spell Save</option>
+                                        </select>
+                                        <span class="attackbonus-display"
+                                            style="font-size:11px; color:#555; flex-shrink:0; display:none;"></span>
+                                        <select id="savetype_value"
+                                            style="width:42px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; display:none;">
+                                            <option value="">—</option>
+                                            <option value="STR">STR</option>
+                                            <option value="DEX">DEX</option>
+                                            <option value="CON">CON</option>
+                                            <option value="INT">INT</option>
+                                            <option value="WIS">WIS</option>
+                                            <option value="CHA">CHA</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Dmg:</span>
+                                        <input type="text" id="damage_value" placeholder="2d6"
+                                            style="width:40px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                        <select id="damagetype_value"
+                                            style="width:72px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Acid">Acid</option>
+                                            <option value="Bludgeoning">Bludg.</option>
+                                            <option value="Cold">Cold</option>
+                                            <option value="Fire">Fire</option>
+                                            <option value="Force">Force</option>
+                                            <option value="Lightning">Lightn.</option>
+                                            <option value="Necrotic">Necro.</option>
+                                            <option value="None">None</option>
+                                            <option value="Piercing">Pierc.</option>
+                                            <option value="Poison">Poison</option>
+                                            <option value="Psychic">Psych.</option>
+                                            <option value="Radiant">Radiant</option>
+                                            <option value="Slashing">Slash.</option>
+                                            <option value="Thunder">Thunder</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
+                                            <input type="text" id="range_value" placeholder="e.g. 60ft"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
+                                            <input type="text" id="duration_value" placeholder="e.g. 1 min"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
+                                            <select id="areashape_value"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                                <option value="">—</option>
+                                                <option value="Cone">Cone</option>
+                                                <option value="Sphere">Sphere</option>
+                                                <option value="Cube">Cube</option>
+                                                <option value="Cylinder">Cylinder</option>
+                                                <option value="Line">Line</option>
+                                            </select>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
+                                            <input type="text" id="areasize_value" placeholder="e.g. 30ft"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                    </div>
+                                    <input type="text" id="tooltip_value" placeholder="Tooltip (shown on hover)"
+                                        style="width:100%; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; box-sizing:border-box; padding:3px;">
+                                    <textarea id="description_value" placeholder="Description"
+                                        style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                        <label
+                                            style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
+                                            <input type="checkbox" id="showstats_value" checked> Stats in tooltip
+                                        </label>
+                                        <button type="button" class="panel-remove-btn" data-delete-label="spell"
+                                            style="border:none; background:none; cursor:pointer; font-size:14px; color:#777; padding:0 2px; line-height:1;">×</button>
+                                    </div>
+                                </div>
                             </div>
                         </template>
                     </div>
 
                     <div id="spells_second_panel"
-                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto;">
+                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
                         <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
                             <span style="text-align:center; flex:1;" data-label>2nd Level</span>
-                            <button type="button" id="spells_second_button" style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
+                            <button type="button" id="spells_second_button"
+                                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
                         </div>
                         <template id="spells_second_template">
-                            <div class="panel-block" style="display:flex; align-items:center; gap:4px;
-                                background:#f0e6d3; border:1px solid #8b6914; border-radius:3px;
-                                padding:4px 6px; flex-shrink:0;">
-                                <input type="text" id="name_value" placeholder="Spell name" style="flex:1; min-width:0; border:none; background:transparent;
-                                    font-size:13px; outline:none; font-family:inherit;">
-                                <button type="button" class="panel-remove-btn" style="border:none; background:none;
-                                    cursor:pointer; font-size:14px; color:#666; padding:0 2px;
-                                    line-height:1; flex-shrink:0;">×</button>
+                            <div class="panel-block"
+                                style="display:flex; flex-direction:column; gap:4px; background:#f0e6d3; border:1px solid #8b6914; border-radius:3px; padding:4px 6px; flex-shrink:0;">
+                                <input type="hidden" id="level_value" value="2">
+                                <div style="display:flex; align-items:center; gap:4px;">
+                                    <input type="text" id="name_value" placeholder="Spell name"
+                                        style="flex:1; min-width:0; border:none; background:transparent; font-size:13px; outline:none; font-family:inherit;">
+                                    <button type="button" class="panel-expand-btn"
+                                        style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
+                                </div>
+                                <div class="panel-expanded" style="display:none; flex-direction:column; gap:4px;">
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">School:</span>
+                                        <select id="school_value"
+                                            style="flex:1; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Abjuration">Abjuration</option>
+                                            <option value="Conjuration">Conjuration</option>
+                                            <option value="Divination">Divination</option>
+                                            <option value="Enchantment">Enchantment</option>
+                                            <option value="Evocation">Evocation</option>
+                                            <option value="Illusion">Illusion</option>
+                                            <option value="Necromancy">Necromancy</option>
+                                            <option value="Transmutation">Transmutation</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Action:</span>
+                                        <select id="action_value"
+                                            style="flex:1; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">None</option>
+                                            <option value="Action">Action</option>
+                                            <option value="Bonus">Bonus</option>
+                                            <option value="Reaction">Reaction</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Type:</span>
+                                        <select id="attacksave_value"
+                                            style="width:90px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Spell Attack">Spell Attack</option>
+                                            <option value="Spell Save">Spell Save</option>
+                                        </select>
+                                        <span class="attackbonus-display"
+                                            style="font-size:11px; color:#555; flex-shrink:0; display:none;"></span>
+                                        <select id="savetype_value"
+                                            style="width:42px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; display:none;">
+                                            <option value="">—</option>
+                                            <option value="STR">STR</option>
+                                            <option value="DEX">DEX</option>
+                                            <option value="CON">CON</option>
+                                            <option value="INT">INT</option>
+                                            <option value="WIS">WIS</option>
+                                            <option value="CHA">CHA</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Dmg:</span>
+                                        <input type="text" id="damage_value" placeholder="2d6"
+                                            style="width:40px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                        <select id="damagetype_value"
+                                            style="width:72px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Acid">Acid</option>
+                                            <option value="Bludgeoning">Bludg.</option>
+                                            <option value="Cold">Cold</option>
+                                            <option value="Fire">Fire</option>
+                                            <option value="Force">Force</option>
+                                            <option value="Lightning">Lightn.</option>
+                                            <option value="Necrotic">Necro.</option>
+                                            <option value="None">None</option>
+                                            <option value="Piercing">Pierc.</option>
+                                            <option value="Poison">Poison</option>
+                                            <option value="Psychic">Psych.</option>
+                                            <option value="Radiant">Radiant</option>
+                                            <option value="Slashing">Slash.</option>
+                                            <option value="Thunder">Thunder</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
+                                            <input type="text" id="range_value" placeholder="e.g. 60ft"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
+                                            <input type="text" id="duration_value" placeholder="e.g. 1 min"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
+                                            <select id="areashape_value"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                                <option value="">—</option>
+                                                <option value="Cone">Cone</option>
+                                                <option value="Sphere">Sphere</option>
+                                                <option value="Cube">Cube</option>
+                                                <option value="Cylinder">Cylinder</option>
+                                                <option value="Line">Line</option>
+                                            </select>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
+                                            <input type="text" id="areasize_value" placeholder="e.g. 30ft"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                    </div>
+                                    <input type="text" id="tooltip_value" placeholder="Tooltip (shown on hover)"
+                                        style="width:100%; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; box-sizing:border-box; padding:3px;">
+                                    <textarea id="description_value" placeholder="Description"
+                                        style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                        <label
+                                            style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
+                                            <input type="checkbox" id="showstats_value" checked> Stats in tooltip
+                                        </label>
+                                        <button type="button" class="panel-remove-btn" data-delete-label="spell"
+                                            style="border:none; background:none; cursor:pointer; font-size:14px; color:#777; padding:0 2px; line-height:1;">×</button>
+                                    </div>
+                                </div>
                             </div>
                         </template>
                     </div>
@@ -690,58 +1122,418 @@
 
                 <div class="col">
                     <div id="spells_third_panel"
-                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto;">
+                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
                         <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
                             <span style="text-align:center; flex:1;" data-label>3rd Level</span>
-                            <button type="button" id="spells_third_button" style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
+                            <button type="button" id="spells_third_button"
+                                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
                         </div>
                         <template id="spells_third_template">
-                            <div class="panel-block" style="display:flex; align-items:center; gap:4px;
-                                background:#f0e6d3; border:1px solid #8b6914; border-radius:3px;
-                                padding:4px 6px; flex-shrink:0;">
-                                <input type="text" id="name_value" placeholder="Spell name" style="flex:1; min-width:0; border:none; background:transparent;
-                                    font-size:13px; outline:none; font-family:inherit;">
-                                <button type="button" class="panel-remove-btn" style="border:none; background:none;
-                                    cursor:pointer; font-size:14px; color:#666; padding:0 2px;
-                                    line-height:1; flex-shrink:0;">×</button>
+                            <div class="panel-block"
+                                style="display:flex; flex-direction:column; gap:4px; background:#f0e6d3; border:1px solid #8b6914; border-radius:3px; padding:4px 6px; flex-shrink:0;">
+                                <input type="hidden" id="level_value" value="3">
+                                <div style="display:flex; align-items:center; gap:4px;">
+                                    <input type="text" id="name_value" placeholder="Spell name"
+                                        style="flex:1; min-width:0; border:none; background:transparent; font-size:13px; outline:none; font-family:inherit;">
+                                    <button type="button" class="panel-expand-btn"
+                                        style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
+                                </div>
+                                <div class="panel-expanded" style="display:none; flex-direction:column; gap:4px;">
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">School:</span>
+                                        <select id="school_value"
+                                            style="flex:1; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Abjuration">Abjuration</option>
+                                            <option value="Conjuration">Conjuration</option>
+                                            <option value="Divination">Divination</option>
+                                            <option value="Enchantment">Enchantment</option>
+                                            <option value="Evocation">Evocation</option>
+                                            <option value="Illusion">Illusion</option>
+                                            <option value="Necromancy">Necromancy</option>
+                                            <option value="Transmutation">Transmutation</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Action:</span>
+                                        <select id="action_value"
+                                            style="flex:1; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">None</option>
+                                            <option value="Action">Action</option>
+                                            <option value="Bonus">Bonus</option>
+                                            <option value="Reaction">Reaction</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Type:</span>
+                                        <select id="attacksave_value"
+                                            style="width:90px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Spell Attack">Spell Attack</option>
+                                            <option value="Spell Save">Spell Save</option>
+                                        </select>
+                                        <span class="attackbonus-display"
+                                            style="font-size:11px; color:#555; flex-shrink:0; display:none;"></span>
+                                        <select id="savetype_value"
+                                            style="width:42px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; display:none;">
+                                            <option value="">—</option>
+                                            <option value="STR">STR</option>
+                                            <option value="DEX">DEX</option>
+                                            <option value="CON">CON</option>
+                                            <option value="INT">INT</option>
+                                            <option value="WIS">WIS</option>
+                                            <option value="CHA">CHA</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Dmg:</span>
+                                        <input type="text" id="damage_value" placeholder="2d6"
+                                            style="width:40px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                        <select id="damagetype_value"
+                                            style="width:72px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Acid">Acid</option>
+                                            <option value="Bludgeoning">Bludg.</option>
+                                            <option value="Cold">Cold</option>
+                                            <option value="Fire">Fire</option>
+                                            <option value="Force">Force</option>
+                                            <option value="Lightning">Lightn.</option>
+                                            <option value="Necrotic">Necro.</option>
+                                            <option value="None">None</option>
+                                            <option value="Piercing">Pierc.</option>
+                                            <option value="Poison">Poison</option>
+                                            <option value="Psychic">Psych.</option>
+                                            <option value="Radiant">Radiant</option>
+                                            <option value="Slashing">Slash.</option>
+                                            <option value="Thunder">Thunder</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
+                                            <input type="text" id="range_value" placeholder="e.g. 60ft"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
+                                            <input type="text" id="duration_value" placeholder="e.g. 1 min"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
+                                            <select id="areashape_value"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                                <option value="">—</option>
+                                                <option value="Cone">Cone</option>
+                                                <option value="Sphere">Sphere</option>
+                                                <option value="Cube">Cube</option>
+                                                <option value="Cylinder">Cylinder</option>
+                                                <option value="Line">Line</option>
+                                            </select>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
+                                            <input type="text" id="areasize_value" placeholder="e.g. 30ft"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                    </div>
+                                    <input type="text" id="tooltip_value" placeholder="Tooltip (shown on hover)"
+                                        style="width:100%; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; box-sizing:border-box; padding:3px;">
+                                    <textarea id="description_value" placeholder="Description"
+                                        style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                        <label
+                                            style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
+                                            <input type="checkbox" id="showstats_value" checked> Stats in tooltip
+                                        </label>
+                                        <button type="button" class="panel-remove-btn" data-delete-label="spell"
+                                            style="border:none; background:none; cursor:pointer; font-size:14px; color:#777; padding:0 2px; line-height:1;">×</button>
+                                    </div>
+                                </div>
                             </div>
                         </template>
                     </div>
 
                     <div id="spells_fourth_panel"
-                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto;">
+                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
                         <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
                             <span style="text-align:center; flex:1;" data-label>4th Level</span>
-                            <button type="button" id="spells_fourth_button" style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
+                            <button type="button" id="spells_fourth_button"
+                                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
                         </div>
                         <template id="spells_fourth_template">
-                            <div class="panel-block" style="display:flex; align-items:center; gap:4px;
-                                background:#f0e6d3; border:1px solid #8b6914; border-radius:3px;
-                                padding:4px 6px; flex-shrink:0;">
-                                <input type="text" id="name_value" placeholder="Spell name" style="flex:1; min-width:0; border:none; background:transparent;
-                                    font-size:13px; outline:none; font-family:inherit;">
-                                <button type="button" class="panel-remove-btn" style="border:none; background:none;
-                                    cursor:pointer; font-size:14px; color:#666; padding:0 2px;
-                                    line-height:1; flex-shrink:0;">×</button>
+                            <div class="panel-block"
+                                style="display:flex; flex-direction:column; gap:4px; background:#f0e6d3; border:1px solid #8b6914; border-radius:3px; padding:4px 6px; flex-shrink:0;">
+                                <input type="hidden" id="level_value" value="4">
+                                <div style="display:flex; align-items:center; gap:4px;">
+                                    <input type="text" id="name_value" placeholder="Spell name"
+                                        style="flex:1; min-width:0; border:none; background:transparent; font-size:13px; outline:none; font-family:inherit;">
+                                    <button type="button" class="panel-expand-btn"
+                                        style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
+                                </div>
+                                <div class="panel-expanded" style="display:none; flex-direction:column; gap:4px;">
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">School:</span>
+                                        <select id="school_value"
+                                            style="flex:1; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Abjuration">Abjuration</option>
+                                            <option value="Conjuration">Conjuration</option>
+                                            <option value="Divination">Divination</option>
+                                            <option value="Enchantment">Enchantment</option>
+                                            <option value="Evocation">Evocation</option>
+                                            <option value="Illusion">Illusion</option>
+                                            <option value="Necromancy">Necromancy</option>
+                                            <option value="Transmutation">Transmutation</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Action:</span>
+                                        <select id="action_value"
+                                            style="flex:1; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">None</option>
+                                            <option value="Action">Action</option>
+                                            <option value="Bonus">Bonus</option>
+                                            <option value="Reaction">Reaction</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Type:</span>
+                                        <select id="attacksave_value"
+                                            style="width:90px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Spell Attack">Spell Attack</option>
+                                            <option value="Spell Save">Spell Save</option>
+                                        </select>
+                                        <span class="attackbonus-display"
+                                            style="font-size:11px; color:#555; flex-shrink:0; display:none;"></span>
+                                        <select id="savetype_value"
+                                            style="width:42px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; display:none;">
+                                            <option value="">—</option>
+                                            <option value="STR">STR</option>
+                                            <option value="DEX">DEX</option>
+                                            <option value="CON">CON</option>
+                                            <option value="INT">INT</option>
+                                            <option value="WIS">WIS</option>
+                                            <option value="CHA">CHA</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Dmg:</span>
+                                        <input type="text" id="damage_value" placeholder="2d6"
+                                            style="width:40px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                        <select id="damagetype_value"
+                                            style="width:72px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Acid">Acid</option>
+                                            <option value="Bludgeoning">Bludg.</option>
+                                            <option value="Cold">Cold</option>
+                                            <option value="Fire">Fire</option>
+                                            <option value="Force">Force</option>
+                                            <option value="Lightning">Lightn.</option>
+                                            <option value="Necrotic">Necro.</option>
+                                            <option value="None">None</option>
+                                            <option value="Piercing">Pierc.</option>
+                                            <option value="Poison">Poison</option>
+                                            <option value="Psychic">Psych.</option>
+                                            <option value="Radiant">Radiant</option>
+                                            <option value="Slashing">Slash.</option>
+                                            <option value="Thunder">Thunder</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
+                                            <input type="text" id="range_value" placeholder="e.g. 60ft"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
+                                            <input type="text" id="duration_value" placeholder="e.g. 1 min"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
+                                            <select id="areashape_value"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                                <option value="">—</option>
+                                                <option value="Cone">Cone</option>
+                                                <option value="Sphere">Sphere</option>
+                                                <option value="Cube">Cube</option>
+                                                <option value="Cylinder">Cylinder</option>
+                                                <option value="Line">Line</option>
+                                            </select>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
+                                            <input type="text" id="areasize_value" placeholder="e.g. 30ft"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                    </div>
+                                    <input type="text" id="tooltip_value" placeholder="Tooltip (shown on hover)"
+                                        style="width:100%; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; box-sizing:border-box; padding:3px;">
+                                    <textarea id="description_value" placeholder="Description"
+                                        style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                        <label
+                                            style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
+                                            <input type="checkbox" id="showstats_value" checked> Stats in tooltip
+                                        </label>
+                                        <button type="button" class="panel-remove-btn" data-delete-label="spell"
+                                            style="border:none; background:none; cursor:pointer; font-size:14px; color:#777; padding:0 2px; line-height:1;">×</button>
+                                    </div>
+                                </div>
                             </div>
                         </template>
                     </div>
 
                     <div id="spells_fifth_panel"
-                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto;">
+                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
                         <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
                             <span style="text-align:center; flex:1;" data-label>5th Level</span>
-                            <button type="button" id="spells_fifth_button" style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
+                            <button type="button" id="spells_fifth_button"
+                                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
                         </div>
                         <template id="spells_fifth_template">
-                            <div class="panel-block" style="display:flex; align-items:center; gap:4px;
-                                background:#f0e6d3; border:1px solid #8b6914; border-radius:3px;
-                                padding:4px 6px; flex-shrink:0;">
-                                <input type="text" id="name_value" placeholder="Spell name" style="flex:1; min-width:0; border:none; background:transparent;
-                                    font-size:13px; outline:none; font-family:inherit;">
-                                <button type="button" class="panel-remove-btn" style="border:none; background:none;
-                                    cursor:pointer; font-size:14px; color:#666; padding:0 2px;
-                                    line-height:1; flex-shrink:0;">×</button>
+                            <div class="panel-block"
+                                style="display:flex; flex-direction:column; gap:4px; background:#f0e6d3; border:1px solid #8b6914; border-radius:3px; padding:4px 6px; flex-shrink:0;">
+                                <input type="hidden" id="level_value" value="5">
+                                <div style="display:flex; align-items:center; gap:4px;">
+                                    <input type="text" id="name_value" placeholder="Spell name"
+                                        style="flex:1; min-width:0; border:none; background:transparent; font-size:13px; outline:none; font-family:inherit;">
+                                    <button type="button" class="panel-expand-btn"
+                                        style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
+                                </div>
+                                <div class="panel-expanded" style="display:none; flex-direction:column; gap:4px;">
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">School:</span>
+                                        <select id="school_value"
+                                            style="flex:1; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Abjuration">Abjuration</option>
+                                            <option value="Conjuration">Conjuration</option>
+                                            <option value="Divination">Divination</option>
+                                            <option value="Enchantment">Enchantment</option>
+                                            <option value="Evocation">Evocation</option>
+                                            <option value="Illusion">Illusion</option>
+                                            <option value="Necromancy">Necromancy</option>
+                                            <option value="Transmutation">Transmutation</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Action:</span>
+                                        <select id="action_value"
+                                            style="flex:1; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">None</option>
+                                            <option value="Action">Action</option>
+                                            <option value="Bonus">Bonus</option>
+                                            <option value="Reaction">Reaction</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Type:</span>
+                                        <select id="attacksave_value"
+                                            style="width:90px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Spell Attack">Spell Attack</option>
+                                            <option value="Spell Save">Spell Save</option>
+                                        </select>
+                                        <span class="attackbonus-display"
+                                            style="font-size:11px; color:#555; flex-shrink:0; display:none;"></span>
+                                        <select id="savetype_value"
+                                            style="width:42px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; display:none;">
+                                            <option value="">—</option>
+                                            <option value="STR">STR</option>
+                                            <option value="DEX">DEX</option>
+                                            <option value="CON">CON</option>
+                                            <option value="INT">INT</option>
+                                            <option value="WIS">WIS</option>
+                                            <option value="CHA">CHA</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Dmg:</span>
+                                        <input type="text" id="damage_value" placeholder="2d6"
+                                            style="width:40px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                        <select id="damagetype_value"
+                                            style="width:72px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Acid">Acid</option>
+                                            <option value="Bludgeoning">Bludg.</option>
+                                            <option value="Cold">Cold</option>
+                                            <option value="Fire">Fire</option>
+                                            <option value="Force">Force</option>
+                                            <option value="Lightning">Lightn.</option>
+                                            <option value="Necrotic">Necro.</option>
+                                            <option value="None">None</option>
+                                            <option value="Piercing">Pierc.</option>
+                                            <option value="Poison">Poison</option>
+                                            <option value="Psychic">Psych.</option>
+                                            <option value="Radiant">Radiant</option>
+                                            <option value="Slashing">Slash.</option>
+                                            <option value="Thunder">Thunder</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
+                                            <input type="text" id="range_value" placeholder="e.g. 60ft"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
+                                            <input type="text" id="duration_value" placeholder="e.g. 1 min"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
+                                            <select id="areashape_value"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                                <option value="">—</option>
+                                                <option value="Cone">Cone</option>
+                                                <option value="Sphere">Sphere</option>
+                                                <option value="Cube">Cube</option>
+                                                <option value="Cylinder">Cylinder</option>
+                                                <option value="Line">Line</option>
+                                            </select>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
+                                            <input type="text" id="areasize_value" placeholder="e.g. 30ft"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                    </div>
+                                    <input type="text" id="tooltip_value" placeholder="Tooltip (shown on hover)"
+                                        style="width:100%; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; box-sizing:border-box; padding:3px;">
+                                    <textarea id="description_value" placeholder="Description"
+                                        style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                        <label
+                                            style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
+                                            <input type="checkbox" id="showstats_value" checked> Stats in tooltip
+                                        </label>
+                                        <button type="button" class="panel-remove-btn" data-delete-label="spell"
+                                            style="border:none; background:none; cursor:pointer; font-size:14px; color:#777; padding:0 2px; line-height:1;">×</button>
+                                    </div>
+                                </div>
                             </div>
                         </template>
                     </div>
@@ -749,77 +1541,557 @@
 
                 <div class="col">
                     <div id="spells_sixth_panel"
-                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto;">
+                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
                         <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
                             <span style="text-align:center; flex:1;" data-label>6th Level</span>
-                            <button type="button" id="spells_sixth_button" style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
+                            <button type="button" id="spells_sixth_button"
+                                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
                         </div>
                         <template id="spells_sixth_template">
-                            <div class="panel-block" style="display:flex; align-items:center; gap:4px;
-                                background:#f0e6d3; border:1px solid #8b6914; border-radius:3px;
-                                padding:4px 6px; flex-shrink:0;">
-                                <input type="text" id="name_value" placeholder="Spell name" style="flex:1; min-width:0; border:none; background:transparent;
-                                    font-size:13px; outline:none; font-family:inherit;">
-                                <button type="button" class="panel-remove-btn" style="border:none; background:none;
-                                    cursor:pointer; font-size:14px; color:#666; padding:0 2px;
-                                    line-height:1; flex-shrink:0;">×</button>
+                            <div class="panel-block"
+                                style="display:flex; flex-direction:column; gap:4px; background:#f0e6d3; border:1px solid #8b6914; border-radius:3px; padding:4px 6px; flex-shrink:0;">
+                                <input type="hidden" id="level_value" value="6">
+                                <div style="display:flex; align-items:center; gap:4px;">
+                                    <input type="text" id="name_value" placeholder="Spell name"
+                                        style="flex:1; min-width:0; border:none; background:transparent; font-size:13px; outline:none; font-family:inherit;">
+                                    <button type="button" class="panel-expand-btn"
+                                        style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
+                                </div>
+                                <div class="panel-expanded" style="display:none; flex-direction:column; gap:4px;">
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">School:</span>
+                                        <select id="school_value"
+                                            style="flex:1; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Abjuration">Abjuration</option>
+                                            <option value="Conjuration">Conjuration</option>
+                                            <option value="Divination">Divination</option>
+                                            <option value="Enchantment">Enchantment</option>
+                                            <option value="Evocation">Evocation</option>
+                                            <option value="Illusion">Illusion</option>
+                                            <option value="Necromancy">Necromancy</option>
+                                            <option value="Transmutation">Transmutation</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Action:</span>
+                                        <select id="action_value"
+                                            style="flex:1; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">None</option>
+                                            <option value="Action">Action</option>
+                                            <option value="Bonus">Bonus</option>
+                                            <option value="Reaction">Reaction</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Type:</span>
+                                        <select id="attacksave_value"
+                                            style="width:90px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Spell Attack">Spell Attack</option>
+                                            <option value="Spell Save">Spell Save</option>
+                                        </select>
+                                        <span class="attackbonus-display"
+                                            style="font-size:11px; color:#555; flex-shrink:0; display:none;"></span>
+                                        <select id="savetype_value"
+                                            style="width:42px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; display:none;">
+                                            <option value="">—</option>
+                                            <option value="STR">STR</option>
+                                            <option value="DEX">DEX</option>
+                                            <option value="CON">CON</option>
+                                            <option value="INT">INT</option>
+                                            <option value="WIS">WIS</option>
+                                            <option value="CHA">CHA</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Dmg:</span>
+                                        <input type="text" id="damage_value" placeholder="2d6"
+                                            style="width:40px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                        <select id="damagetype_value"
+                                            style="width:72px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Acid">Acid</option>
+                                            <option value="Bludgeoning">Bludg.</option>
+                                            <option value="Cold">Cold</option>
+                                            <option value="Fire">Fire</option>
+                                            <option value="Force">Force</option>
+                                            <option value="Lightning">Lightn.</option>
+                                            <option value="Necrotic">Necro.</option>
+                                            <option value="None">None</option>
+                                            <option value="Piercing">Pierc.</option>
+                                            <option value="Poison">Poison</option>
+                                            <option value="Psychic">Psych.</option>
+                                            <option value="Radiant">Radiant</option>
+                                            <option value="Slashing">Slash.</option>
+                                            <option value="Thunder">Thunder</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
+                                            <input type="text" id="range_value" placeholder="e.g. 60ft"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
+                                            <input type="text" id="duration_value" placeholder="e.g. 1 min"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
+                                            <select id="areashape_value"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                                <option value="">—</option>
+                                                <option value="Cone">Cone</option>
+                                                <option value="Sphere">Sphere</option>
+                                                <option value="Cube">Cube</option>
+                                                <option value="Cylinder">Cylinder</option>
+                                                <option value="Line">Line</option>
+                                            </select>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
+                                            <input type="text" id="areasize_value" placeholder="e.g. 30ft"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                    </div>
+                                    <input type="text" id="tooltip_value" placeholder="Tooltip (shown on hover)"
+                                        style="width:100%; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; box-sizing:border-box; padding:3px;">
+                                    <textarea id="description_value" placeholder="Description"
+                                        style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                        <label
+                                            style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
+                                            <input type="checkbox" id="showstats_value" checked> Stats in tooltip
+                                        </label>
+                                        <button type="button" class="panel-remove-btn" data-delete-label="spell"
+                                            style="border:none; background:none; cursor:pointer; font-size:14px; color:#777; padding:0 2px; line-height:1;">×</button>
+                                    </div>
+                                </div>
                             </div>
                         </template>
                     </div>
 
                     <div id="spells_seventh_panel"
-                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto;">
+                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
                         <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
                             <span style="text-align:center; flex:1;" data-label>7th Level</span>
-                            <button type="button" id="spells_seventh_button" style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
+                            <button type="button" id="spells_seventh_button"
+                                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
                         </div>
                         <template id="spells_seventh_template">
-                            <div class="panel-block" style="display:flex; align-items:center; gap:4px;
-                                background:#f0e6d3; border:1px solid #8b6914; border-radius:3px;
-                                padding:4px 6px; flex-shrink:0;">
-                                <input type="text" id="name_value" placeholder="Spell name" style="flex:1; min-width:0; border:none; background:transparent;
-                                    font-size:13px; outline:none; font-family:inherit;">
-                                <button type="button" class="panel-remove-btn" style="border:none; background:none;
-                                    cursor:pointer; font-size:14px; color:#666; padding:0 2px;
-                                    line-height:1; flex-shrink:0;">×</button>
+                            <div class="panel-block"
+                                style="display:flex; flex-direction:column; gap:4px; background:#f0e6d3; border:1px solid #8b6914; border-radius:3px; padding:4px 6px; flex-shrink:0;">
+                                <input type="hidden" id="level_value" value="7">
+                                <div style="display:flex; align-items:center; gap:4px;">
+                                    <input type="text" id="name_value" placeholder="Spell name"
+                                        style="flex:1; min-width:0; border:none; background:transparent; font-size:13px; outline:none; font-family:inherit;">
+                                    <button type="button" class="panel-expand-btn"
+                                        style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
+                                </div>
+                                <div class="panel-expanded" style="display:none; flex-direction:column; gap:4px;">
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">School:</span>
+                                        <select id="school_value"
+                                            style="flex:1; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Abjuration">Abjuration</option>
+                                            <option value="Conjuration">Conjuration</option>
+                                            <option value="Divination">Divination</option>
+                                            <option value="Enchantment">Enchantment</option>
+                                            <option value="Evocation">Evocation</option>
+                                            <option value="Illusion">Illusion</option>
+                                            <option value="Necromancy">Necromancy</option>
+                                            <option value="Transmutation">Transmutation</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Action:</span>
+                                        <select id="action_value"
+                                            style="flex:1; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">None</option>
+                                            <option value="Action">Action</option>
+                                            <option value="Bonus">Bonus</option>
+                                            <option value="Reaction">Reaction</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Type:</span>
+                                        <select id="attacksave_value"
+                                            style="width:90px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Spell Attack">Spell Attack</option>
+                                            <option value="Spell Save">Spell Save</option>
+                                        </select>
+                                        <span class="attackbonus-display"
+                                            style="font-size:11px; color:#555; flex-shrink:0; display:none;"></span>
+                                        <select id="savetype_value"
+                                            style="width:42px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; display:none;">
+                                            <option value="">—</option>
+                                            <option value="STR">STR</option>
+                                            <option value="DEX">DEX</option>
+                                            <option value="CON">CON</option>
+                                            <option value="INT">INT</option>
+                                            <option value="WIS">WIS</option>
+                                            <option value="CHA">CHA</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Dmg:</span>
+                                        <input type="text" id="damage_value" placeholder="2d6"
+                                            style="width:40px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                        <select id="damagetype_value"
+                                            style="width:72px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Acid">Acid</option>
+                                            <option value="Bludgeoning">Bludg.</option>
+                                            <option value="Cold">Cold</option>
+                                            <option value="Fire">Fire</option>
+                                            <option value="Force">Force</option>
+                                            <option value="Lightning">Lightn.</option>
+                                            <option value="Necrotic">Necro.</option>
+                                            <option value="None">None</option>
+                                            <option value="Piercing">Pierc.</option>
+                                            <option value="Poison">Poison</option>
+                                            <option value="Psychic">Psych.</option>
+                                            <option value="Radiant">Radiant</option>
+                                            <option value="Slashing">Slash.</option>
+                                            <option value="Thunder">Thunder</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
+                                            <input type="text" id="range_value" placeholder="e.g. 60ft"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
+                                            <input type="text" id="duration_value" placeholder="e.g. 1 min"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
+                                            <select id="areashape_value"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                                <option value="">—</option>
+                                                <option value="Cone">Cone</option>
+                                                <option value="Sphere">Sphere</option>
+                                                <option value="Cube">Cube</option>
+                                                <option value="Cylinder">Cylinder</option>
+                                                <option value="Line">Line</option>
+                                            </select>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
+                                            <input type="text" id="areasize_value" placeholder="e.g. 30ft"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                    </div>
+                                    <input type="text" id="tooltip_value" placeholder="Tooltip (shown on hover)"
+                                        style="width:100%; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; box-sizing:border-box; padding:3px;">
+                                    <textarea id="description_value" placeholder="Description"
+                                        style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                        <label
+                                            style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
+                                            <input type="checkbox" id="showstats_value" checked> Stats in tooltip
+                                        </label>
+                                        <button type="button" class="panel-remove-btn" data-delete-label="spell"
+                                            style="border:none; background:none; cursor:pointer; font-size:14px; color:#777; padding:0 2px; line-height:1;">×</button>
+                                    </div>
+                                </div>
                             </div>
                         </template>
                     </div>
 
                     <div id="spells_eighth_panel"
-                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto;">
+                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
                         <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
                             <span style="text-align:center; flex:1;" data-label>8th Level</span>
-                            <button type="button" id="spells_eighth_button" style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
+                            <button type="button" id="spells_eighth_button"
+                                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
                         </div>
                         <template id="spells_eighth_template">
-                            <div class="panel-block" style="display:flex; align-items:center; gap:4px;
-                                background:#f0e6d3; border:1px solid #8b6914; border-radius:3px;
-                                padding:4px 6px; flex-shrink:0;">
-                                <input type="text" id="name_value" placeholder="Spell name" style="flex:1; min-width:0; border:none; background:transparent;
-                                    font-size:13px; outline:none; font-family:inherit;">
-                                <button type="button" class="panel-remove-btn" style="border:none; background:none;
-                                    cursor:pointer; font-size:14px; color:#666; padding:0 2px;
-                                    line-height:1; flex-shrink:0;">×</button>
+                            <div class="panel-block"
+                                style="display:flex; flex-direction:column; gap:4px; background:#f0e6d3; border:1px solid #8b6914; border-radius:3px; padding:4px 6px; flex-shrink:0;">
+                                <input type="hidden" id="level_value" value="8">
+                                <div style="display:flex; align-items:center; gap:4px;">
+                                    <input type="text" id="name_value" placeholder="Spell name"
+                                        style="flex:1; min-width:0; border:none; background:transparent; font-size:13px; outline:none; font-family:inherit;">
+                                    <button type="button" class="panel-expand-btn"
+                                        style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
+                                </div>
+                                <div class="panel-expanded" style="display:none; flex-direction:column; gap:4px;">
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">School:</span>
+                                        <select id="school_value"
+                                            style="flex:1; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Abjuration">Abjuration</option>
+                                            <option value="Conjuration">Conjuration</option>
+                                            <option value="Divination">Divination</option>
+                                            <option value="Enchantment">Enchantment</option>
+                                            <option value="Evocation">Evocation</option>
+                                            <option value="Illusion">Illusion</option>
+                                            <option value="Necromancy">Necromancy</option>
+                                            <option value="Transmutation">Transmutation</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Action:</span>
+                                        <select id="action_value"
+                                            style="flex:1; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">None</option>
+                                            <option value="Action">Action</option>
+                                            <option value="Bonus">Bonus</option>
+                                            <option value="Reaction">Reaction</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Type:</span>
+                                        <select id="attacksave_value"
+                                            style="width:90px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Spell Attack">Spell Attack</option>
+                                            <option value="Spell Save">Spell Save</option>
+                                        </select>
+                                        <span class="attackbonus-display"
+                                            style="font-size:11px; color:#555; flex-shrink:0; display:none;"></span>
+                                        <select id="savetype_value"
+                                            style="width:42px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; display:none;">
+                                            <option value="">—</option>
+                                            <option value="STR">STR</option>
+                                            <option value="DEX">DEX</option>
+                                            <option value="CON">CON</option>
+                                            <option value="INT">INT</option>
+                                            <option value="WIS">WIS</option>
+                                            <option value="CHA">CHA</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Dmg:</span>
+                                        <input type="text" id="damage_value" placeholder="2d6"
+                                            style="width:40px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                        <select id="damagetype_value"
+                                            style="width:72px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Acid">Acid</option>
+                                            <option value="Bludgeoning">Bludg.</option>
+                                            <option value="Cold">Cold</option>
+                                            <option value="Fire">Fire</option>
+                                            <option value="Force">Force</option>
+                                            <option value="Lightning">Lightn.</option>
+                                            <option value="Necrotic">Necro.</option>
+                                            <option value="None">None</option>
+                                            <option value="Piercing">Pierc.</option>
+                                            <option value="Poison">Poison</option>
+                                            <option value="Psychic">Psych.</option>
+                                            <option value="Radiant">Radiant</option>
+                                            <option value="Slashing">Slash.</option>
+                                            <option value="Thunder">Thunder</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
+                                            <input type="text" id="range_value" placeholder="e.g. 60ft"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
+                                            <input type="text" id="duration_value" placeholder="e.g. 1 min"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
+                                            <select id="areashape_value"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                                <option value="">—</option>
+                                                <option value="Cone">Cone</option>
+                                                <option value="Sphere">Sphere</option>
+                                                <option value="Cube">Cube</option>
+                                                <option value="Cylinder">Cylinder</option>
+                                                <option value="Line">Line</option>
+                                            </select>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
+                                            <input type="text" id="areasize_value" placeholder="e.g. 30ft"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                    </div>
+                                    <input type="text" id="tooltip_value" placeholder="Tooltip (shown on hover)"
+                                        style="width:100%; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; box-sizing:border-box; padding:3px;">
+                                    <textarea id="description_value" placeholder="Description"
+                                        style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                        <label
+                                            style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
+                                            <input type="checkbox" id="showstats_value" checked> Stats in tooltip
+                                        </label>
+                                        <button type="button" class="panel-remove-btn" data-delete-label="spell"
+                                            style="border:none; background:none; cursor:pointer; font-size:14px; color:#777; padding:0 2px; line-height:1;">×</button>
+                                    </div>
+                                </div>
                             </div>
                         </template>
                     </div>
 
                     <div id="spells_ninth_panel"
-                        style="height: 200px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto;">
+                        style="height: 200px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
                         <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
                             <span style="text-align:center; flex:1;" data-label>9th Level</span>
-                            <button type="button" id="spells_ninth_button" style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
+                            <button type="button" id="spells_ninth_button"
+                                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
                         </div>
                         <template id="spells_ninth_template">
-                            <div class="panel-block" style="display:flex; align-items:center; gap:4px;
-                                background:#f0e6d3; border:1px solid #8b6914; border-radius:3px;
-                                padding:4px 6px; flex-shrink:0;">
-                                <input type="text" id="name_value" placeholder="Spell name" style="flex:1; min-width:0; border:none; background:transparent;
-                                    font-size:13px; outline:none; font-family:inherit;">
-                                <button type="button" class="panel-remove-btn" style="border:none; background:none;
-                                    cursor:pointer; font-size:14px; color:#666; padding:0 2px;
-                                    line-height:1; flex-shrink:0;">×</button>
+                            <div class="panel-block"
+                                style="display:flex; flex-direction:column; gap:4px; background:#f0e6d3; border:1px solid #8b6914; border-radius:3px; padding:4px 6px; flex-shrink:0;">
+                                <input type="hidden" id="level_value" value="9">
+                                <div style="display:flex; align-items:center; gap:4px;">
+                                    <input type="text" id="name_value" placeholder="Spell name"
+                                        style="flex:1; min-width:0; border:none; background:transparent; font-size:13px; outline:none; font-family:inherit;">
+                                    <button type="button" class="panel-expand-btn"
+                                        style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
+                                </div>
+                                <div class="panel-expanded" style="display:none; flex-direction:column; gap:4px;">
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">School:</span>
+                                        <select id="school_value"
+                                            style="flex:1; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Abjuration">Abjuration</option>
+                                            <option value="Conjuration">Conjuration</option>
+                                            <option value="Divination">Divination</option>
+                                            <option value="Enchantment">Enchantment</option>
+                                            <option value="Evocation">Evocation</option>
+                                            <option value="Illusion">Illusion</option>
+                                            <option value="Necromancy">Necromancy</option>
+                                            <option value="Transmutation">Transmutation</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Action:</span>
+                                        <select id="action_value"
+                                            style="flex:1; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">None</option>
+                                            <option value="Action">Action</option>
+                                            <option value="Bonus">Bonus</option>
+                                            <option value="Reaction">Reaction</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Type:</span>
+                                        <select id="attacksave_value"
+                                            style="width:90px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Spell Attack">Spell Attack</option>
+                                            <option value="Spell Save">Spell Save</option>
+                                        </select>
+                                        <span class="attackbonus-display"
+                                            style="font-size:11px; color:#555; flex-shrink:0; display:none;"></span>
+                                        <select id="savetype_value"
+                                            style="width:42px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; display:none;">
+                                            <option value="">—</option>
+                                            <option value="STR">STR</option>
+                                            <option value="DEX">DEX</option>
+                                            <option value="CON">CON</option>
+                                            <option value="INT">INT</option>
+                                            <option value="WIS">WIS</option>
+                                            <option value="CHA">CHA</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <span style="font-size:11px; color:#555; flex-shrink:0;">Dmg:</span>
+                                        <input type="text" id="damage_value" placeholder="2d6"
+                                            style="width:40px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                        <select id="damagetype_value"
+                                            style="width:72px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                                            <option value="">—</option>
+                                            <option value="Acid">Acid</option>
+                                            <option value="Bludgeoning">Bludg.</option>
+                                            <option value="Cold">Cold</option>
+                                            <option value="Fire">Fire</option>
+                                            <option value="Force">Force</option>
+                                            <option value="Lightning">Lightn.</option>
+                                            <option value="Necrotic">Necro.</option>
+                                            <option value="None">None</option>
+                                            <option value="Piercing">Pierc.</option>
+                                            <option value="Poison">Poison</option>
+                                            <option value="Psychic">Psych.</option>
+                                            <option value="Radiant">Radiant</option>
+                                            <option value="Slashing">Slash.</option>
+                                            <option value="Thunder">Thunder</option>
+                                        </select>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
+                                            <input type="text" id="range_value" placeholder="e.g. 60ft"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
+                                            <input type="text" id="duration_value" placeholder="e.g. 1 min"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
+                                            <select id="areashape_value"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                                <option value="">—</option>
+                                                <option value="Cone">Cone</option>
+                                                <option value="Sphere">Sphere</option>
+                                                <option value="Cube">Cube</option>
+                                                <option value="Cylinder">Cylinder</option>
+                                                <option value="Line">Line</option>
+                                            </select>
+                                        </div>
+                                        <div style="display:flex; align-items:center; gap:4px;">
+                                            <span
+                                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
+                                            <input type="text" id="areasize_value" placeholder="e.g. 30ft"
+                                                style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                        </div>
+                                    </div>
+                                    <input type="text" id="tooltip_value" placeholder="Tooltip (shown on hover)"
+                                        style="width:100%; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; box-sizing:border-box; padding:3px;">
+                                    <textarea id="description_value" placeholder="Description"
+                                        style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                        <label
+                                            style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
+                                            <input type="checkbox" id="showstats_value" checked> Stats in tooltip
+                                        </label>
+                                        <button type="button" class="panel-remove-btn" data-delete-label="spell"
+                                            style="border:none; background:none; cursor:pointer; font-size:14px; color:#777; padding:0 2px; line-height:1;">×</button>
+                                    </div>
+                                </div>
                             </div>
                         </template>
                     </div>

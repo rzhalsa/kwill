@@ -382,6 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function createPanelBlock(panelId, data = {}) {
+
     const template = document.getElementById(`${panelId}_template`);
     if (!template) {
         console.warn(`Panel template not found: ${panelId}_template`);
@@ -398,12 +399,12 @@ function createPanelBlock(panelId, data = {}) {
     // duplicate id collisions in the live DOM
     clone.querySelectorAll('[id]').forEach(el => {
         let key = el.id.trim();
-        const isValue      = key.endsWith('_value');
-        const isName       = key.endsWith('_name');
+        const isValue = key.endsWith('_value');
+        const isName = key.endsWith('_name');
         const isCalculated = key.endsWith('_calculated');
 
-        if (isValue)           key = key.slice(0, -'_value'.length);
-        else if (isName)       key = key.slice(0, -'_name'.length);
+        if (isValue) key = key.slice(0, -'_value'.length);
+        else if (isName) key = key.slice(0, -'_name'.length);
         else if (isCalculated) key = key.slice(0, -'_calculated'.length);
         else { el.removeAttribute('id'); return; }
 
@@ -423,8 +424,204 @@ function createPanelBlock(panelId, data = {}) {
         }
     });
 
-    clone.querySelector('.panel-remove-btn')
-        ?.addEventListener('click', () => clone.remove());
+    clone.querySelector('.panel-remove-btn')?.addEventListener('click', () => {
+        const nameInput = clone.querySelector('[data-field-key="name"]');
+        const name = nameInput?.value?.trim() || '';
+        const label = clone.querySelector('.panel-remove-btn')?.dataset.deleteLabel || 'entry';
+        if (confirm(`Delete ${label} ${name}?`)) {
+            tooltip.remove();
+            clone.remove();
+        }
+    });
+
+
+    // Wire up expand/collapse button
+    const expandBtn = clone.querySelector('.panel-expand-btn');
+    const expandedSection = clone.querySelector('.panel-expanded');
+
+    // Show savetype only when Spell Save is selected
+    const attackSaveSelect = clone.querySelector('[data-field-key="attacksave"]');
+    const saveTypeSelect = clone.querySelector('[data-field-key="savetype"]');
+    const attackBonusDisplay = clone.querySelector('.attackbonus-display');
+
+    function updateSaveTypeVisibility() {
+        const val = attackSaveSelect?.value;
+
+        if (saveTypeSelect)
+            saveTypeSelect.style.display = val === 'Spell Save' ? 'inline-block' : 'none';
+
+        if (attackBonusDisplay) {
+            if (val === 'Spell Attack') {
+                const bonus = document.getElementById('spell_attackBonus_value')?.value?.trim();
+                attackBonusDisplay.textContent = bonus ? `+${bonus}` : '';
+                attackBonusDisplay.style.display = 'inline';
+            } else {
+                attackBonusDisplay.style.display = 'none';
+            }
+        }
+    }
+
+    attackSaveSelect?.addEventListener('change', updateSaveTypeVisibility);
+
+    // Also refresh when the main sheet attack bonus field changes
+    document.getElementById('spell_attackBonus_value')
+        ?.addEventListener('input', updateSaveTypeVisibility);
+
+    setTimeout(updateSaveTypeVisibility, 0);
+
+    // Create uses display element shown in collapsed view
+    const usesDisplay = document.createElement('span');
+    usesDisplay.style.cssText = 'font-size:11px; color:#555; flex-shrink:0;';
+
+    // Insert uses display after the name input in the main row
+    const mainRow = clone.querySelector('.panel-block > div');
+    if (mainRow) mainRow.insertBefore(usesDisplay, expandBtn);
+
+    function updateUsesDisplay() {
+        const current = clone.querySelector('[data-field-key="uses_current"]');
+        const max = clone.querySelector('[data-field-key="uses_max"]');
+        const currentVal = current?.value?.trim();
+        const maxVal = max?.value?.trim();
+        if (currentVal) {
+            usesDisplay.textContent = maxVal ? `${currentVal}/${maxVal}` : currentVal;
+        } else {
+            usesDisplay.textContent = '';
+        }
+    }
+
+    function updateCollapsedSpells() {
+        const damage = clone.querySelector('[data-field-key="damage"]');
+        const damageType = clone.querySelector('[data-field-key="damagetype"]');
+        const action = clone.querySelector('[data-field-key="action"]');
+        const range = clone.querySelector('[data-field-key="range"]');
+
+        const dmgVal = damage?.value?.trim();
+        const dmgTypeVal = damageType?.value?.trim();
+        const actionVal = action?.value?.trim();
+        const rangeVal = range?.value?.trim();
+
+        const dmgDisplay = clone.querySelector('.collapsed-damage');
+        const actionDisplay = clone.querySelector('.collapsed-action');
+        const rangeDisplay = clone.querySelector('.collapsed-range');
+
+        if (dmgDisplay) {
+            if (dmgVal && dmgTypeVal) dmgDisplay.textContent = `${dmgVal} ${dmgTypeVal}`;
+            else if (dmgTypeVal) dmgDisplay.textContent = dmgTypeVal;
+            else dmgDisplay.textContent = '';
+        }
+        if (actionDisplay) actionDisplay.textContent = actionVal || '';
+        if (rangeDisplay) rangeDisplay.textContent = rangeVal || '';
+    }
+
+    clone.addEventListener('input', (e) => {
+        const key = e.target.dataset.fieldKey;
+        if (['damage', 'damagetype', 'action', 'range'].includes(key)) {
+            updateCollapsedSpells();
+        }
+    });
+    clone.addEventListener('change', (e) => {
+        const key = e.target.dataset.fieldKey;
+        if (['damage', 'damagetype', 'action', 'range'].includes(key)) {
+            updateCollapsedSpells();
+        }
+    });
+
+    setTimeout(updateCollapsedSpells, 0);
+
+    // Update display when uses fields change
+    clone.addEventListener('input', (e) => {
+        if (e.target.dataset.fieldKey === 'uses_current' || e.target.dataset.fieldKey === 'uses_max') {
+            updateUsesDisplay();
+        }
+    });
+
+    if (expandBtn && expandedSection) {
+        expandBtn.addEventListener('click', () => {
+            const isOpen = expandedSection.style.display !== 'none';
+            expandedSection.style.display = isOpen ? 'none' : 'flex';
+            expandBtn.textContent = isOpen ? 'v' : '^';
+            tooltip.style.display = 'none'; // hide tooltip when toggling
+        });
+    }
+    // Call once after data is populated
+    setTimeout(updateUsesDisplay, 0);
+
+    // Tooltip showing description on hover when collapsed
+    const tooltip = document.createElement('div');
+    tooltip.style.cssText = [
+        'position:fixed',
+        'background:#333',
+        'color:#fff',
+        'font-size:12px',
+        'padding:5px 8px',
+        'border-radius:4px',
+        'max-width:170px',
+        'white-space:pre-wrap',
+        'pointer-events:none',
+        'z-index:9999',
+        'display:none'
+    ].join(';');
+    document.body.appendChild(tooltip);
+
+    clone.addEventListener('mouseenter', (e) => {
+        if (expandedSection.style.display !== 'none') return;
+
+        const get = (key) => clone.querySelector(`[data-field-key="${key}"]`)?.value?.trim() || '';
+
+        const manualTooltip = get('tooltip');
+        const showStats = clone.querySelector('[data-field-key="showstats"]')?.checked;
+
+        const lines = [];
+
+        if (showStats) {
+            const range = get('range');
+            const duration = get('duration');
+            const action = get('action');
+            const attacksave = get('attacksave');
+            const savetype = get('savetype');
+            const damage = get('damage');
+            const damagetype = get('damagetype');
+            const areashape = get('areashape');
+            const areasize = get('areasize');
+
+            if (action) lines.push(action);
+            if (range) lines.push(`Range: ${range}`);
+            if (duration) lines.push(`Duration: ${duration}`);
+
+            if (attacksave === 'Spell Attack') {
+                const bonus = document.getElementById('spell_attackBonus_value')?.value?.trim();
+                if (bonus) lines.push(`Spell Attack Bonus +${bonus}`);
+            } else if (attacksave === 'Spell Save') {
+                const dc = document.getElementById('spell_saveDc_value')?.value?.trim();
+                const saveStr = [dc ? `DC ${dc}` : '', savetype].filter(Boolean).join(' ');
+                if (dc || savetype) lines.push(`Spell Save ${saveStr}`);
+            }
+
+            const dmgParts = [damage, damagetype && damagetype !== '—' && damagetype !== '' ? damagetype : ''].filter(Boolean);
+            if (dmgParts.length) lines.push(dmgParts.join(' '));
+
+            const aoeParts = [areasize, areashape].filter(Boolean);
+            if (aoeParts.length) lines.push(`AOE: ${aoeParts.join(' ')}`);
+        }
+
+        if (manualTooltip) lines.push(manualTooltip);
+
+        if (!lines.length) return;
+
+        tooltip.textContent = lines.join('\n');
+        tooltip.style.display = 'block';
+        tooltip.style.left = e.clientX + 12 + 'px';
+        tooltip.style.top = e.clientY + 12 + 'px';
+    });
+
+    clone.addEventListener('mousemove', (e) => {
+        tooltip.style.left = e.clientX + 12 + 'px';
+        tooltip.style.top = e.clientY + 12 + 'px';
+    });
+
+    clone.addEventListener('mouseleave', () => {
+        tooltip.style.display = 'none';
+    });
 
     return clone;
 }
