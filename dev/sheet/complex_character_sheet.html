@@ -77,7 +77,7 @@
                         <div style="display: flex; flex-direction: row; align-items: center; gap: 0px;">
                             <input class="page1-top-input-value" id="class_name" placeholder="class" autocomplete="off"
                                 style="width: 70px; margin-top: 30px;">
-                            <input class="ability-score" id="class_level_value" placeholder="1" autocomplete="off"
+                            <input class="ability-score" id="level_value" placeholder="1" autocomplete="off"
                                 style="position: absolute; width: 25px; height: 25px; margin-left: 75px; margin-top: 30px;"
                                 type="number" autocomplete="off">
                         </div>
@@ -127,8 +127,7 @@
                             <div class="col">
                                 <span data-label style="font-size: 11px; font-weight: bold;">STR</span>
                                 <input class="ability-modifier" id="ability_strength_modifier_calculated" type="text"
-                                    autocomplete="off"
-                                    value="=ability_strength_score [0,3,4,6,8,10,12,14,16,18,20][-5,-4,-3,-2,-1,0,1,2,3,4,5]">
+                                    autocomplete="off" value="=Math.floor((ability_strength_score - 10) / 2)">
                                 <input class="ability-score" id="ability_strength_score_value" type="number"
                                     autocomplete="off">
                             </div>
@@ -138,8 +137,7 @@
                             <div class="col">
                                 <span data-label style="font-size: 11px; font-weight: bold;">DEX</span>
                                 <input class="ability-modifier" id="ability_dexterity_modifier_calculated" type="text"
-                                    autocomplete="off"
-                                    value="=ability_dexterity_score [0,3,4,6,8,10,12,14,16,18,20][-5,-4,-3,-2,-1,0,1,2,3,4,5]">
+                                    autocomplete="off" value="=Math.floor((ability_dexterity_score - 10) / 2)">
                                 <input class="ability-score" id="ability_dexterity_score_value" type="number"
                                     autocomplete="off">
                             </div>
@@ -150,7 +148,7 @@
                                 <span data-label style="font-size: 11px; font-weight: bold;">CON</span>
                                 <input class="ability-modifier" id="ability_constitution_modifier_calculated"
                                     type="text" autocomplete="off"
-                                    value="=ability_constitution_score [0,3,4,6,8,10,12,14,16,18,20][-5,-4,-3,-2,-1,0,1,2,3,4,5]">
+                                    value="=Math.floor((ability_constitution_score - 10) / 2)">
                                 <input class="ability-score" id="ability_constitution_score_value" type="number"
                                     autocomplete="off">
                             </div>
@@ -161,7 +159,7 @@
                                 <span data-label style="font-size: 11px; font-weight: bold;">INT</span>
                                 <input class="ability-modifier" id="ability_intelligence_modifier_calculated"
                                     type="text" autocomplete="off"
-                                    value="=ability_intelligence_score [0,3,4,6,8,10,12,14,16,18,20][-5,-4,-3,-2,-1,0,1,2,3,4,5]">
+                                    value="=Math.floor((ability_intelligence_score - 10) / 2)">
                                 <input class="ability-score" id="ability_intelligence_score_value" type="number"
                                     autocomplete="off">
                             </div>
@@ -171,8 +169,7 @@
                             <div class="col">
                                 <span data-label style="font-size: 11px; font-weight: bold;">WIS</span>
                                 <input class="ability-modifier" id="ability_wisdom_modifier_calculated" type="text"
-                                    autocomplete="off"
-                                    value="=ability_wisdom_score [0,3,4,6,8,10,12,14,16,18,20][-5,-4,-3,-2,-1,0,1,2,3,4,5]">
+                                    autocomplete="off" value="=Math.floor((ability_wisdom_score - 10) / 2)">
                                 <input class="ability-score" id="ability_wisdom_score_value" type="number"
                                     autocomplete="off">
                             </div>
@@ -182,8 +179,7 @@
                             <div class="col">
                                 <span data-label style="font-size: 11px; font-weight: bold;">CHA</span>
                                 <input class="ability-modifier" id="ability_charisma_modifier_calculated" type="text"
-                                    autocomplete="off"
-                                    value="=ability_charisma_score [0,3,4,6,8,10,12,14,16,18,20][-5,-4,-3,-2,-1,0,1,2,3,4,5]">
+                                    autocomplete="off" value="=Math.floor((ability_charisma_score - 10) / 2)">
                                 <input class="ability-score" id="ability_charisma_score_value" type="number"
                                     autocomplete="off">
                             </div>
@@ -370,9 +366,9 @@
                                 <div style="text-align: center;" data-label>AC</div>
                             </div>
                             <div>
-                                <input id="initiative_value" autocomplete="off" type="text" inputmode="numeric"
-                                    oninput="this.value=this.value.replace(/[^0-9+\-]/g,'').replace(/(?!^)[+\-]/g,'')"
-                                    style="width: 50px; height: 50px; border: 2px solid #000; display: flex; margin: 5px; text-align: center;">
+                                <input id="initiative_calculated" autocomplete="off" type="text"
+                                    style="width: 50px; height: 50px; border: 2px solid #000; display: flex; margin: 5px; text-align: center;"
+                                    value="=> ability_dexterity_modifier_calculated">
                                 <div style="text-align: center;" data-label>Initiative</div>
                             </div>
                             <div><input id="speed_value" autocomplete="off"
@@ -568,6 +564,15 @@
                                     <textarea id="description_value" placeholder="Description"
                                         style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent;
                        font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
+
+                                    <!-- Formula override -->
+                                    <div style="display:flex; align-items:center; gap:4px;">
+                                        <input type="text" id="formula_value"
+                                            placeholder="e.g. =+ hitpoints_maximum + character_level" style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent;
+               font-size:12px; font-family:inherit; padding:2px;">
+                                                       <input type="checkbox" id="formula_active_value" checked>
+
+                                    </div>
 
                                     <!-- Delete button bottom right -->
                                     <div style="display:flex; justify-content:flex-end;">
