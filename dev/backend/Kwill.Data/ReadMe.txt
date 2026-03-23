@@ -1,4 +1,6 @@
-﻿To run the sql database you need:
+﻿First check the to see if the sql database is already made. Go to line 15 of this document to see how.
+
+To run the sql database you need:
 Microsoft.EntityFrameworkCore.SqlServer --version 8.0.11
 Microsoft.EntityFrameworkCore.Design --version 8.0.11
 Microsoft.EntityFrameworkCore.Tools --version 8.0.11

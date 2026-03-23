@@ -6,6 +6,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.IO;
 using MongoDB.Driver;
 using System.Text.Json;
+using Kwill.Api.Services;
 
 [ApiController]
 [Route("api/character")]
