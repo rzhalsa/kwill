@@ -1,7 +1,10 @@
+using kwill.Data;
 using Kwill.Api;
 using Kwill.Api.Services;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
 using MongoDB.Driver;
+
 
 // look in properties/launchSettings.json for ports.
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +27,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<KwillDB.KwillDB>(); // ASP.NET creates the instance of the singleton class.
 builder.Services.AddScoped<SrdService>();
 builder.Services.AddScoped<CharacterService>();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 

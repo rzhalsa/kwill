@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Kwill.Api;
+using Kwill.Validation;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using Kwill.Validation;
+using System;
 
 public class CharacterService
 {
@@ -9,12 +10,26 @@ public class CharacterService
 
 	public CharacterService(KwillDB.KwillDB db) => _db = db;
 
+    //Gets the calculated character sheet.
     public async Task<BsonDocument?> GetByCharacterIdAsync(string characterId)
     {
         var filter = Builders<BsonDocument>.Filter.Eq("character_id", characterId);
-        return await _db.CharacterSheets.Find(filter).FirstOrDefaultAsync();
+        var doc = await _db.CharacterSheets.Find(filter).FirstOrDefaultAsync();
+
+        if (doc == null)
+            return null;
+
+        var srdData = await LoadSrdDataAsync();
+
+        var calculated = CharacterSheetCalculator.Calculate(doc, srdData);
+
+        var response = doc.DeepClone().AsBsonDocument;
+        response["calculated"] = calculated;
+
+        return response;
     }
 
+    //Creates an entry in the mongoDb using the provided BsonDocument.
     public async Task<(bool Success, BsonDocument? Doc, List<string>? Errors, string? ErrorMessage)> CreateAsync(BsonDocument doc)
     {
         try
@@ -38,6 +53,7 @@ public class CharacterService
         }
     }
 
+    //Updates the specified entry in the mongoDb
     public async Task<(bool Success, BsonDocument? Doc, List<string>? Errors, string? ErrorMessage, bool NotFound, bool Forbidden)> UpdateAsync(
         string userId,
         string characterId,
@@ -69,6 +85,7 @@ public class CharacterService
         }
     }
 
+    //Deletes the specified entry in the mongoDb
     public async Task<(bool Success, bool NotFound, bool Forbidden, string? ErrorMessage)> DeleteAsync(string userId, string characterId)
     {
         try
