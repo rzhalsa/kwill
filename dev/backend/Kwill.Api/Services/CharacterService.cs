@@ -1,4 +1,5 @@
 ﻿using Kwill.Api;
+using Kwill.Api.Helpers;
 using Kwill.Validation;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -27,6 +28,31 @@ public class CharacterService
         response["calculated"] = calculated;
 
         return response;
+    }
+
+    //Gets all characters from given UserId
+    public async Task<List<BsonDocument>> GetByUserIdAsync(string userId)
+    {
+        var filter = Builders<BsonDocument>.Filter.Eq("user_id", userId);
+        var docs = await _db.CharacterSheets.Find(filter).ToListAsync();
+
+        if (docs.Count == 0)
+            return new List<BsonDocument>();
+
+        var srdData = await LoadSrdDataAsync();
+        var results = new List<BsonDocument>();
+
+        foreach (var doc in docs)
+        {
+            var calculated = CharacterSheetCalculator.Calculate(doc, srdData);
+
+            var response = doc.DeepClone().AsBsonDocument;
+            response["calculated"] = calculated;
+
+            results.Add(response);
+        }
+
+        return results;
     }
 
     //Creates an entry in the mongoDb using the provided BsonDocument.
