@@ -1,0 +1,32 @@
+name: Backend CI
+permissions:
+  contents: read
+  pull-requests: write
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/**'
+      - 'bugfix/**'
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with: 
+          dotnet-version: '6.0.x'
+      - name: Install dependencies
+        run: dotnet restore Backend.sln
+        working-directory: dev/backend
+      - name: Build Files
+        run: dotnet build --configuration Release
+        working-directory: dev/backend
+      - name: Run Tests
+        run: dotnet test --no-build --configuration Release
+        working-directory: dev/backend

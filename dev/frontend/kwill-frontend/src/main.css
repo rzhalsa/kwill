@@ -1,9 +1,40 @@
 .v-application * {
-  font-family: 'Playwrite NZ Basic', sans-serif !important;
+  font-family: 'PT Serif' !important;
 }
-.gradient-navbar {
-  background: linear-gradient(150deg, #157a08, #02350d) !important;
-  }
-.gradient-card {
-background: linear-gradient(to bottom, #272727 0%, #222222 50%, #272727 100%) !important;
+.menu-item * {
+  font-family: 'PT Serif' !important;
+}
+.v-theme--kwillTheme .gradient-navbar {
+  background: linear-gradient(to right, #f97272, rgb(218, 70, 70)) !important;
+}
+.v-theme--kwillThemeDark .gradient-navbar {
+  background: linear-gradient(to right, #370808, #422828) !important;
+}
+
+.v-theme--kwillTheme .gradient-topcard {
+background: linear-gradient(to bottom, #ffd1d1 0%, #ebcaca 50%, #faeded 100%) !important;
+}
+.v-theme--kwillThemeDark .gradient-topcard {
+background: linear-gradient(to bottom, #2b1111, #342a2a ) !important;
+}
+
+.v-theme--kwillTheme .gradient-card {
+background: linear-gradient(to bottom, #faeded 0%, #f7f0f0 50%, #ffffff 100%) !important;
+}
+.v-theme--kwillThemeDark .gradient-card {
+background: linear-gradient(to bottom, #342a2a 0%, #2c2929 50%, #272727 100%) !important;
+}
+
+.v-theme--kwillTheme .gradient-card-bottom {
+background: linear-gradient(to bottom, #ffffff 0%, #f7f0f0 50%, #ffd1d1 100%) !important;
+}
+.v-theme--kwillThemeDark .gradient-card-bottom {
+background: linear-gradient(to bottom, #272727 0%, #211d1d 50%, #2b1111 100%) !important;
+}
+
+.v-theme--kwillTheme .gradient-login {
+background: linear-gradient(to bottom, #383333 0%, #3c2e2e 50%, #1f1414 100%) !important;
+}
+.v-theme--kwillThemeDark .gradient-login {
+background: linear-gradient(to bottom, #3b3b3b 0%, #373333 50%, #2b2a2a 100%) !important;
 }

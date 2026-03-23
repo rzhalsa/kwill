@@ -10,17 +10,35 @@ export default createVuetify({
     defaultTheme: 'kwillTheme',
     themes: {
       kwillTheme: {
-        dark: true, //to turn dark mode on and off
+        dark: false, //to turn dark mode on and off
         colors: {
-          primary: '#2c9e0f',   
-          secondary: '#158f44', 
-          accent: '#FFC107',    
+          primary: '#e66c63',   
+          secondary: '#bb3a3a', 
+          accent: '#c0bdb4',    
           error: '#f44336',     
           info: '#2196F3',
           success: '#4CAF50',
           warning: '#FB8C00',
         },
+        variables: {
+          // any theme variables for CSS styling go here
+        }
       },
+      kwillThemeDark: {
+        dark: true,
+        colors: {
+          primary: '#8f3933',   
+          secondary: '#8f1515', 
+          accent: '#c0bdb4',    
+          error: '#f44336',     
+          info: '#2196F3',
+          success: '#4CAF50',
+          warning: '#FB8C00',
+        },
+        variables: {
+          // any theme variables for CSS styling go here
+        }
+      }
     },
   },
     defaults: {
