@@ -2,7 +2,6 @@ using Kwill.Api;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-// look in properties/launchSettings.json for ports.
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
@@ -13,14 +12,14 @@ builder.Services.AddCors(options =>
                         .AllowAnyMethod());
 });
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<KwillDB.KwillDB>(); // ASP.NET creates the instance of the singleton class.
+builder.Services.AddSingleton<KwillDB.KwillDB>();
+builder.Services.AddScoped<Kwill.Api.Services.SrdService>();
+builder.Services.AddScoped<Kwill.Api.Services.CharacterService>();
+builder.Services.AddScoped<Kwill.Api.Services.UserService>();
 
 var app = builder.Build();
 
@@ -39,10 +38,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
-
