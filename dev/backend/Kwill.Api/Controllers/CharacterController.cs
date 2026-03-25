@@ -1,5 +1,4 @@
-﻿using Kwill.Data;
-using Kwill.Api.Helpers;
+﻿using Kwill.Api.Helpers;
 using Kwill.Validation;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
