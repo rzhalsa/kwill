@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Kwill.Data;
+using Kwill.data;
 
 #nullable disable
 
-namespace kwill.data.Migrations
+namespace Kwill.data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
@@ -21,7 +21,7 @@ namespace kwill.data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("kwill.Data.User", b =>
+            modelBuilder.Entity("Kwill.data.User", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()

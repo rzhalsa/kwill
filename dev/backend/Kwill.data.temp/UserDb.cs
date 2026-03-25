@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
-namespace Kwill.Data 
+namespace Kwill.data 
 {
     //Creates and handles the sql database
     public class AppDbContext : DbContext
