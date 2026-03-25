@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace kwill.data.Migrations
+namespace Kwill.data.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

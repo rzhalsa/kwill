@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Kwill.Data;
+using Kwill.data;
 
 #nullable disable
 
-namespace kwill.data.Migrations
+namespace Kwill.data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20260319063209_InitialCreate")]
