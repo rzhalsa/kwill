@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace kwill.Data
+namespace Kwill.Data
 {
     /**
      * Setups up the model for the sql database.

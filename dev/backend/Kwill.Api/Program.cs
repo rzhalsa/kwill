@@ -1,4 +1,4 @@
-using kwill.Data;
+using Kwill.Data;
 using Kwill.Api;
 using Kwill.Api.Services;
 using Microsoft.EntityFrameworkCore;
