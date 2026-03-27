@@ -4,7 +4,7 @@
             <v-card class="mt-4 ml-4 rounded-lg">
                 <v-card-title class="d-flex justify-space-between align-center">
                     <span>Characters</span>
-                    <v-btn title="New Character" icon="mdi-plus"></v-btn>
+                    <v-btn title="New Character" icon="mdi-plus" to="charactercreator"></v-btn>
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
