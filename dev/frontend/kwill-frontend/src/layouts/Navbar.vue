@@ -72,7 +72,7 @@
     const theme = useTheme()
     const title = ref('Kwill');
     // List of items to show on the Menu drop down
-    const items =[
+    const items = [
         {title: 'Characters', route:'/characters'},
         {title: 'Community',route:'/characters'},
         {title: 'Account',route:'/characters'},

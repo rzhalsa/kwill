@@ -38,3 +38,11 @@ background: linear-gradient(to bottom, #383333 0%, #3c2e2e 50%, #1f1414 100%) !i
 .v-theme--kwillThemeDark .gradient-login {
 background: linear-gradient(to bottom, #3b3b3b 0%, #373333 50%, #2b2a2a 100%) !important;
 }
+
+.v-theme--kwillTheme .gradient-character-creator {
+background: linear-gradient(to bottom, #776363, rgb(177, 173, 173)) !important;  
+}
+
+.v-theme--kwillThemeDark .gradient-character-creator {
+background: linear-gradient(to bottom, grey, #9e9b9b) !important;
+}

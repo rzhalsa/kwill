@@ -51,8 +51,8 @@
         }
     }
 
-// Optionally, call it when component mounts
-onMounted(() => {
-  fetchCharData();
-});
+    // Optionally, call it when component mounts
+    onMounted(() => {
+    fetchCharData();
+    });
 </script>
