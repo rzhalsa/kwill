@@ -94,6 +94,20 @@ export const useCharacterCreationStore = defineStore('character_creation', {
         },
         setCha(cha) {
             this.cha = cha
+        },
+        resetStore() {
+            this.character_name = ''
+            this.player_name = ''
+            this.class = ''
+            this.race = ''
+            this.alignment = ''
+            this.background = ''
+            this.str = null
+            this.dex = null
+            this.con = null
+            this.wis = null
+            this.int = null
+            this.cha = null
         }
     }
 })

@@ -10,7 +10,7 @@
                 </v-row>
                 <!-- Current layout for character creation -->
                 <v-row class="ma-8">
-                    <component :is="currentLayout" />
+                    <component v-if="ready" :is="currentLayout" />
                 </v-row>
                 <v-row>
                     <v-col class="d-flex justify-end mr-2 mb-2">
@@ -23,11 +23,14 @@
 </template>
 
 <script setup>
-    import { shallowRef } from 'vue'
-    import CharCreatClass from '../layouts/CharCreatClass.vue';                 // character class
-    import CharCreatOrigin from '../layouts/CharCreatOrigin.vue';               // character race, background, languages, and alignment
-    import CharCreatAbilityScores from '../layouts/CharCreatAbilityScores.vue'; // character stats
-    const currentLayout = shallowRef(CharCreatClass)                            // start at CharCreatClass layout
+    import { ref, shallowRef, onMounted } from 'vue'
+    import { useCharacterCreationStore } from '../stores/character_creation_state';
+    import CharCreatClass from '../layouts/CharCreatClass.vue';                     // character class
+    import CharCreatOrigin from '../layouts/CharCreatOrigin.vue';                   // character race, background, languages, and alignment
+    import CharCreatAbilityScores from '../layouts/CharCreatAbilityScores.vue';     // character stats
+    const currentLayout = shallowRef(CharCreatClass)                                // start at CharCreatClass layout
+    const store = useCharacterCreationStore()                                       // pinia store for character creation
+    const ready = ref(false)                                                        // flag for showing the layout once ready
 
     // Maps and count var to track layout order
     let order_count = 0
@@ -61,6 +64,14 @@
             //console.log(order_count)
         }
     }
+
+    /**
+     * Re-render page on mount
+     */
+    onMounted(() => {
+        store.resetStore()
+        ready.value = true
+    })
 </script>
 
 <style>
