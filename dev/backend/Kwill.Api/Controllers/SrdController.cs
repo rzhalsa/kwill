@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Kwill.Api.Services;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Bson.IO;
 using MongoDB.Driver;
@@ -7,15 +8,15 @@ using MongoDB.Driver;
 [Route("api/srd")]
 public class SrdController : ControllerBase
 {
-    private readonly KwillDB.KwillDB _db;
-    public SrdController(KwillDB.KwillDB db) => _db = db;
+    private readonly SrdService _srdService;
+    public SrdController(SrdService srdService) => _srdService = srdService;
 
     // Get all SRD data (Kris's original endpoint)
     // GET /api/srd/all
     [HttpGet("all")]
     public async Task<IActionResult> GetAll()
     {
-        var docs = await _db.SrdData.Find(FilterDefinition<BsonDocument>.Empty).ToListAsync();
+        var docs = await _srdService.GetAllAsync();
         var settings = new JsonWriterSettings { OutputMode = JsonOutputMode.RelaxedExtendedJson };
         var json = "[" + string.Join(",", docs.Select(d => d.ToJson(settings))) + "]";
         return Content(json, "application/json");
@@ -28,18 +29,8 @@ public class SrdController : ControllerBase
     {
         try
         {
-            var keys = await _db.SrdData.Distinct<string>("Key", Builders<BsonDocument>.Filter.Empty).ToListAsync();
-            
-            var collections = new List<object>();
-            foreach (var key in keys)
-            {
-                var count = await _db.SrdData.CountDocumentsAsync(
-                    Builders<BsonDocument>.Filter.Eq("Key", key)
-                );
-                collections.Add(new { name = key, count = count });
-            }
-
-            return Ok(new { collections = collections });
+            var collections = await _srdService.GetCollectionsAsync();
+            return Ok(new { collections });
         }
         catch (Exception ex)
         {
@@ -59,30 +50,7 @@ public class SrdController : ControllerBase
     {
         try
         {
-            var filterBuilder = Builders<BsonDocument>.Filter;
-            var filter = filterBuilder.Eq("Key", "spells");
-
-            // Filter by class if provided (returns ALL levels for that class)
-            if (!string.IsNullOrEmpty(@class))
-            {
-                filter = filterBuilder.And(
-                    filter,
-                    filterBuilder.Eq("Data.classes", @class)
-                );
-            }
-
-            // Filter by level if provided (optional - for specific queries)
-            if (level.HasValue)
-            {
-                filter = filterBuilder.And(
-                    filter,
-                    filterBuilder.Eq("Data.level", level.Value)
-                );
-            }
-
-            var documents = await _db.SrdData.Find(filter).ToListAsync();
-            var results = documents.Select(doc => doc["Data"].AsBsonDocument).ToList();
-
+            var results = await _srdService.GetSpellsAsync(@class, level);
             var settings = new JsonWriterSettings { OutputMode = JsonOutputMode.RelaxedExtendedJson };
             var json = "[" + string.Join(",", results.Select(d => d.ToJson(settings))) + "]";
             return Content(json, "application/json");
@@ -101,20 +69,7 @@ public class SrdController : ControllerBase
     {
         try
         {
-            var filterBuilder = Builders<BsonDocument>.Filter;
-            var filter = filterBuilder.Eq("Key", "equipment");
-
-            if (!string.IsNullOrEmpty(category))
-            {
-                filter = filterBuilder.And(
-                    filter,
-                    filterBuilder.Eq("Data.equipment_category.name", category)
-                );
-            }
-
-            var documents = await _db.SrdData.Find(filter).ToListAsync();
-            var results = documents.Select(doc => doc["Data"].AsBsonDocument).ToList();
-
+            var results = await _srdService.GetEquipmentAsync(category);
             var settings = new JsonWriterSettings { OutputMode = JsonOutputMode.RelaxedExtendedJson };
             var json = "[" + string.Join(",", results.Select(d => d.ToJson(settings))) + "]";
             return Content(json, "application/json");
@@ -132,15 +87,11 @@ public class SrdController : ControllerBase
     {
         try
         {
-            var filter = Builders<BsonDocument>.Filter.Eq("Key", collection);
-            var documents = await _db.SrdData.Find(filter).ToListAsync();
+            var results = await _srdService.GetCollectionAsync(collection);
 
-            if (documents.Count == 0)
-            {
+            if (results.Count == 0)
                 return NotFound(new { message = $"Collection '{collection}' not found or empty" });
-            }
 
-            var results = documents.Select(doc => doc["Data"].AsBsonDocument).ToList();
             var settings = new JsonWriterSettings { OutputMode = JsonOutputMode.RelaxedExtendedJson };
             var json = "[" + string.Join(",", results.Select(d => d.ToJson(settings))) + "]";
             return Content(json, "application/json");
@@ -158,20 +109,16 @@ public class SrdController : ControllerBase
     {
         try
         {
-            var filter = Builders<BsonDocument>.Filter.And(
-                Builders<BsonDocument>.Filter.Eq("Key", collection),
-                Builders<BsonDocument>.Filter.Eq("Data.index", id)
-            );
+            var result = await _srdService.GetItemAsync(collection, id);
 
-            var document = await _db.SrdData.Find(filter).FirstOrDefaultAsync();
-
-            if (document == null)
-            {
+            if (result == null)
                 return NotFound(new { message = $"Item '{id}' not found in collection '{collection}'" });
-            }
 
-            var result = document["Data"].AsBsonDocument;
-            var json = result.ToJson(new JsonWriterSettings { OutputMode = JsonOutputMode.RelaxedExtendedJson });
+            var json = result.ToJson(new JsonWriterSettings
+            {
+                OutputMode = JsonOutputMode.RelaxedExtendedJson
+            });
+
             return Content(json, "application/json");
         }
         catch (Exception ex)

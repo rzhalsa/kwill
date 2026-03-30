@@ -1,4 +1,5 @@
 ﻿using Kwill.Api;
+using Kwill.Api.Helpers;
 using Kwill.Validation;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -6,137 +7,163 @@ using System;
 
 namespace Kwill.Api.Services
 {
-public class CharacterService
-{
-	private readonly KwillDB.KwillDB _db;
-
-	public CharacterService(KwillDB.KwillDB db) => _db = db;
-
-    //Gets the calculated character sheet.
-    public async Task<BsonDocument?> GetByCharacterIdAsync(string characterId)
+    public class CharacterService
     {
-        var filter = Builders<BsonDocument>.Filter.Eq("character_id", characterId);
-        var doc = await _db.CharacterSheets.Find(filter).FirstOrDefaultAsync();
+        private readonly KwillDB.KwillDB _db;
 
-        if (doc == null)
-            return null;
+        public CharacterService(KwillDB.KwillDB db) => _db = db;
 
-        var srdData = await LoadSrdDataAsync();
-
-        var calculated = CharacterSheetCalculator.Calculate(doc, srdData);
-
-        var response = doc.DeepClone().AsBsonDocument;
-        response["calculated"] = calculated;
-
-        return response;
-    }
-
-    //Creates an entry in the mongoDb using the provided BsonDocument.
-    public async Task<(bool Success, BsonDocument? Doc, List<string>? Errors, string? ErrorMessage)> CreateAsync(BsonDocument doc)
-    {
-        try
+        //Gets the calculated character sheet.
+        public async Task<BsonDocument?> GetByCharacterIdAsync(string characterId)
         {
-            var srdData = await LoadSrdDataAsync();
-            var validation = CharacterSheetValidator.ValidateCharacterSheet(doc, srdData);
+            var filter = Builders<BsonDocument>.Filter.Eq("character_id", characterId);
+            var doc = await _db.CharacterSheets.Find(filter).FirstOrDefaultAsync();
 
-            if (!validation.IsValid) 
+            if (doc == null)
+                return null;
+
+            var srdData = await LoadSrdDataAsync();
+
+            var calculated = CharacterSheetCalculator.Calculate(doc, srdData);
+
+            var response = doc.DeepClone().AsBsonDocument;
+            response["calculated"] = calculated;
+
+            return response;
+        }
+
+        //Gets all characters from given UserId
+        public async Task<List<BsonDocument>> GetByUserIdAsync(string userId)
+        {
+            var filter = Builders<BsonDocument>.Filter.Eq("user_id", userId);
+            var docs = await _db.CharacterSheets.Find(filter).ToListAsync();
+
+            if (docs.Count == 0)
+                return new List<BsonDocument>();
+
+            var srdData = await LoadSrdDataAsync();
+            var results = new List<BsonDocument>();
+
+            foreach (var doc in docs)
             {
-                Console.WriteLine($"Validation failed: {string.Join(", ", validation.Errors)}");
-                return (false, null, validation.Errors, null);
+                var calculated = CharacterSheetCalculator.Calculate(doc, srdData);
+
+                var response = doc.DeepClone().AsBsonDocument;
+                response["calculated"] = calculated;
+
+                results.Add(response);
             }
-                
 
-            await _db.CharacterSheets.InsertOneAsync(doc);
-            return (true, doc, null, null);
+            return results;
         }
-        catch (Exception ex)
+
+        //Creates an entry in the mongoDb using the provided BsonDocument.
+        public async Task<(bool Success, BsonDocument? Doc, List<string>? Errors, string? ErrorMessage)> CreateAsync(BsonDocument doc)
         {
-            return (false, null, null, ex.Message);
-        }
-    }
+            try
+            {
+                var srdData = await LoadSrdDataAsync();
+                var validation = CharacterSheetValidator.ValidateCharacterSheet(doc, srdData);
 
-    //Updates the specified entry in the mongoDb
-    public async Task<(bool Success, BsonDocument? Doc, List<string>? Errors, string? ErrorMessage, bool NotFound, bool Forbidden)> UpdateAsync(
-        string userId,
-        string characterId,
-        BsonDocument doc)
-    {
-        try
+                if (!validation.IsValid)
+                {
+                    Console.WriteLine($"Validation failed: {string.Join(", ", validation.Errors)}");
+                    return (false, null, validation.Errors, null);
+                }
+
+
+                await _db.CharacterSheets.InsertOneAsync(doc);
+                return (true, doc, null, null);
+            }
+            catch (Exception ex)
+            {
+                return (false, null, null, ex.Message);
+            }
+        }
+
+        //Updates the specified entry in the mongoDb
+        public async Task<(bool Success, BsonDocument? Doc, List<string>? Errors, string? ErrorMessage, bool NotFound, bool Forbidden)> UpdateAsync(
+            string userId,
+            string characterId,
+            BsonDocument doc)
         {
-            var filter = Builders<BsonDocument>.Filter.Eq("character_id", characterId);
-            var existing = await _db.CharacterSheets.Find(filter).FirstOrDefaultAsync();
+            try
+            {
+                var filter = Builders<BsonDocument>.Filter.Eq("character_id", characterId);
+                var existing = await _db.CharacterSheets.Find(filter).FirstOrDefaultAsync();
 
-            if (existing == null)
-                return (false, null, null, null, true, false);
+                if (existing == null)
+                    return (false, null, null, null, true, false);
 
-            if (!existing.Contains("user_id") || existing["user_id"].AsString != userId)
-                return (false, null, null, null, false, true);
+                if (!existing.Contains("user_id") || existing["user_id"].AsString != userId)
+                    return (false, null, null, null, false, true);
 
-            var srdData = await LoadSrdDataAsync();
-            var validation = CharacterSheetValidator.ValidateCharacterSheet(doc, srdData);
+                var srdData = await LoadSrdDataAsync();
+                var validation = CharacterSheetValidator.ValidateCharacterSheet(doc, srdData);
 
-            if (!validation.IsValid)
-                return (false, null, validation.Errors, null, false, false);
+                if (!validation.IsValid)
+                    return (false, null, validation.Errors, null, false, false);
 
-            await _db.CharacterSheets.ReplaceOneAsync(filter, doc);
-            return (true, doc, null, null, false, false);
+                await _db.CharacterSheets.ReplaceOneAsync(filter, doc);
+                return (true, doc, null, null, false, false);
+            }
+            catch (Exception ex)
+            {
+                return (false, null, null, ex.Message, false, false);
+            }
         }
-        catch (Exception ex)
+
+        //Deletes the specified entry in the mongoDb
+        public async Task<(bool Success, bool NotFound, bool Forbidden, string? ErrorMessage)> DeleteAsync(string userId, string characterId)
         {
-            return (false, null, null, ex.Message, false, false);
-        }
-    }
+            try
+            {
+                var filter = Builders<BsonDocument>.Filter.Eq("character_id", characterId);
+                var existing = await _db.CharacterSheets.Find(filter).FirstOrDefaultAsync();
 
-    //Deletes the specified entry in the mongoDb
-    public async Task<(bool Success, bool NotFound, bool Forbidden, string? ErrorMessage)> DeleteAsync(string userId, string characterId)
-    {
-        try
+                if (existing == null)
+                    return (false, true, false, null);
+
+                if (!existing.Contains("user_id") || existing["user_id"].AsString != userId)
+                    return (false, false, true, null);
+
+                await _db.CharacterSheets.DeleteOneAsync(filter);
+                return (true, false, false, null);
+            }
+            catch (Exception ex)
+            {
+                return (false, false, false, ex.Message);
+            }
+        }
+
+        // Helper method to load SRD data for validation
+
+        private async Task<Dictionary<string, List<BsonDocument>>> LoadSrdDataAsync()
         {
-            var filter = Builders<BsonDocument>.Filter.Eq("character_id", characterId);
-            var existing = await _db.CharacterSheets.Find(filter).FirstOrDefaultAsync();
+            var srdData = new Dictionary<string, List<BsonDocument>>();
 
-            if (existing == null)
-                return (false, true, false, null);
+            var classesFilter = Builders<BsonDocument>.Filter.Eq("Key", "classes");
+            var classDocuments = await _db.SrdData.Find(classesFilter).ToListAsync();
+            srdData["srd_classes"] = classDocuments.Select(d => d["Data"].AsBsonDocument).ToList();
 
-            if (!existing.Contains("user_id") || existing["user_id"].AsString != userId)
-                return (false, false, true, null);
+            var racesFilter = Builders<BsonDocument>.Filter.Eq("Key", "races");
+            var raceDocuments = await _db.SrdData.Find(racesFilter).ToListAsync();
+            srdData["srd_races"] = raceDocuments.Select(d => d["Data"].AsBsonDocument).ToList();
 
-            await _db.CharacterSheets.DeleteOneAsync(filter);
-            return (true, false, false, null);
+            var skillsFilter = Builders<BsonDocument>.Filter.Eq("Key", "skills");
+            var skillDocuments = await _db.SrdData.Find(skillsFilter).ToListAsync();
+            srdData["srd_skills"] = skillDocuments.Select(d => d["Data"].AsBsonDocument).ToList();
+
+            var proficienciesFilter = Builders<BsonDocument>.Filter.Eq("Key", "proficiencies");
+            var proficiencyDocuments = await _db.SrdData.Find(proficienciesFilter).ToListAsync();
+            srdData["srd_proficiencies"] = proficiencyDocuments.Select(d => d["Data"].AsBsonDocument).ToList();
+
+            var spellsFilter = Builders<BsonDocument>.Filter.Eq("Key", "spells");
+            var spellDocuments = await _db.SrdData.Find(spellsFilter).ToListAsync();
+            srdData["srd_spells"] = spellDocuments.Select(d => d["Data"].AsBsonDocument).ToList();
+
+            return srdData;
         }
-        catch (Exception ex)
-        {
-            return (false, false, false, ex.Message);
-        }
-    }
-
-    // Helper method to load SRD data for validation
-
-    private async Task<Dictionary<string, List<BsonDocument>>> LoadSrdDataAsync()
-    {
-        var srdData = new Dictionary<string, List<BsonDocument>>();
-
-        var classesFilter = Builders<BsonDocument>.Filter.Eq("Key", "classes");
-        var classDocuments = await _db.SrdData.Find(classesFilter).ToListAsync();
-        srdData["srd_classes"] = classDocuments.Select(d => d["Data"].AsBsonDocument).ToList();
-
-        var racesFilter = Builders<BsonDocument>.Filter.Eq("Key", "races");
-        var raceDocuments = await _db.SrdData.Find(racesFilter).ToListAsync();
-        srdData["srd_races"] = raceDocuments.Select(d => d["Data"].AsBsonDocument).ToList();
-
-        var skillsFilter = Builders<BsonDocument>.Filter.Eq("Key", "skills");
-        var skillDocuments = await _db.SrdData.Find(skillsFilter).ToListAsync();
-        srdData["srd_skills"] = skillDocuments.Select(d => d["Data"].AsBsonDocument).ToList();
-
-        var proficienciesFilter = Builders<BsonDocument>.Filter.Eq("Key", "proficiencies");
-        var proficiencyDocuments = await _db.SrdData.Find(proficienciesFilter).ToListAsync();
-        srdData["srd_proficiencies"] = proficiencyDocuments.Select(d => d["Data"].AsBsonDocument).ToList();
-
-        var spellsFilter = Builders<BsonDocument>.Filter.Eq("Key", "spells");
-        var spellDocuments = await _db.SrdData.Find(spellsFilter).ToListAsync();
-        srdData["srd_spells"] = spellDocuments.Select(d => d["Data"].AsBsonDocument).ToList();
-
-        return srdData;
     }
 }
-}
+
