@@ -29,12 +29,14 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue'
+    import { ref, onMounted, onBeforeUnmount } from 'vue'
+    import { useCharacterCreationStore } from '../stores/character_creation_state'
     import axios from 'axios'
-    const selected_race = ref(null)       // currently selected race
-    const races = ref([])                 // array of all races
-    const selected_alignment = ref(null)  // currently selected alignment
-    const alignments = ref([              // array of all alignments
+    const store = useCharacterCreationStore()            // pinia store for character creation
+    const selected_race = ref(store.getRace)             // currently selected race
+    const races = ref([])                                // array of all races
+    const selected_alignment = ref(store.getAlignment)   // currently selected alignment
+    const alignments = ref([                             // array of all alignments
         "Lawful Good",
         "Neutral Good",
         "Chaotic Good",
@@ -45,8 +47,8 @@
         "Neutral Evil",
         "Chaotic Evil"
     ])         
-    const selected_background = ref(null) // currently selected background
-    const backgrounds = ref([])           // array of all backgrounds
+    const selected_background = ref(store.getBackground) // currently selected background
+    const backgrounds = ref([])                          // array of all backgrounds
 
     /**
      * Populate the races array with the fetched race data for use in the v-select menu
@@ -98,11 +100,27 @@
     }
 
     /**
-     * Call fetchRaceDace() on page mount
+     * Saves currently selected origin data before the page unmounts
+     */
+    function saveOriginData() {
+        store.setRace(selected_race)
+        store.setAlignment(selected_alignment)
+        store.setBackground(selected_background)
+    }
+
+    /**
+     * Calls fetchRaceDace() on page mount
      */
     onMounted(() => {
         fetchRaceData()
         fetchBackgroundData()
+    })
+
+    /**
+     * Calls saveOriginData() before the page unmounts
+     */
+    onBeforeUnmount(() => {
+        saveOriginData()
     })
 </script>
 

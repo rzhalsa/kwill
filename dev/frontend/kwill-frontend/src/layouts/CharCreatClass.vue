@@ -4,10 +4,10 @@
             <v-card-title>Step 1: Class and Names</v-card-title>
             <v-divider horizontal class="mt-2 mb-6"></v-divider>
             <p class="ma-2">Character Name
-                <input type="text" required class="login-input px-2 py-2 d-flex justify-end" style="border-radius: 15px; border-style: solid; border-color: black;">
+                <input type="text" v-model="character_name" required class="login-input px-2 py-2 d-flex justify-end" style="border-radius: 15px; border-style: solid; border-color: black;">
             </p>
             <p class="ma-2">Player Name
-                <input type="text" required class="login-input px-2 py-2 d-flex justify-end" style="border-radius: 15px; border-style: solid; border-color: black;">
+                <input type="text" v-model="player_name" required class="login-input px-2 py-2 d-flex justify-end" style="border-radius: 15px; border-style: solid; border-color: black;">
             </p>
             <!-- Class dropdown -->
              <v-select
@@ -21,10 +21,14 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue'
+    import { ref, onMounted, onBeforeUnmount } from 'vue'
+    import { useCharacterCreationStore } from '../stores/character_creation_state'
     import axios from 'axios'
-    const selected = ref(null)  // currently selected item in the v-select menu
-    const classes = ref([])     // array of all classes
+    const store = useCharacterCreationStore()           // pinia store for character creation
+    const character_name = ref(store.getCharacterName)  // currently entered character name
+    const player_name = ref(store.getPlayerName)        // currently entered player name
+    const selected = ref(store.getClass)                // currently selected item in the v-select menu
+    const classes = ref([])                             // array of all classes
 
     /**
      * Populate the classes array with the fetched class data for use in the v-select menu
@@ -50,10 +54,26 @@
     }
 
     /**
-     * Call fetchClassData() on page mount
+     * Saves currently entered class and name data before the page unmounts
+     */
+    function saveClassData() {
+        store.setCharacterName(character_name)
+        store.setPlayerName(player_name)
+        store.setClass(selected)
+    }
+
+    /**
+     * Calls fetchClassData() on page mount
      */
     onMounted(() => {
         fetchClassData()
+    })
+
+    /**
+     * Calls saveClassData() before the page unmounts
+     */
+    onBeforeUnmount(() => {
+        saveClassData()
     })
 </script>
 

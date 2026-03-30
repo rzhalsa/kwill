@@ -23,13 +23,11 @@
 </template>
 
 <script setup>
-    import { ref, shallowRef, onMounted } from 'vue'
-    import CharCreatClass from '../layouts/CharCreatClass.vue'; // character class
-    import CharCreatOrigin from '../layouts/CharCreatOrigin.vue'; // character race, background, languages, and alignment
+    import { shallowRef } from 'vue'
+    import CharCreatClass from '../layouts/CharCreatClass.vue';                 // character class
+    import CharCreatOrigin from '../layouts/CharCreatOrigin.vue';               // character race, background, languages, and alignment
     import CharCreatAbilityScores from '../layouts/CharCreatAbilityScores.vue'; // character stats
-    import axios from 'axios'
-    const currentLayout = shallowRef(CharCreatClass) // start at CharCreatClass layout
-    const charData = ref(null)
+    const currentLayout = shallowRef(CharCreatClass)                            // start at CharCreatClass layout
 
     // Maps and count var to track layout order
     let order_count = 0
@@ -42,53 +40,27 @@
         [1, CharCreatClass]
     ])
 
-    // Move forward a page
-    const moveForward = () => {
-        // Add logic to save current state here, function call probably
-
+    /**
+     * Move forward a page
+     */
+    function moveForward() {
         if(order.has(order_count)) {
             currentLayout.value = order.get(order_count)
             order_count++
             //console.log(order_count)
-
-            // call function to load page state from pinia
         }
     }
 
-    // Move back a page
-    const moveBackwards = () => {
-        // Call function to save page state
-        
+    /**
+     * Move backwards a page
+     */
+    function moveBackwards() {
         if(rev_order.has(order_count)) {
             currentLayout.value = rev_order.get(order_count)
             order_count--
             //console.log(order_count)
-
-            // call function to load page state from pinia
         }
     }
-
-    /*
-
-    async function fetchCharData() {
-        try {
-            const response = await axios.get(`https://www.dnd5eapi.co/classes`)
-            const data = response.data;
-            console.log(data);
-            charData.value = data;
-            console.log('Character data retrieved:', charData.value);
-            //sendCharData();
-        } catch (error) {
-            console.error('Failed to fetch character data:', error);
-        }
-    }
-
-    // Optionally, call it when component mounts
-    onMounted(() => {
-        fetchCharData();
-    });
-    */
-
 </script>
 
 <style>
