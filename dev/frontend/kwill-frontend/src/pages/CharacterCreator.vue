@@ -9,7 +9,7 @@
                     </v-col>
                 </v-row>
                 <!-- Current layout for character creation -->
-                <v-row class="ma-6">
+                <v-row class="ma-8">
                     <component :is="currentLayout" />
                 </v-row>
                 <v-row>
@@ -28,7 +28,6 @@
     import CharCreatOrigin from '../layouts/CharCreatOrigin.vue'; // character race, background, languages, and alignment
     import CharCreatAbilityScores from '../layouts/CharCreatAbilityScores.vue'; // character stats
     import axios from 'axios'
-
     const currentLayout = shallowRef(CharCreatClass) // start at CharCreatClass layout
     const charData = ref(null)
 
@@ -45,19 +44,27 @@
 
     // Move forward a page
     const moveForward = () => {
+        // Add logic to save current state here, function call probably
+
         if(order.has(order_count)) {
             currentLayout.value = order.get(order_count)
             order_count++
-            console.log(order_count)
+            //console.log(order_count)
+
+            // call function to load page state from pinia
         }
     }
 
     // Move back a page
     const moveBackwards = () => {
+        // Call function to save page state
+        
         if(rev_order.has(order_count)) {
             currentLayout.value = rev_order.get(order_count)
             order_count--
-            console.log(order_count)
+            //console.log(order_count)
+
+            // call function to load page state from pinia
         }
     }
 
@@ -87,6 +94,6 @@
 <style>
     .center-page {
         place-items: center;
-        height: 75vh;
+        height: 100vh;
     }
 </style>

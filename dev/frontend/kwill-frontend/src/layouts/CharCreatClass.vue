@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card width="30vw">
         <v-col>
             <v-card-title>Step 1: Class and Names</v-card-title>
             <v-divider horizontal class="mt-2 mb-6"></v-divider>
@@ -23,26 +23,35 @@
 <script setup>
     import { ref, onMounted } from 'vue'
     import axios from 'axios'
-    const selected = ref(null)
-    const classes = ref([])
+    const selected = ref(null)  // currently selected item in the v-select menu
+    const classes = ref([])     // array of all classes
 
+    /**
+     * Populate the classes array with the fetched class data for use in the v-select menu
+     * @param class_data the fetched class data
+     */
     function setClasses(class_data) {
-        // 
         for(let i = 0; i < class_data.length; i++) {
             classes.value.push(class_data[i].name)
         }
     }
 
+    /**
+     * Fetch relevant class data from the backend API
+     */
     async function fetchClassData() {
         try {
             const response = await axios.get('http://localhost:5262/api/srd/classes')
-            console.log(response.data)
+            //console.log(response.data)
             setClasses(response.data)
         } catch (error) {
             console.error('Failed to fetch class data: ', error)
         }
     }
 
+    /**
+     * Call fetchClassData() on page mount
+     */
     onMounted(() => {
         fetchClassData()
     })

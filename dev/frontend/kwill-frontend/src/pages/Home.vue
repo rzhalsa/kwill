@@ -79,7 +79,7 @@
   </v-row>
   <v-row>
     <v-col>
-      <v-card class="gradient-card-bottom mt-n6" style=" padding-bottom: 10%;">
+      <v-card class="gradient-card-bottom mt-n6" style="padding-bottom: 10%;">
         <v-card-title class="ma-4 text-h4" style="padding-left: 45%;">About</v-card-title>
         <v-divider style="margin-left: 3%; margin-right: 3%;"></v-divider>
         <v-card-text style="padding-top: 2%;" class="text-center text-accent text-h5" >

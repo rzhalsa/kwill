@@ -44,5 +44,5 @@ background: linear-gradient(to bottom, #776363, rgb(177, 173, 173)) !important;
 }
 
 .v-theme--kwillThemeDark .gradient-character-creator {
-background: linear-gradient(to bottom, grey, #9e9b9b) !important;
+background: linear-gradient(to bottom, rgb(65, 47, 47), #080606) !important;
 }
