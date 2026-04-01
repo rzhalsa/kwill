@@ -28,17 +28,23 @@
     import CharCreatClass from '../layouts/CharCreatClass.vue';                     // character class
     import CharCreatOrigin from '../layouts/CharCreatOrigin.vue';                   // character race, background, languages, and alignment
     import CharCreatAbilityScores from '../layouts/CharCreatAbilityScores.vue';     // character stats
+    import CharCreatAppearance from '../layouts/CharCreatAppearance.vue';           // character appearance
+    import { createCharacter } from '../models/characterModel';
     const currentLayout = shallowRef(CharCreatClass)                                // start at CharCreatClass layout
     const store = useCharacterCreationStore()                                       // pinia store for character creation
     const ready = ref(false)                                                        // flag for showing the layout once ready
+    const character = createCharacter()
+    //console.log(character)
 
     // Maps and count var to track layout order
     let order_count = 0
     const order = new Map([
         [0, CharCreatOrigin],
-        [1, CharCreatAbilityScores]
+        [1, CharCreatAbilityScores],
+        [2, CharCreatAppearance]
     ])
     const rev_order = new Map([
+        [3, CharCreatAbilityScores],
         [2, CharCreatOrigin],
         [1, CharCreatClass]
     ])

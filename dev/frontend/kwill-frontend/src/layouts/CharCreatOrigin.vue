@@ -1,30 +1,32 @@
 <template>
     <v-card width="30vw">
-        <v-col>
-            <v-card-title>Step 2: Character Origin</v-card-title>
+        <v-row>
+            <v-card-title class="mt-3 ml-3">Step 2: Character Origin</v-card-title>
             <v-divider horizontal class="mt-2 mb-6"></v-divider>
-            <!-- Race dropdown -->
-            <v-select
-                v-model="selected_race"
-                :items="races"
-                label="Race"
-                class="ma-4"
-            ></v-select>
-            <!-- Alignment dropdown -->
-            <v-select
-                v-model="selected_alignment"
-                :items="alignments"
-                label="Alignment"
-                class="ma-4"
-            ></v-select>
-            <!-- Background dropdown -->
-            <v-select
-                v-model="selected_background"
-                :items="backgrounds"
-                label="Background"
-                class="ma-4"
-            ></v-select>
-        </v-col>
+            <v-col>  
+                <!-- Race dropdown -->
+                <v-select
+                    v-model="selected_race"
+                    :items="races"
+                    label="Race"
+                    class="ma-4"
+                ></v-select>
+                <!-- Alignment dropdown -->
+                <v-select
+                    v-model="selected_alignment"
+                    :items="alignments"
+                    label="Alignment"
+                    class="ma-4"
+                ></v-select>
+                <!-- Background dropdown -->
+                <v-select
+                    v-model="selected_background"
+                    :items="backgrounds"
+                    label="Background"
+                    class="ma-4"
+                ></v-select>
+            </v-col>
+        </v-row>
     </v-card>
 </template>
 
@@ -32,11 +34,11 @@
     import { ref, onMounted, onBeforeUnmount } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import axios from 'axios'
-    const store = useCharacterCreationStore()            // pinia store for character creation
-    const selected_race = ref(store.getRace)             // currently selected race
-    const races = ref([])                                // array of all races
-    const selected_alignment = ref(store.getAlignment)   // currently selected alignment
-    const alignments = ref([                             // array of all alignments
+    const store = useCharacterCreationStore()                                 // pinia store for character creation
+    const selected_race = ref(store.getCharacterState.get('race'))            // currently selected race
+    const races = ref([])                                                     // array of all races
+    const selected_alignment = ref(store.getCharacterState.get('alignment'))  // currently selected alignment
+    const alignments = ref([                                                  // array of all alignments
         "Lawful Good",
         "Neutral Good",
         "Chaotic Good",
@@ -47,7 +49,7 @@
         "Neutral Evil",
         "Chaotic Evil"
     ])         
-    const selected_background = ref(store.getBackground) // currently selected background
+    const selected_background = ref(store.getCharacterState.get('background')) // currently selected background
     const backgrounds = ref([])                          // array of all backgrounds
 
     /**
@@ -103,9 +105,9 @@
      * Saves currently selected origin data before the page unmounts
      */
     function saveOriginData() {
-        store.setRace(selected_race)
-        store.setAlignment(selected_alignment)
-        store.setBackground(selected_background)
+        store.setCharacterState('race', selected_race)
+        store.setCharacterState('alignment', selected_alignment)
+        store.setCharacterState('background', selected_background)
     }
 
     /**

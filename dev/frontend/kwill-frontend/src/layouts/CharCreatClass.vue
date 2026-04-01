@@ -1,22 +1,26 @@
 <template>
     <v-card width="30vw">
-        <v-col>
-            <v-card-title>Step 1: Class and Names</v-card-title>
+        <v-row>
+            <v-card-title class="mt-3 ml-3">Step 1: Class and Names</v-card-title>
             <v-divider horizontal class="mt-2 mb-6"></v-divider>
-            <p class="ma-2">Character Name
-                <input type="text" v-model="character_name" required class="login-input px-2 py-2 d-flex justify-end" style="border-radius: 15px; border-style: solid; border-color: black;">
-            </p>
-            <p class="ma-2">Player Name
-                <input type="text" v-model="player_name" required class="login-input px-2 py-2 d-flex justify-end" style="border-radius: 15px; border-style: solid; border-color: black;">
-            </p>
-            <!-- Class dropdown -->
-             <v-select
-                v-model="selected"
-                :items="classes"
-                label="Class"
-                class="ma-4"
-             ></v-select>
-        </v-col>
+            <v-col>
+                <!-- Character Name -->
+                <p class="ma-2">Character Name
+                    <input type="text" v-model="character_name" required class="login-input px-2 py-2 d-flex justify-end" style="border-radius: 15px; border-style: solid; border-color: black;">
+                </p>
+                <!-- Player Name -->
+                <p class="ma-2">Player Name
+                    <input type="text" v-model="player_name" required class="login-input px-2 py-2 d-flex justify-end" style="border-radius: 15px; border-style: solid; border-color: black;">
+                </p>
+                <!-- Class dropdown -->
+                <v-select
+                    v-model="selected"
+                    :items="classes"
+                    label="Class"
+                    class="ma-4"
+                ></v-select>
+            </v-col>
+        </v-row>
     </v-card>
 </template>
 
@@ -24,11 +28,11 @@
     import { ref, onMounted, onBeforeUnmount } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import axios from 'axios'
-    const store = useCharacterCreationStore()           // pinia store for character creation
-    const character_name = ref(store.getCharacterName)  // currently entered character name
-    const player_name = ref(store.getPlayerName)        // currently entered player name
-    const selected = ref(store.getClass)                // currently selected item in the v-select menu
-    const classes = ref([])                             // array of all classes
+    const store = useCharacterCreationStore()                        // pinia store for character creation
+    const character_name = ref(store.getCharacterState.get('name'))  // currently entered character name
+    const player_name = ref(store.getCharacterState.get('player'))   // currently entered player name
+    const selected = ref(store.getCharacterState.get('class'))       // currently selected item in the v-select menu
+    const classes = ref([])                                          // array of all classes
 
     /**
      * Populate the classes array with the fetched class data for use in the v-select menu
@@ -57,9 +61,9 @@
      * Saves currently entered class and name data before the page unmounts
      */
     function saveClassData() {
-        store.setCharacterName(character_name)
-        store.setPlayerName(player_name)
-        store.setClass(selected)
+        store.setCharacterState('name', character_name)
+        store.setCharacterState('player', player_name)
+        store.setCharacterState('class', selected)
     }
 
     /**

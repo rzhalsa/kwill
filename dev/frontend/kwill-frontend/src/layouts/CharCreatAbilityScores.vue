@@ -50,32 +50,37 @@
                 ></v-select>
             </v-col>
         </v-row>
+        <v-row>
+            <v-btn @click="toJson(character, store.getCharacterState)">Finish Character</v-btn>
+        </v-row>
     </v-card>
 </template>
 
 <script setup>
-    import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
+    // Imports and variable declarations
+    import { ref, onBeforeUnmount } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
-    import axios from 'axios'
-    const store = useCharacterCreationStore()  // pinia store for character creation
-    const valid_ability_scores = ref(Array.from({length: 20}, (_, i) => 1 + i)) // valid range is 1 to 20
-    const str = ref(store.getStr)  // strength stat
-    const dex = ref(store.getDex)  // dexterity stat
-    const con = ref(store.getCon)  // constitution stat
-    const wis = ref(store.getWis)  // wisdom stat
-    const int = ref(store.getInt)  // intelligence stat
-    const cha = ref(store.getCha)  // charisma stat
+    import { createCharacter, toJson } from '../models/characterModel' 
+    const store = useCharacterCreationStore()                                           // pinia store for character creation
+    const character = createCharacter()                                              
+    const valid_ability_scores = ref(Array.from({length: 20}, (_, i) => 1 + i))         // valid range is 1 to 20
+    const str = ref(store.getCharacterState.get('ability.strength.modifier.score'))     // strength stat
+    const dex = ref(store.getCharacterState.get('ability.dexterity.modifier.score'))    // dexterity stat
+    const con = ref(store.getCharacterState.get('ability.constitution.modifier.score')) // constitution stat
+    const wis = ref(store.getCharacterState.get('ability.wisdom.modifier.score'))       // wisdom stat
+    const int = ref(store.getCharacterState.get('ability.intelligence.modifier.score')) // intelligence stat
+    const cha = ref(store.getCharacterState.get('ability.charisma.modifier.score'))     // charisma stat
 
     /**
      * Saves currently selected ability scores before the page unmounts
      */
     function saveAbilityScores() {
-        store.setStr(str)
-        store.setDex(dex)
-        store.setCon(con)
-        store.setWis(wis)
-        store.setInt(int)
-        store.setCha(cha)
+        store.setCharacterState('ability.strength.modifier.score', str)
+        store.setCharacterState('ability.dexterity.modifier.score', dex)
+        store.setCharacterState('ability.constitution.modifier.score', con)
+        store.setCharacterState('ability.wisdom.modifier.score', wis)
+        store.setCharacterState('ability.intelligence.modifier.score', int)
+        store.setCharacterState('ability.charisma.modifier.score', cha)
     }
 
     /**
