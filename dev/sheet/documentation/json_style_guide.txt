@@ -1,0 +1,7 @@
+This is how characters are stored in json for use in Kwill character sheets.
+
+{
+    "object_id": "character
+}
+
+Everything is stored in this object as a series of fields
