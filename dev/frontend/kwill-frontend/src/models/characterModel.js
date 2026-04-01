@@ -15,7 +15,7 @@ export function createCharacter(){
                     object_id: "operation",
                     operation_type: "conditional",
                     condition: "ability_strength_score",
-                    score: ""
+                    score: "10"
                 }
             },
             dexterity: {
@@ -23,7 +23,7 @@ export function createCharacter(){
                     object_id: "operation",
                     operation_type: "conditional",
                     condition: "ability_dexterity_score",
-                    score: ""
+                    score: "10"
                 }
             },
             constitution: {
@@ -31,7 +31,7 @@ export function createCharacter(){
                     object_id: "operation",
                     operation_type: "conditional",
                     condition: "ability_consitution_score",
-                    score: ""
+                    score: "10"
                 }
             },
             intelligence: {
@@ -39,7 +39,7 @@ export function createCharacter(){
                     object_id: "operation",
                     operation_type: "conditional",
                     condition: "ability_intelligence_score",
-                    score: ""
+                    score: "10"
                 }
             },
             wisdom: {
@@ -47,7 +47,7 @@ export function createCharacter(){
                     object_id: "operation",
                     operation_type: "conditional",
                     condition: "ability_wisdom_score",
-                    score: ""
+                    score: "10"
                 }
             },
             charisma: {
@@ -55,7 +55,7 @@ export function createCharacter(){
                     object_id: "operation",
                     operation_type: "conditional",
                     condition: "ability_charism_score",
-                    score: ""
+                    score: "10"
                 }
             },
         },
@@ -86,7 +86,7 @@ export function createCharacter(){
             modifier: ""
             },
             object_id: "saves",
-            charima: {
+            charisma: {
             proficiency: false,
             modifier: ""
             }

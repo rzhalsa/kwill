@@ -6,7 +6,6 @@
         <!-- Page 1 -->
         <div class="page">
             <img class="kwill-logo" src="../assets/icon.png" alt="Kwill Logo" width="300" height="300">
-
             <div class="page-top-row">
                 <input v-model="character.name" placeholder="Character name" autocomplete="off"
                     style="position: absolute; font-size: 18px; top: 75px; left: 130px; width: 200px; height: 30px; border: 2px solid #000;">
@@ -26,12 +25,10 @@
                 </div>
                 <div class="page-top-col">
                     <div>
-                        <input class="page1-top-input-value" v-model="character.alignment" placeholder="allignment"
-                            autocomplete="off">
+                        <input class="page1-top-input-value" v-model="character.alignment" placeholder="allignment" autocomplete="off">
                     </div>
                     <div>
-                        <input class="page1-top-input-value" v-model="character.background.name" placeholder="background"
-                            autocomplete="off">
+                        <input class="page1-top-input-value" v-model="character.background.name" placeholder="background" autocomplete="off">
                     </div>
                 </div>
                 <div class="page-top-col">
@@ -44,7 +41,6 @@
                 </div>
             </div>
 
-
             <!-- Page 1 body -->
             <div class="row" style="justify-content: center; align-items: flex-start; gap: 20px; padding: 10px;">
                 <!-- Left Column -->
@@ -53,50 +49,38 @@
                     <!-- Stat boxes -->
                     <div style="display: flex; flex-direction: column; gap: 15px; align-items: center;">
 
-                        <div class="stat-box mt-1" v-for="ability in abilitiesList" :key="ability.name">
+                        <div class="stat-box mt-1" v-for="key in abilityList">
                             <div class="col">
-                                <span data-label style="font-size: 11px; font-weight: bold;">
-                                {{ ability.label.toUpperCase() }}
-                                </span>
-                                <input
-                                class="ability-modifier"
-                                type="text"
-                                :value="abilityModifiers[ability.name]"
-                                readonly>
-                                <input
-                                class="ability-score"
-                                type="number"
-                                v-model.number="abilities[ability.name]">
+                                <span data-label style="font-size: 11px; font-weight: bold;">{{ key.label.toUpperCase()}}</span>
+                                <input class="ability-modifier" type="text" :value="key.mod" readonly>
+                                <input class="ability-score" type="number" v-model="character.ability[key.name].modifier.score">
                             </div>
                         </div>
                     </div>
-
                 <!-- Proficiency boxes -->
                 <div style="display: flex; flex-direction: column; gap: 5px; align-items: flex-start; ">
-                    <div
-                        class="proficiency-box"
-                        v-for="ability in abilitiesList"
-                        :key="ability.name">
+                    <div class="proficiency-box" v-for="ability in abilityList">
                         <div data-label style="text-align: center; font-weight: bold; margin-bottom: 5px;">
-                            {{ ability.label }}
+                            {{ ability.name.toUpperCase() }}
                         </div>
                         <div style="display: flex; flex-direction: column; gap: 4px; width: 100%;">
                             <!-- Saving Throw -->
                             <div class="skill-row">
-                                <input type="checkbox" v-model="saves[ability.name].proficient">
-                                <input class="line-input" type="number" :value="calculatedSaves[ability.name]" readonly>
-                                <span data-label>Saves</span>
-                            </div>
+                                <input type="checkbox" v-model="character.saves[ability.name].proficiency" >
+                                <input class="line-input" type="number" v-model="character.saves[ability.name].modifier" readonly>
+                                <span data-label>saves</span>
+                            </div> 
                             <!-- Skills -->
-                            <div class="skill-row" v-for="skill in ability.skills" :key="skill.name">
-                                <input type="checkbox" v-model="skills[skill.name].proficient">
-                                <input class="line-input" type="number" :value="calculatedSkills[skill.name]" readonly>
-                                <span data-label>{{ skill.label }}</span>
+                            <div class="skill-row" v-for="skill in groupedSkills[ability.name]">
+                                <input type="checkbox" v-model="character.skills[skill.name].proficiency">
+                                <input class="line-input" type="number" v-model="character.skills[skill.name].modifier" readonly>
+                                <span data-label>{{ skill.name }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
                 <!-- Middle Column -->
                 <div class="col" style="flex: 0 0 auto;">
                     <div class="col">
@@ -121,8 +105,6 @@
                                 <div style="text-align: center;" data-label>Speed</div>
                             </div>
                         </div>
-
-
                         <!-- HP, Hit Dice, Death Saves -->
                         <div style="width: 200px; height: 100px; border: 2px solid #000; display: flex; margin: -3px; margin-top: -10px;">
                             <div style="text-align: center;" data-label>Current Hitpoints:
@@ -183,12 +165,8 @@
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
-
                     <div class="col">
-
                         <textarea v-model="character.attacks" placeholder="Attacks and Spellcasting"
                             style="width: 200px; height: 125px; border: 2px solid #000; display: flex; margin-top: -30px; text-align: left; margin-bottom: 5px; resize: none;"></textarea>
                         <div class="row">
@@ -215,61 +193,54 @@
 
                     </div>
                 </div>
-
-
                 <!-- Right Column -->
                 <div class="col" style="flex: 0 0 auto; gap: 10px; align-items: flex-start;">
-                    <textarea id="text_personality_value" placeholder="Personality"
+                    <textarea v-model="character.text.personality" placeholder="Personality"
                         style="height: 75px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
-                    <textarea id="text_ideals_value" placeholder="Ideals"
+                    <textarea v-model="character.text.ideals" placeholder="Ideals"
                         style="height: 75px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
-                    <textarea id="text_bonds_value" placeholder="Bonds"
+                    <textarea v-model="character.text.bonds" placeholder="Bonds"
                         style="height: 75px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
-                    <textarea id="text_flaws_value" placeholder="Flaws"
+                    <textarea v-model="character.text.flaws" placeholder="Flaws"
                         style="height: 75px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
-                    <textarea id="text_features_value" placeholder="Features"
+                    <textarea v-model="character.text.features" placeholder="Features"
                         style="height: 407px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
                 </div>
-
             </div>
-
         </div>
-
-
-
 
         <!-- Page 2 -->
         <div class="page">
             <img class="kwill-logo" src="../assets/icon.png" alt="Kwill Logo" width="300" height="300">
 
             <div class="page-top-row">
-                <input id="name2_calculated" placeholder="Character name here" value="=>name"
+                <input v-model="character.name" placeholder="Character name here" 
                     style="position: absolute; font-size: 18px; top: 75px; left: 130px; width: 200px; height: 30px; border: 2px solid #000;">
 
                 <div class="page-top-col">
                     <div>
-                        <input class="page1-top-input-value" id="age_value" placeholder="age" autocomplete="off">
+                        <input class="page1-top-input-value" v-model="character.age" placeholder="age" autocomplete="off">
                     </div>
                     <div>
-                        <input class="page1-top-input-value" id="eyes_value" placeholder="eyes" autocomplete="off">
-                    </div>
-                </div>
-
-                <div class="page-top-col">
-                    <div>
-                        <input class="page1-top-input-value" id="height_value" placeholder="height" autocomplete="off">
-                    </div>
-                    <div>
-                        <input class="page1-top-input-value" id="skin_value" placeholder="skin" autocomplete="off">
+                        <input class="page1-top-input-value" v-model="character.eyes" placeholder="eyes" autocomplete="off">
                     </div>
                 </div>
 
                 <div class="page-top-col">
                     <div>
-                        <input class="page1-top-input-value" id="weight_value" placeholder="weight" autocomplete="off">
+                        <input class="page1-top-input-value" v-model="character.height" placeholder="height" autocomplete="off">
                     </div>
                     <div>
-                        <input class="page1-top-input-value" id="hair_value" placeholder="hair" autocomplete="off">
+                        <input class="page1-top-input-value" v-model="character.skin" placeholder="skin" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="page-top-col">
+                    <div>
+                        <input class="page1-top-input-value" v-model="character.weight" placeholder="weight" autocomplete="off">
+                    </div>
+                    <div>
+                        <input class="page1-top-input-value" v-model="character.hair" placeholder="hair" autocomplete="off">
                     </div>
                 </div>
             </div>
@@ -277,21 +248,21 @@
             <div class="row" style="margin-left: -30px;">
 
                 <div class="col">
-                    <textarea id="appearance_value" placeholder="Appearance"
+                    <textarea v-model="character.appearance" placeholder="Appearance"
                         style="height: 260px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
 
-                    <textarea id="backstory_value" placeholder="Backstory"
+                    <textarea v-model="character.nackstory" placeholder="Backstory"
                         style="height: 538px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
                 </div>
 
                 <div class="col" style="margin-left: -25px;">
-                    <textarea id="alliesAndOrganizations_value" placeholder="Allies and Organizations"
+                    <textarea v-model="character.alliesAndOrganizations" placeholder="Allies and Organizations"
                         style="height: 260px; width: 500px; border: 2px solid #000; resize: none;"></textarea>
 
-                    <textarea id="features_aditional_value" placeholder="Aditional Features and Traits"
+                    <textarea v-model="character.features.additional" placeholder="Aditional Features and Traits"
                         style="height: 260px; width: 500px; border: 2px solid #000; resize: none;"></textarea>
 
-                    <textarea id="treasure_value" placeholder="Treasure"
+                    <textarea v-model="character.treasure" placeholder="Treasure"
                         style="height: 260px; width: 500px; border: 2px solid #000; resize: none;"></textarea>
                 </div>
             </div>
@@ -303,37 +274,32 @@
 
 
             <div class="page-top-row">
-                <input id="spellcasting_class_value" placeholder="Spellcasting class"
+                <input v-model="character.spellcasting.class" placeholder="Spellcasting class"
                     style="position: absolute; font-size: 18px; top: 75px; left: 130px; width: 200px; height: 30px; border: 2px solid #000;">
 
                 <div class="page-top-col">
                     <div>
-                        <input class="page1-top-input-value" id="spell_castingAbility_value" placeholder="spell abi"
+                        <input class="page1-top-input-value" v-model="character.spell.castingAbility" placeholder="spell abi"
                             autocomplete="off">
                     </div>
                 </div>
                 <div class="page-top-col">
                     <div>
-                        <input class="page1-top-input-value" id="spell_saveDc_value" placeholder="spell save dc"
+                        <input class="page1-top-input-value" v-model="character.spell.saveDc" placeholder="spell save dc"
                             autocomplete="off">
                     </div>
                 </div>
                 <div class="page-top-col">
                     <div>
-                        <input class="page1-top-input-value" id="spell_attackBonus_value"
-                            placeholder="spell attack bonus" autocomplete="off">
+                        <input class="page1-top-input-value" v-model="character.spell.attackBonus" placeholder="spell attack bonus" autocomplete="off">
                     </div>
                 </div>
             </div>
-
             <!-- Page 3 body -->
             <!-- Spells -->
             <div class="row">
-
                 <div class="col">
-                    <div
-                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px;">
-
+                    <div style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px;">
                         <span style="text-align: center;" data-label>Cantrips</span>
                         <div class="row" style="gap: 10px;">
                             <div class="col">
@@ -607,7 +573,7 @@
      // ability mapping
     const skillAbilityMap = {
         acrobatics: 'dexterity',
-        sleight_of_hand: 'dexterity',
+        sleightofhand: 'dexterity',
         stealth: 'dexterity',
         athletics: 'strength',
         arcana: 'intelligence',
@@ -615,7 +581,7 @@
         investigation: 'intelligence',
         nature: 'intelligence',
         religion: 'intelligence',
-        animal_handling: 'wisdom',
+        animalhandling: 'wisdom',
         insight: 'wisdom',
         medicine: 'wisdom',
         perception: 'wisdom',
@@ -626,57 +592,60 @@
         persuasion: 'charisma'
     };
 
-    const abilitiesList = [
-        { name: 'strength', label: 'STR', skills: 
-            [{ name: 'athletics', label: 'Athletics' }] 
-        },
-        { name: 'dexterity', label: 'DEX', skills: 
-        [   { name: 'acrobatics', label: 'Acrobatics' },
-            { name: 'sleight_of_hand', label: 'Sleight of Hand' },
-            { name: 'stealth', label: 'Stealth' } ]
-        },
-        { name: 'constitution', label: 'CON', skills: [] 
-        },
-        { name: 'intelligence', label: 'INT', skills: 
-        [   { name: 'arcana', label: 'Arcana' },
-            { name: 'history', label: 'History' },
-            { name: 'investigation', label: 'Investigation' },
-            { name: 'nature', label: 'Nature' },
-            { name: 'religion', label: 'Religion' }]
-        },
-        { name: 'wisdom', label: 'WIS', skills: [
-            { name: 'animal_handling', label: 'Animal Handling' },
-            { name: 'insight', label: 'Insight' },
-            { name: 'medicine', label: 'Medicine' },
-            { name: 'perception', label: 'Perception' },
-            { name: 'survival', label: 'Survival' }
-            ]
-        },
-        { name: 'charisma', label: 'CHA', skills: [
-            { name: 'deception', label: 'Deception' },
-            { name: 'intimidation', label: 'Intimidation' },
-            { name: 'performance', label: 'Performance' },
-            { name: 'persuasion', label: 'Persuasion' }
-            ]
-        }
-    ];
+    const abilityLabels = {
+        strength: "STR",
+        dexterity: "DEX",
+        constitution: "CON",
+        intelligence: "INT",
+        wisdom: "WIS",
+        charisma: "CHA"
+    }
+    
+    //returns a computed list used to pull names, labels, values, from reactive character model and calculates ability mod score.
+    const abilityList = computed(()=>{
+        const list = [];
+        for(const key in character.ability){
+            //skips over object id fields
+            if(key == "object_id") continue;
 
-    const abilities = reactive({
-        strength: 10,
-        dexterity: 10,
-        constitution: 10,
-        intelligence: 10,
-        wisdom: 10,
-        charisma: 10
+            const ability = character.ability[key];
+            const modifier = getAbiltyMod(character.ability[key].modifier.score);
+            const label = abilityLabels[key];
+            //calculates saves mod
+            character.saves[key].modifier = modifier + (character.saves[key].proficiency ? proficiencyBonus.value : 0);
+            //populates list
+            list.push({
+                name:key,
+                label:label,
+                mod: modifier
+            })
+        }
+        return list;
     });
 
-    const saves = reactive({});
-    const skills = reactive({});
+    function getAbiltyMod(score){
+        return Math.floor((score -10)/2);
+    }
+    //Groups skills and connects skills to abilities
+    const groupedSkills = computed(() => {
+        const groups = {}; 
+        for (const key in character.skills) {
+            if (key === "object_id") continue;
+            const abilityType = skillAbilityMap[key];
+            if (!groups[abilityType])
+            { 
+                groups[abilityType] = [];
+            }
+            //Calculates skill mod
+            const modifier = getAbiltyMod(character.ability[abilityType].modifier.score);
+            character.skills[key].modifier = modifier + (character.skills[key].proficiency ? proficiencyBonus.value : 0);
 
-    // Initialize saves and skills
-    abilitiesList.forEach(a => {
-        saves[a.name] = { proficient: false };
-        a.skills.forEach(s => skills[s.name] = { proficient: false });
+            //Populates List
+            groups[abilityType].push({
+                name: key,
+            });
+        }
+        return groups;
     });
 
     // proficiency boncus calculation
@@ -687,36 +656,5 @@
         if(character.class.level>=5){ return 3;}
         return 2;
     });
-
-    // Computed ability modifiers
-    const abilityModifiers = computed(() => {
-        const result = {};
-        for (const key in abilities) {
-            result[key] = Math.floor((abilities[key] - 10) / 2);
-        }
-        return result;
-    });
-
-    // Computed Saves
-    const calculatedSaves = computed(() => {
-        const result = {};
-        for (const key in saves) {
-            const mod = abilityModifiers.value[key];
-            result[key] = mod + (saves[key].proficient ? proficiencyBonus.value : 0);
-        }
-        return result;
-    });
-
-    // Computed Skills
-    const calculatedSkills = computed(() => {
-        const result = {};
-        for (const key in skills) {
-            const abilityKey = skillAbilityMap[key];
-            const mod = abilityModifiers.value[abilityKey];
-            result[key] = mod + (skills[key].proficient ? proficiencyBonus.value : 0);
-        }
-        return result;
-    });
-
 </script>
 <style src="../character.css" scoped></style>
