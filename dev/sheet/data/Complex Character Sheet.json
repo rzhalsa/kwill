@@ -119,7 +119,7 @@
   "speed": "30",
   "hitpoints": {
     "current": "7",
-    "maximum": "-24748",
+    "maximum": "-34948",
     "temporary": "2"
   },
   "hitDice": {
@@ -372,22 +372,22 @@
   "ability": {
     "object_id": "ability",
     "strength": {
-      "score": "14"
-    },
-    "dexterity": {
       "score": "10"
     },
+    "dexterity": {
+      "score": ""
+    },
     "constitution": {
-      "score": "26"
+      "score": ""
     },
     "intelligence": {
-      "score": "-17"
+      "score": ""
     },
     "wisdom": {
-      "score": "15"
+      "score": ""
     },
     "charisma": {
-      "score": "9"
+      "score": ""
     }
   }
 }

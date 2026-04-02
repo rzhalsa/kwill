@@ -1509,12 +1509,24 @@ updateScale();
 //
 // Depends on: characterSelect, characters, populateJsonFromHtml,
 //             parseFormulaToOperation, evaluateOperation, applyPanelOverrides
-document.getElementById('character-sheet').addEventListener('input', (e) => {
+document.getElementById('character-sheet').addEventListener('change', (e) => {
     const selected = characterSelect.value;
     if (!selected || !characters[selected]) return;
 
     // Panel inputs are handled internally by panel event listeners; skip them here.
     if (e.target.closest('[id$="_panel"]')) return;
+
+    // If user is editing a formula field, store the formula and stop here
+if (e.target.id.endsWith('_calculated')) {
+    const trimmed = e.target.value.trim();
+
+    if (trimmed.startsWith('=')) {
+        // Store the formula so populateJsonFromHtml can save it
+        e.target.dataset.formula = trimmed;
+        return; // do NOT evaluate or overwrite yet
+    }
+}
+
 
     // Special handling for overridden number fields (e.g. HP modified by a spell):
     // When the user clicks the spinner arrows, they expect to change the base value,
@@ -1565,8 +1577,8 @@ document.getElementById('character-sheet').addEventListener('input', (e) => {
     document.querySelectorAll('[id$="_calculated"]').forEach(el => {
         if (el.closest('[id$="_panel"]')) return;
         if (el.hasAttribute('data-label')) return;
-        const formula = el.defaultValue?.trim();
-        if (!formula?.startsWith('=')) return;
+const formula = el.dataset.formula || el.defaultValue?.trim();        
+if (!formula?.startsWith('=')) return;
         el.value = evaluateOperation(parseFormulaToOperation(formula.slice(1).trim()), characterData);
     });
 
