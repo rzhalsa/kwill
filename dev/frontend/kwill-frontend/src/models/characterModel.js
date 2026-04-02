@@ -11,52 +11,22 @@ export function createCharacter(){
         ability: {
             object_id: "ability",
             strength: {
-                modifier: {
-                    object_id: "operation",
-                    operation_type: "conditional",
-                    condition: "ability_strength_score",
-                    score: "10"
-                }
+                score: "10"
             },
             dexterity: {
-                modifier: {
-                    object_id: "operation",
-                    operation_type: "conditional",
-                    condition: "ability_dexterity_score",
-                    score: "10"
-                }
+                score: "10"
             },
             constitution: {
-                modifier: {
-                    object_id: "operation",
-                    operation_type: "conditional",
-                    condition: "ability_consitution_score",
-                    score: "10"
-                }
+                score: "10"
             },
             intelligence: {
-                modifier: {
-                    object_id: "operation",
-                    operation_type: "conditional",
-                    condition: "ability_intelligence_score",
-                    score: "10"
-                }
+                score: "10"
             },
             wisdom: {
-                modifier: {
-                    object_id: "operation",
-                    operation_type: "conditional",
-                    condition: "ability_wisdom_score",
-                    score: "10"
-                }
+                score: "10"
             },
             charisma: {
-                modifier: {
-                    object_id: "operation",
-                    operation_type: "conditional",
-                    condition: "ability_charism_score",
-                    score: "10"
-                }
+                score: "10"
             },
         },
         saves: {
@@ -112,7 +82,7 @@ export function createCharacter(){
             performance: { proficiency: false, modifier: "" },
             persuasion: { proficiency: false, modifier: "" }
             },
-        ac: "",
+        ac: "10",
         initiative: "",
         speed: "",
         hitpoints: { current: "", maximum: "", temporary: "" },
@@ -157,11 +127,38 @@ export function createCharacter(){
             cantrip10: "",
             cantrip11: "",
             cantrip12: "",
-            "1st": { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "" },
-            "2nd": { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "" }
-            // … continue 3rd–9th as needed
+            first: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, prepared10: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "", spell10:"" },
+            second: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, prepared10: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "", spell10:"" },
+            third: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, prepared10: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "", spell10:"" },
+            fourth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, prepared10: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "", spell10:"" },
+            fifth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
+            sixth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: ""},
+            seventh: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: ""},
+            eighth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
+            ninth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: ""}
         },
         classlevel: "",
         class: { object_id: "class", name: "", level: "" }
         });
+}
+
+export async function updateCharacter(characterId, characterData, userId){
+    try {
+        const payload = {...characterData, user_id: userId}
+        const response = await axios.put(`/api/character/${characterId}`, payload);
+        console.log("created character successfully: ",response.data );
+        return response.data;
+    } catch (error) {
+        console.error("Failed to post API data: ", error)
+    }
+}
+export async function createCharacter(characterData, userId){
+    try {
+        const payload = {...characterData, user_id: userId};
+        const response = await axios.post("/api/character", payload);
+        console.log("created character successfully: ",response.data );
+        return response.data;
+    } catch (error) {
+        console.error("Failed to post API data: ", error)
+    }
 }

@@ -53,7 +53,7 @@
                             <div class="col">
                                 <span data-label style="font-size: 11px; font-weight: bold;">{{ key.label.toUpperCase()}}</span>
                                 <input class="ability-modifier" type="text" :value="key.mod" readonly>
-                                <input class="ability-score" type="number" v-model="character.ability[key.name].modifier.score">
+                                <input class="ability-score" type="number" v-model="character.ability[key.name].score">
                             </div>
                         </div>
                     </div>
@@ -299,265 +299,103 @@
             <!-- Spells -->
             <div class="row">
                 <div class="col">
-                    <div style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px;">
+                    <div style="height: 220px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px;">
                         <span style="text-align: center;" data-label>Cantrips</span>
                         <div class="row" style="gap: 10px;">
                             <div class="col">
-                                <input id="spells_cantrip1_value" type="text" class="line-input">
-                                <input id="spells_cantrip2_value" type="text" class="line-input">
-                                <input id="spells_cantrip3_value" type="text" class="line-input">
-                                <input id="spells_cantrip4_value" type="text" class="line-input">
-                                <input id="spells_cantrip5_value" type="text" class="line-input">
-                                <input id="spells_cantrip6_value" type="text" class="line-input">
+                                <input v-for="i in 6" :key="i" v-model="character.spells[`cantrip${i}`]" type="text" class="line-input">
                             </div>
                             <div class="col">
-                                <input id="spells_cantrip7_value" type="text" class="line-input">
-                                <input id="spells_cantrip8_value" type="text" class="line-input">
-                                <input id="spells_cantrip9_value" type="text" class="line-input">
-                                <input id="spells_cantrip10_value" type="text" class="line-input">
-                                <input id="spells_cantrip11_value" type="text" class="line-input">
-                                <input id="spells_cantrip12_value" type="text" class="line-input">
+                                <input v-for="i in 6" :key="i" v-model="character.spells[`cantrip${i+6}`]" type="text" class="line-input">
                             </div>
                         </div>
-
                     </div>
-
-
-                    <div
-                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                    <div style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
                         <span style="text-align: center;" data-label>1st Level</span>
-                        <div class="row" style="gap: 5px; align-items: flex-start;">
-                            <div class="col" style="flex: 0 0 auto;">
-                                <input type="checkbox" id="spells_1st_prepared1_value">
-                                <input type="checkbox" id="spells_1st_prepared2_value">
-                                <input type="checkbox" id="spells_1st_prepared3_value">
-                                <input type="checkbox" id="spells_1st_prepared4_value">
-                                <input type="checkbox" id="spells_1st_prepared5_value">
-                                <input type="checkbox" id="spells_1st_prepared6_value">
-                                <input type="checkbox" id="spells_1st_prepared7_value">
-                                <input type="checkbox" id="spells_1st_prepared8_value">
-                                <input type="checkbox" id="spells_1st_prepared9_value">
-                            </div>
-                            <div class="col" style="flex: 1;">
-                                <input type="text" class="line-input" id="spells_1st_spell1_value">
-                                <input type="text" class="line-input" id="spells_1st_spell2_value">
-                                <input type="text" class="line-input" id="spells_1st_spell3_value">
-                                <input type="text" class="line-input" id="spells_1st_spell4_value">
-                                <input type="text" class="line-input" id="spells_1st_spell5_value">
-                                <input type="text" class="line-input" id="spells_1st_spell6_value">
-                                <input type="text" class="line-input" id="spells_1st_spell7_value">
-                                <input type="text" class="line-input" id="spells_1st_spell8_value">
-                                <input type="text" class="line-input" id="spells_1st_spell9_value">
+                        <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;" >
+                            <div v-for = "i in 10" :key="i" style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
+                                <input type="checkbox"  v-model="character.spells.first[`prepared${i}`]">
+                                <input type="text" class="line-input" v-model="character.spells.first[`spell${i}`]">
                             </div>
                         </div>
                     </div>
-
-                    <div
-                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                    <div style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
                         <span style="text-align: center;" data-label>2nd Level</span>
-                        <div class="row" style="gap: 5px; align-items: flex-start;">
-                            <div class="col" style="flex: 0 0 auto;">
-                                <input type="checkbox" id="spells_2nd_prepared1_value">
-                                <input type="checkbox" id="spells_2nd_prepared2_value">
-                                <input type="checkbox" id="spells_2nd_prepared3_value">
-                                <input type="checkbox" id="spells_2nd_prepared4_value">
-                                <input type="checkbox" id="spells_2nd_prepared5_value">
-                                <input type="checkbox" id="spells_2nd_prepared6_value">
-                                <input type="checkbox" id="spells_2nd_prepared7_value">
-                                <input type="checkbox" id="spells_2nd_prepared8_value">
-                                <input type="checkbox" id="spells_2nd_prepared9_value">
-                            </div>
-                            <div class="col" style="flex: 1;">
-                                <input type="text" class="line-input" id="spells_2nd_spell1_value">
-                                <input type="text" class="line-input" id="spells_2nd_spell2_value">
-                                <input type="text" class="line-input" id="spells_2nd_spell3_value">
-                                <input type="text" class="line-input" id="spells_2nd_spell4_value">
-                                <input type="text" class="line-input" id="spells_2nd_spell5_value">
-                                <input type="text" class="line-input" id="spells_2nd_spell6_value">
-                                <input type="text" class="line-input" id="spells_2nd_spell7_value">
-                                <input type="text" class="line-input" id="spells_2nd_spell8_value">
-                                <input type="text" class="line-input" id="spells_2nd_spell9_value">
+                        <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;" >
+                            <div v-for = "i in 10" :key="i" style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
+                                <input type="checkbox"  v-model="character.spells.second[`prepared${i}`]">
+                                <input type="text" class="line-input" v-model="character.spells.second[`spell${i}`]">
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="col">
-                    <div
-                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                    <div style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
                         <span style="text-align: center;" data-label>3rd Level</span>
-                        <div style="display: flex; flex-direction: row; gap: 5px; align-items: flex-start;">
-                            <div style="display: flex; flex-direction: column; flex: 0 0 auto; gap: 5px;">
-                                <input type="checkbox" id="spells_3rd_prepared1_value">
-                                <input type="checkbox" id="spells_3rd_prepared2_value">
-                                <input type="checkbox" id="spells_3rd_prepared3_value">
-                                <input type="checkbox" id="spells_3rd_prepared4_value">
-                                <input type="checkbox" id="spells_3rd_prepared5_value">
-                                <input type="checkbox" id="spells_3rd_prepared6_value">
-                                <input type="checkbox" id="spells_3rd_prepared7_value">
-                                <input type="checkbox" id="spells_3rd_prepared8_value">
-                                <input type="checkbox" id="spells_3rd_prepared9_value">
-                                <input type="checkbox" id="spells_3rd_prepared10_value">
-                            </div>
-                            <div style="display: flex; flex-direction: column; flex: 1; gap: 5px;">
-                                <input type="text" class="line-input" id="spells_3rd_spell1_value">
-                                <input type="text" class="line-input" id="spells_3rd_spell2_value">
-                                <input type="text" class="line-input" id="spells_3rd_spell3_value">
-                                <input type="text" class="line-input" id="spells_3rd_spell4_value">
-                                <input type="text" class="line-input" id="spells_3rd_spell5_value">
-                                <input type="text" class="line-input" id="spells_3rd_spell6_value">
-                                <input type="text" class="line-input" id="spells_3rd_spell7_value">
-                                <input type="text" class="line-input" id="spells_3rd_spell8_value">
-                                <input type="text" class="line-input" id="spells_3rd_spell9_value">
-                                <input type="text" class="line-input" id="spells_3rd_spell10_value">
+                        <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;" >
+                            <div v-for = "i in 10" :key="i" style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
+                                <input type="checkbox"  v-model="character.spells.third[`prepared${i}`]">
+                                <input type="text" class="line-input" v-model="character.spells.third[`spell${i}`]">
                             </div>
                         </div>
                     </div>
-
-                    <div
-                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                    <div style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
                         <span style="text-align: center;" data-label>4th Level</span>
-                        <div style="display: flex; flex-direction: row; gap: 5px; align-items: flex-start;">
-                            <div style="display: flex; flex-direction: column; flex: 0 0 auto; gap: 5px;">
-                                <input type="checkbox" id="spells_4th_prepared1_value">
-                                <input type="checkbox" id="spells_4th_prepared2_value">
-                                <input type="checkbox" id="spells_4th_prepared3_value">
-                                <input type="checkbox" id="spells_4th_prepared4_value">
-                                <input type="checkbox" id="spells_4th_prepared5_value">
-                                <input type="checkbox" id="spells_4th_prepared6_value">
-                                <input type="checkbox" id="spells_4th_prepared7_value">
-                                <input type="checkbox" id="spells_4th_prepared8_value">
-                                <input type="checkbox" id="spells_4th_prepared9_value">
-                                <input type="checkbox" id="spells_4th_prepared10_value">
-                            </div>
-                            <div style="display: flex; flex-direction: column; flex: 1; gap: 5px;">
-                                <input type="text" class="line-input" id="spells_4th_spell1_value">
-                                <input type="text" class="line-input" id="spells_4th_spell2_value">
-                                <input type="text" class="line-input" id="spells_4th_spell3_value">
-                                <input type="text" class="line-input" id="spells_4th_spell4_value">
-                                <input type="text" class="line-input" id="spells_4th_spell5_value">
-                                <input type="text" class="line-input" id="spells_4th_spell6_value">
-                                <input type="text" class="line-input" id="spells_4th_spell7_value">
-                                <input type="text" class="line-input" id="spells_4th_spell8_value">
-                                <input type="text" class="line-input" id="spells_4th_spell9_value">
-                                <input type="text" class="line-input" id="spells_4th_spell10_value">
+                        <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;" >
+                            <div v-for = "i in 10" :key="i" style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
+                                <input type="checkbox"  v-model="character.spells.fourth[`prepared${i}`]">
+                                <input type="text" class="line-input" v-model="character.spells.fourth[`spell${i}`]">
                             </div>
                         </div>
                     </div>
-
-                    <div
-                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                    <div style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
                         <span style="text-align: center;" data-label>5th Level</span>
-                        <div style="display: flex; flex-direction: row; gap: 5px; align-items: flex-start;">
-                            <div style="display: flex; flex-direction: column; flex: 0 0 auto; gap: 5px;">
-                                <input type="checkbox" id="spells_5th_prepared1_value">
-                                <input type="checkbox" id="spells_5th_prepared2_value">
-                                <input type="checkbox" id="spells_5th_prepared3_value">
-                                <input type="checkbox" id="spells_5th_prepared4_value">
-                                <input type="checkbox" id="spells_5th_prepared5_value">
-                                <input type="checkbox" id="spells_5th_prepared6_value">
-                            </div>
-                            <div style="display: flex; flex-direction: column; flex: 1; gap: 5px;">
-                                <input type="text" class="line-input" id="spells_5th_spell1_value">
-                                <input type="text" class="line-input" id="spells_5th_spell2_value">
-                                <input type="text" class="line-input" id="spells_5th_spell3_value">
-                                <input type="text" class="line-input" id="spells_5th_spell4_value">
-                                <input type="text" class="line-input" id="spells_5th_spell5_value">
-                                <input type="text" class="line-input" id="spells_5th_spell6_value">
+                        <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;" >
+                            <div v-for = "i in 6" :key="i" style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
+                                <input type="checkbox"  v-model="character.spells.fifth[`prepared${i}`]">
+                                <input type="text" class="line-input" v-model="character.spells.fifth[`spell${i}`]">
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="col">
-                    <div
-                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                    <div style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
                         <span style="text-align: center;" data-label>6th Level</span>
-                        <div style="display: flex; flex-direction: row; gap: 5px; align-items: flex-start;">
-                            <div style="display: flex; flex-direction: column; flex: 0 0 auto; gap: 5px;">
-                                <input type="checkbox" id="spells_6th_prepared1_value">
-                                <input type="checkbox" id="spells_6th_prepared2_value">
-                                <input type="checkbox" id="spells_6th_prepared3_value">
-                                <input type="checkbox" id="spells_6th_prepared4_value">
-                                <input type="checkbox" id="spells_6th_prepared5_value">
-                                <input type="checkbox" id="spells_6th_prepared6_value">
-                            </div>
-                            <div style="display: flex; flex-direction: column; flex: 1; gap: 5px;">
-                                <input type="text" class="line-input" id="spells_6th_spell1_value">
-                                <input type="text" class="line-input" id="spells_6th_spell2_value">
-                                <input type="text" class="line-input" id="spells_6th_spell3_value">
-                                <input type="text" class="line-input" id="spells_6th_spell4_value">
-                                <input type="text" class="line-input" id="spells_6th_spell5_value">
-                                <input type="text" class="line-input" id="spells_6th_spell6_value">
+                        <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;" >
+                            <div v-for = "i in 6" :key="i" style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
+                                <input type="checkbox"  v-model="character.spells.sixth[`prepared${i}`]">
+                                <input type="text" class="line-input" v-model="character.spells.sixth[`spell${i}`]">
                             </div>
                         </div>
                     </div>
-
-                    <div
-                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                    <div style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
                         <span style="text-align: center;" data-label>7th Level</span>
-                        <div style="display: flex; flex-direction: row; gap: 5px; align-items: flex-start;">
-                            <div style="display: flex; flex-direction: column; flex: 0 0 auto; gap: 5px;">
-                                <input type="checkbox" id="spells_7th_prepared1_value">
-                                <input type="checkbox" id="spells_7th_prepared2_value">
-                                <input type="checkbox" id="spells_7th_prepared3_value">
-                                <input type="checkbox" id="spells_7th_prepared4_value">
-                                <input type="checkbox" id="spells_7th_prepared5_value">
-                                <input type="checkbox" id="spells_7th_prepared6_value">
-                            </div>
-                            <div style="display: flex; flex-direction: column; flex: 1; gap: 5px;">
-                                <input type="text" class="line-input" id="spells_7th_spell1_value">
-                                <input type="text" class="line-input" id="spells_7th_spell2_value">
-                                <input type="text" class="line-input" id="spells_7th_spell3_value">
-                                <input type="text" class="line-input" id="spells_7th_spell4_value">
-                                <input type="text" class="line-input" id="spells_7th_spell5_value">
-                                <input type="text" class="line-input" id="spells_7th_spell6_value">
+                        <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;" >
+                            <div v-for = "i in 6" :key="i" style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
+                                <input type="checkbox"  v-model="character.spells.seventh[`prepared${i}`]">
+                                <input type="text" class="line-input" v-model="character.spells.seventh[`spell${i}`]">
                             </div>
                         </div>
                     </div>
-
                     <div
                         style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
                         <span style="text-align: center;" data-label>8th Level</span>
-                        <div style="display: flex; flex-direction: row; gap: 5px; align-items: flex-start;">
-                            <div style="display: flex; flex-direction: column; flex: 0 0 auto; gap: 5px;">
-                                <input type="checkbox" id="spells_8th_prepared1_value">
-                                <input type="checkbox" id="spells_8th_prepared2_value">
-                                <input type="checkbox" id="spells_8th_prepared3_value">
-                                <input type="checkbox" id="spells_8th_prepared4_value">
-                                <input type="checkbox" id="spells_8th_prepared5_value">
-                                <input type="checkbox" id="spells_8th_prepared6_value">
-                            </div>
-                            <div style="display: flex; flex-direction: column; flex: 1; gap: 5px;">
-                                <input type="text" class="line-input" id="spells_8th_spell1_value">
-                                <input type="text" class="line-input" id="spells_8th_spell2_value">
-                                <input type="text" class="line-input" id="spells_8th_spell3_value">
-                                <input type="text" class="line-input" id="spells_8th_spell4_value">
-                                <input type="text" class="line-input" id="spells_8th_spell5_value">
-                                <input type="text" class="line-input" id="spells_8th_spell6_value">
+                        <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;" >
+                            <div v-for = "i in 6" :key="i" style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
+                                <input type="checkbox"  v-model="character.spells.eighth[`prepared${i}`]">
+                                <input type="text" class="line-input" v-model="character.spells.eighth[`spell${i}`]">
                             </div>
                         </div>
                     </div>
-
                     <div
                         style="height: 200px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
                         <span style="text-align: center;" data-label>9th Level</span>
-                        <div style="display: flex; flex-direction: row; gap: 5px; align-items: flex-start;">
-                            <div style="display: flex; flex-direction: column; flex: 0 0 auto; gap: 5px;">
-                                <input type="checkbox" id="spells_9th_prepared1_value">
-                                <input type="checkbox" id="spells_9th_prepared2_value">
-                                <input type="checkbox" id="spells_9th_prepared3_value">
-                                <input type="checkbox" id="spells_9th_prepared4_value">
-                                <input type="checkbox" id="spells_9th_prepared5_value">
-                                <input type="checkbox" id="spells_9th_prepared6_value">
-                            </div>
-                            <div style="display: flex; flex-direction: column; flex: 1; gap: 5px;">
-                                <input type="text" class="line-input" id="spells_9th_spell1_value">
-                                <input type="text" class="line-input" id="spells_9th_spell2_value">
-                                <input type="text" class="line-input" id="spells_9th_spell3_value">
-                                <input type="text" class="line-input" id="spells_9th_spell4_value">
-                                <input type="text" class="line-input" id="spells_9th_spell5_value">
-                                <input type="text" class="line-input" id="spells_9th_spell6_value">
+                        <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;" >
+                            <div v-for = "i in 6" :key="i" style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
+                                <input type="checkbox"  v-model="character.spells.ninth[`prepared${i}`]">
+                                <input type="text" class="line-input" v-model="character.spells.ninth[`spell${i}`]">
                             </div>
                         </div>
                     </div>
@@ -570,6 +408,7 @@
     import {ref, reactive, readonly, computed} from 'vue';
     import { createCharacter } from '../models/characterModel';
     const character = createCharacter();
+    const amourBonus = ref(0);
      // ability mapping
     const skillAbilityMap = {
         acrobatics: 'dexterity',
@@ -591,7 +430,7 @@
         performance: 'charisma',
         persuasion: 'charisma'
     };
-
+    //labels for stats
     const abilityLabels = {
         strength: "STR",
         dexterity: "DEX",
@@ -600,19 +439,21 @@
         wisdom: "WIS",
         charisma: "CHA"
     }
-    
     //returns a computed list used to pull names, labels, values, from reactive character model and calculates ability mod score.
     const abilityList = computed(()=>{
         const list = [];
         for(const key in character.ability){
             //skips over object id fields
             if(key == "object_id") continue;
-
-            const ability = character.ability[key];
-            const modifier = getAbiltyMod(character.ability[key].modifier.score);
+            const modifier = getAbiltyMod(character.ability[key].score);
             const label = abilityLabels[key];
             //calculates saves mod
             character.saves[key].modifier = modifier + (character.saves[key].proficiency ? proficiencyBonus.value : 0);
+            //calculates AC
+            if(key == "dexterity")
+            {
+                character.ac = modifier + 10 + amourBonus.value;
+            }
             //populates list
             list.push({
                 name:key,
@@ -622,7 +463,7 @@
         }
         return list;
     });
-
+    
     function getAbiltyMod(score){
         return Math.floor((score -10)/2);
     }
@@ -637,7 +478,7 @@
                 groups[abilityType] = [];
             }
             //Calculates skill mod
-            const modifier = getAbiltyMod(character.ability[abilityType].modifier.score);
+            const modifier = getAbiltyMod(character.ability[abilityType].score);
             character.skills[key].modifier = modifier + (character.skills[key].proficiency ? proficiencyBonus.value : 0);
 
             //Populates List
