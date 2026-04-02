@@ -29,21 +29,33 @@
     import CharCreatOrigin from '../layouts/CharCreatOrigin.vue';                   // character race, background, languages, and alignment
     import CharCreatAbilityScores from '../layouts/CharCreatAbilityScores.vue';     // character stats
     import CharCreatAppearance from '../layouts/CharCreatAppearance.vue';           // character appearance
-    import { createCharacter } from '../models/characterModel';
+    import CharCreatFeats from '../layouts/CharCreatFeats.vue';                     // character feats
+    import CharCreatPersonal from '../layouts/CharCreatPersonal.vue';               // personal information about character
+    import CharCreatSkills from '../layouts/CharCreatSkills.vue';
+    import CharCreatGear from '../layouts/CharCreatGear.vue';
+    import CharCreatEnd from '../layouts/CharCreatEnd.vue';
     const currentLayout = shallowRef(CharCreatClass)                                // start at CharCreatClass layout
     const store = useCharacterCreationStore()                                       // pinia store for character creation
     const ready = ref(false)                                                        // flag for showing the layout once ready
-    const character = createCharacter()
-    //console.log(character)
 
     // Maps and count var to track layout order
     let order_count = 0
     const order = new Map([
         [0, CharCreatOrigin],
         [1, CharCreatAbilityScores],
-        [2, CharCreatAppearance]
+        [2, CharCreatSkills],
+        [3, CharCreatGear],
+        [4, CharCreatFeats],
+        [5, CharCreatAppearance],
+        [6, CharCreatPersonal],
+        [7, CharCreatEnd]
     ])
     const rev_order = new Map([
+        [8, CharCreatPersonal],
+        [7, CharCreatAppearance],
+        [6, CharCreatFeats],
+        [5, CharCreatGear],
+        [4, CharCreatSkills],
         [3, CharCreatAbilityScores],
         [2, CharCreatOrigin],
         [1, CharCreatClass]

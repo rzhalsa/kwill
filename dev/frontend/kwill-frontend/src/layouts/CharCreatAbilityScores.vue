@@ -1,7 +1,7 @@
 <template>
-    <v-card width="30vw">
+    <v-card width="40vw" height="50vh">
         <v-row>
-            <v-card-title class="mt-3 ml-3">Step 3: Ability Scores</v-card-title>
+            <v-card-title class="mt-3 ml-3">Step 3/8: Ability Scores</v-card-title>
             <v-divider horizontal class="mt-2 mb-2"></v-divider>
             <v-col cols="6">    
                 <!-- Strength -->
@@ -50,19 +50,13 @@
                 ></v-select>
             </v-col>
         </v-row>
-        <v-row>
-            <v-btn @click="toJson(character, store.getCharacterState)">Finish Character</v-btn>
-        </v-row>
     </v-card>
 </template>
 
 <script setup>
-    // Imports and variable declarations
     import { ref, onBeforeUnmount } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
-    import { createCharacter, toJson } from '../models/characterModel' 
-    const store = useCharacterCreationStore()                                           // pinia store for character creation
-    const character = createCharacter()                                              
+    const store = useCharacterCreationStore()                                           // pinia store for character creation                                             
     const valid_ability_scores = ref(Array.from({length: 20}, (_, i) => 1 + i))         // valid range is 1 to 20
     const str = ref(store.getCharacterState.get('ability.strength.modifier.score'))     // strength stat
     const dex = ref(store.getCharacterState.get('ability.dexterity.modifier.score'))    // dexterity stat

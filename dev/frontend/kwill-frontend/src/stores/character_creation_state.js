@@ -12,6 +12,7 @@ export const useCharacterCreationStore = defineStore('character_creation', {
             ['name', null],
             ['player', null],
             ['class', null],
+            ['level', null],
             ['race', null],
             ['alignment', null],
             ['background', null],
@@ -26,7 +27,17 @@ export const useCharacterCreationStore = defineStore('character_creation', {
             ['weight', null],
             ['eyes', null],
             ['hair', null],
-            ['skin', null]
+            ['skin', null],
+            ['features', null],
+            ['feat_amt', 0],
+            ['equipment', null],
+            ['gear_amt', 0],
+            ['proficiency_amt', null],
+            ['text.personality', null],
+            ['text.ideals', null],
+            ['text.bonds', null],
+            ['text.flaws', null],
+            ['backstory', null]
         ])
         
     }),

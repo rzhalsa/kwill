@@ -165,7 +165,7 @@ export function createCharacter(){
                 "2nd": { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "" }
                 // … continue 3rd–9th as needed
             },
-            classlevel: "",
+            level: "",
             class: { object_id: "class", name: "", level: "" }
         });
 }
@@ -186,8 +186,7 @@ export function toJson(character, map) {
             setValue(character, keys, value)
         }
     }
-
-    console.log(character)
+    return character
 }
 
 /**

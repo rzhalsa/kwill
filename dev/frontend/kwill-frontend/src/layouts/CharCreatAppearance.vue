@@ -1,7 +1,7 @@
 <template>
-    <v-card width="30vw">
+    <v-card width="40vw" height="50vh">
         <v-row>
-            <v-card-title class="mt-3 ml-3">Step 4: Character Appearance</v-card-title>
+            <v-card-title class="mt-3 ml-3">Step 7/8: Character Appearance</v-card-title>
             <v-divider horizontal class="mt-2 mb-6"></v-divider>
             <v-col>    
                 <!-- Age -->

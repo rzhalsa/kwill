@@ -1,7 +1,7 @@
 <template>
-    <v-card width="30vw">
+    <v-card width="40vw" height="50vh">
         <v-row>
-            <v-card-title class="mt-3 ml-3">Step 2: Character Origin</v-card-title>
+            <v-card-title class="mt-3 ml-3">Step 2/8: Character Origin</v-card-title>
             <v-divider horizontal class="mt-2 mb-6"></v-divider>
             <v-col>  
                 <!-- Race dropdown -->
@@ -34,11 +34,12 @@
     import { ref, onMounted, onBeforeUnmount } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import axios from 'axios'
-    const store = useCharacterCreationStore()                                 // pinia store for character creation
-    const selected_race = ref(store.getCharacterState.get('race'))            // currently selected race
-    const races = ref([])                                                     // array of all races
-    const selected_alignment = ref(store.getCharacterState.get('alignment'))  // currently selected alignment
-    const alignments = ref([                                                  // array of all alignments
+    import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'
+    const store = useCharacterCreationStore()                                  // pinia store for character creation
+    const selected_race = ref(store.getCharacterState.get('race'))             // currently selected race
+    const races = ref([])                                                      // array of all races
+    const selected_alignment = ref(store.getCharacterState.get('alignment'))   // currently selected alignment
+    const alignments = ref([                                                   // array of all alignments
         "Lawful Good",
         "Neutral Good",
         "Chaotic Good",
@@ -50,17 +51,7 @@
         "Chaotic Evil"
     ])         
     const selected_background = ref(store.getCharacterState.get('background')) // currently selected background
-    const backgrounds = ref([])                          // array of all backgrounds
-
-    /**
-     * Populate the races array with the fetched race data for use in the v-select menu
-     * @param race_data the fetched race data
-     */
-    function setRaces(race_data) {
-        for(let i = 0; i < race_data.length; i++) {
-            races.value.push(race_data[i].name)
-        }
-    }
+    const backgrounds = ref([])                                                // array of all backgrounds
 
     /**
      * Populate the backgrounds array with the fetched background data for use in the v-select menu
@@ -76,26 +67,12 @@
     }
 
     /**
-     * Fetch relevant race data from the backend API
-     */
-    async function fetchRaceData() {
-        try {
-            const response = await axios.get('http://localhost:5262/api/srd/races')
-            //console.log(response.data)
-            setRaces(response.data)
-        } catch (error) {
-            console.error("Failed to fetch race data: ", error)
-        }
-    }
-
-    /**
      * Fetch relevant alignment data from a third-party API
      */
     async function fetchBackgroundData() {
         try {
             const response = await axios.get('https://api.open5e.com/v2/backgrounds/')
-            //console.log(response.data)
-            setBackgrounds(response.data)
+            return response.data
         } catch (error) {
             console.error("Failed to fetch background data: ", error)
         }
@@ -111,11 +88,14 @@
     }
 
     /**
-     * Calls fetchRaceDace() on page mount
+     * Fetches race + background data and populate the races + background
+     * vars with the fetched data on page mount
      */
-    onMounted(() => {
-        fetchRaceData()
-        fetchBackgroundData()
+    onMounted(async () => {
+        const race_data = await fetchApiData('api/srd/races')
+        setCharCreateArrayData(races, race_data)
+        const background_data = await fetchBackgroundData()
+        setBackgrounds(background_data)
     })
 
     /**

@@ -1,7 +1,7 @@
 <template>
-    <v-card width="30vw">
+    <v-card width="40vw" height="50vh">
         <v-row>
-            <v-card-title class="mt-3 ml-3">Step 1: Class and Names</v-card-title>
+            <v-card-title class="mt-3 ml-3">Step 1/8: Class and Names</v-card-title>
             <v-divider horizontal class="mt-2 mb-6"></v-divider>
             <v-col>
                 <!-- Character Name -->
@@ -19,6 +19,13 @@
                     label="Class"
                     class="ma-4"
                 ></v-select>
+                <!-- Class level -->
+                 <v-select
+                    v-model="level"
+                    :items="levels"
+                    label="Level"
+                    class="ma-4"
+                 ></v-select>
             </v-col>
         </v-row>
     </v-card>
@@ -28,34 +35,14 @@
     import { ref, onMounted, onBeforeUnmount } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import axios from 'axios'
+    import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'
     const store = useCharacterCreationStore()                        // pinia store for character creation
     const character_name = ref(store.getCharacterState.get('name'))  // currently entered character name
     const player_name = ref(store.getCharacterState.get('player'))   // currently entered player name
     const selected = ref(store.getCharacterState.get('class'))       // currently selected item in the v-select menu
     const classes = ref([])                                          // array of all classes
-
-    /**
-     * Populate the classes array with the fetched class data for use in the v-select menu
-     * @param class_data the fetched class data
-     */
-    function setClasses(class_data) {
-        for(let i = 0; i < class_data.length; i++) {
-            classes.value.push(class_data[i].name)
-        }
-    }
-
-    /**
-     * Fetch relevant class data from the backend API
-     */
-    async function fetchClassData() {
-        try {
-            const response = await axios.get('http://localhost:5262/api/srd/classes')
-            //console.log(response.data)
-            setClasses(response.data)
-        } catch (error) {
-            console.error('Failed to fetch class data: ', error)
-        }
-    }
+    const level = ref(store.getCharacterState.get('classlevel'))     // class level
+    const levels = ref(Array.from({length: 20}, (_, i) => 1 + i))    // valid levels are 1 to 20
 
     /**
      * Saves currently entered class and name data before the page unmounts
@@ -67,10 +54,12 @@
     }
 
     /**
-     * Calls fetchClassData() on page mount
+     * Fetch character data and populates the classes var with fetched data
+     * on page mount
      */
-    onMounted(() => {
-        fetchClassData()
+    onMounted(async () => {
+        const character_data = await fetchApiData('api/srd/classes')
+        setCharCreateArrayData(classes, character_data)
     })
 
     /**
