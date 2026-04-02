@@ -152,7 +152,7 @@ export async function updateCharacter(characterId, characterData, userId){
         console.error("Failed to post API data: ", error)
     }
 }
-export async function createCharacter(characterData, userId){
+export async function postCharacter(characterData, userId){
     try {
         const payload = {...characterData, user_id: userId};
         const response = await axios.post("/api/character", payload);
