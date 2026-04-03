@@ -1,7 +1,7 @@
 
 <template>
    <v-app>
-    <Navbar />
+    <Navbar v-if="navbarState"/>
     <v-main>
       <router-view />
     </v-main>
@@ -9,11 +9,10 @@
 </template>
 
 <script setup>
-import Navbar from './layouts/Navbar.vue'
+  import { computed, ref } from 'vue'
+  import { useNavbarStore } from './stores/navbar_state'
+  import Navbar from './layouts/Navbar.vue'
+  
+  const store = useNavbarStore()
+  const navbarState = computed(() => store.getUseNavBar)
 </script>
-
-<style>
-body, html, #app {
-  font-family: 'Playwrite NZ Basic', sans-serif;
-}
-</style>
