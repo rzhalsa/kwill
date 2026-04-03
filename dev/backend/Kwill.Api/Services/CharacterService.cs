@@ -63,13 +63,13 @@ namespace Kwill.Api.Services
             try
             {
                 var srdData = await LoadSrdDataAsync();
-                var validation = CharacterSheetValidator.ValidateCharacterSheet(doc, srdData);
+               var validation = CharacterSheetValidator.ValidateCharacterSheet(doc, srdData);
 
-                if (!validation.IsValid)
-                {
+               if (!validation.IsValid)
+               {
                     Console.WriteLine($"Validation failed: {string.Join(", ", validation.Errors)}");
                     return (false, null, validation.Errors, null);
-                }
+               }
 
 
                 await _db.CharacterSheets.InsertOneAsync(doc);
