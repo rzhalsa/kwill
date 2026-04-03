@@ -14,7 +14,7 @@ namespace Kwill.Api
         private static readonly Dictionary<string, string> SkillAbilityMap = new(StringComparer.OrdinalIgnoreCase)
     {
         { "acrobatics", "dexterity" },
-        { "animal_handling", "wisdom" },
+        { "animalhandling", "wisdom" },
         { "arcana", "intelligence" },
         { "athletics", "strength" },
         { "deception", "charisma" },
@@ -28,7 +28,7 @@ namespace Kwill.Api
         { "performance", "charisma" },
         { "persuasion", "charisma" },
         { "religion", "intelligence" },
-        { "sleight_of_hand", "dexterity" },
+        { "sleightofhand", "dexterity" },
         { "stealth", "dexterity" },
         { "survival", "wisdom" }
     };
@@ -45,13 +45,13 @@ namespace Kwill.Api
         //Calls other methods to calculate the stats on the character sheet then returns the modified BsonDocument.
         public static BsonDocument Calculate(BsonDocument character, Dictionary<string, List<BsonDocument>> srdData)
         {
-            int level = character.GetValue("level", 1).ToInt32();
+            int level = ParseInt(character.GetValue("level", 1), 1);
             int proficiencyBonus = GetProficiencyBonus(level);
 
             var abilityScores = GetAbilityScores(character);
             var abilityModifiers = CalculateAbilityModifiers(abilityScores);
 
-            int maxHp = CalculateMaxHp(character, abilityModifiers);
+            int maxHp = CalculateMaxHp(character, abilityModifiers, srdData);
 
             var savingThrows = CalculateSavingThrows(character, abilityModifiers, proficiencyBonus);
             var skills = CalculateSkills(character, abilityModifiers, proficiencyBonus);
@@ -73,30 +73,37 @@ namespace Kwill.Api
         private static BsonDocument GetAbilityScores(BsonDocument character)
         {
             var result = new BsonDocument
+    {
+        { "strength", 10 },
+        { "dexterity", 10 },
+        { "constitution", 10 },
+        { "intelligence", 10 },
+        { "wisdom", 10 },
+        { "charisma", 10 }
+    };
+
+            if (!character.Contains("ability") || !character["ability"].IsBsonDocument)
+                return result;
+
+            var abilityDoc = character["ability"].AsBsonDocument;
+
+            foreach (var ability in Abilities)
             {
-                 { "strength", 10 },
-                 { "dexterity", 10 },
-                 { "constitution", 10 },
-                 { "intelligence", 10 },
-                 { "wisdom", 10 },
-                 { "charisma", 10 }
-             };
+                if (!abilityDoc.Contains(ability) || !abilityDoc[ability].IsBsonDocument)
+                    continue;
 
-            if (!character.Contains("ability_scores") || !character["ability_scores"].IsBsonArray)
-                return result;
+                var statDoc = abilityDoc[ability].AsBsonDocument;
 
-            var abilityArray = character["ability_scores"].AsBsonArray;
-            if (abilityArray.Count == 0 || !abilityArray[0].IsBsonDocument)
-                return result;
+                if (!statDoc.Contains("modifier") || !statDoc["modifier"].IsBsonDocument)
+                    continue;
 
-            var abilityDoc = abilityArray[0].AsBsonDocument;
+                var modifierDoc = statDoc["modifier"].AsBsonDocument;
 
-            result["strength"] = ParseScore(abilityDoc, "score_strength");
-            result["dexterity"] = ParseScore(abilityDoc, "score_dexterity");
-            result["constitution"] = ParseScore(abilityDoc, "score_constitution");
-            result["intelligence"] = ParseScore(abilityDoc, "score_intelligence");
-            result["wisdom"] = ParseScore(abilityDoc, "score_wisdom");
-            result["charisma"] = ParseScore(abilityDoc, "score_charisma");
+                if (!modifierDoc.Contains("score"))
+                    continue;
+
+                result[ability] = ParseInt(modifierDoc["score"], 10);
+            }
 
             return result;
         }
@@ -147,64 +154,36 @@ namespace Kwill.Api
         }
 
         //Calculates the maximum hp for the character.
-        private static int CalculateMaxHp(BsonDocument character, BsonDocument abilityModifiers)
+        private static int CalculateMaxHp(BsonDocument character, BsonDocument abilityModifiers, Dictionary<string, List<BsonDocument>> srdData)
         {
             int conMod = abilityModifiers.GetValue("constitution", 0).ToInt32();
+            int level = ParseInt(character.GetValue("level", 1), 1);
 
-            if (!character.Contains("class") || !character["class"].IsBsonArray)
-                return 1;
+            if (!character.Contains("class") || !character["class"].IsString)
+                return Math.Max(1, 8 + conMod);
 
-            var classArray = character["class"].AsBsonArray;
-            if (classArray.Count == 0)
-                return 1;
+            string className = character["class"].AsString;
+            string classIndex = NormalizeSrdIndex(className);
 
-            int totalHp = 0;
-            bool firstCharacterLevelHandled = false;
+            int hitDie = 8;
 
-            foreach (var classValue in classArray)
+            if (srdData.ContainsKey("srd_classes"))
             {
-                if (!classValue.IsBsonDocument)
-                    continue;
+                var classData = srdData["srd_classes"]
+                    .FirstOrDefault(c => c.Contains("index") && c["index"].AsString == classIndex);
 
-                var classDoc = classValue.AsBsonDocument;
-
-                int classLevel = 0;
-                if (classDoc.Contains("class_level"))
+                if (classData != null && classData.Contains("hit_die"))
                 {
-                    var levelValue = classDoc["class_level"];
-                    if (levelValue.IsString)
-                        int.TryParse(levelValue.AsString, out classLevel);
-                    else if (levelValue.IsInt32)
-                        classLevel = levelValue.AsInt32;
+                    hitDie = ParseInt(classData["hit_die"], 8);
                 }
+            }
 
-                int hitDie = 8;
-                if (classDoc.Contains("traits") && classDoc["traits"].IsBsonDocument)
-                {
-                    var traits = classDoc["traits"].AsBsonDocument;
-                    if (traits.Contains("hit_point_die"))
-                    {
-                        hitDie = ParseHitDie(traits["hit_point_die"].ToString());
-                    }
-                }
+            int totalHp = Math.Max(1, hitDie + conMod);
 
-                if (classLevel <= 0)
-                    continue;
-
-                // First overall character level gets full hit die once
-                if (!firstCharacterLevelHandled)
-                {
-                    totalHp += Math.Max(1, hitDie + conMod);
-                    firstCharacterLevelHandled = true;
-                    classLevel--;
-                }
-
-                // Remaining levels in this class use fixed gain
-                int fixedGain = GetFixedHpGain(hitDie);
-                for (int i = 0; i < classLevel; i++)
-                {
-                    totalHp += Math.Max(1, fixedGain + conMod);
-                }
+            int fixedGain = GetFixedHpGain(hitDie);
+            for (int i = 2; i <= level; i++)
+            {
+                totalHp += Math.Max(1, fixedGain + conMod);
             }
 
             return Math.Max(1, totalHp);
@@ -240,17 +219,24 @@ namespace Kwill.Api
         {
             var saves = new BsonDocument();
 
-            var proficientSaves = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            if (character.Contains("saving_throw_proficiencies") && character["saving_throw_proficiencies"].IsBsonArray)
-            {
-                foreach (var item in character["saving_throw_proficiencies"].AsBsonArray)
-                    proficientSaves.Add(NormalizeKey(item.AsString));
-            }
-
             foreach (var ability in Abilities)
             {
                 int total = abilityModifiers.GetValue(ability, 0).ToInt32();
-                if (proficientSaves.Contains(ability))
+                bool proficient = false;
+
+                if (character.Contains("saves") && character["saves"].IsBsonDocument)
+                {
+                    var savesDoc = character["saves"].AsBsonDocument;
+
+                    if (savesDoc.Contains(ability) && savesDoc[ability].IsBsonDocument)
+                    {
+                        var saveDoc = savesDoc[ability].AsBsonDocument;
+                        if (saveDoc.Contains("proficiency"))
+                            proficient = saveDoc["proficiency"].ToBoolean();
+                    }
+                }
+
+                if (proficient)
                     total += proficiencyBonus;
 
                 saves[ability] = total;
@@ -264,19 +250,20 @@ namespace Kwill.Api
         {
             var result = new BsonDocument();
 
-            var proficientSkills = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            BsonDocument? skillsDoc = null;
+            if (character.Contains("skills") && character["skills"].IsBsonDocument)
+                skillsDoc = character["skills"].AsBsonDocument;
+
             var expertiseSkills = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            if (character.Contains("skill_proficiencies") && character["skill_proficiencies"].IsBsonArray)
-            {
-                foreach (var item in character["skill_proficiencies"].AsBsonArray)
-                    proficientSkills.Add(NormalizeKey(item.AsString));
-            }
-
+            // Optional legacy/global expertise array support
             if (character.Contains("skill_expertise") && character["skill_expertise"].IsBsonArray)
             {
                 foreach (var item in character["skill_expertise"].AsBsonArray)
-                    expertiseSkills.Add(NormalizeKey(item.AsString));
+                {
+                    if (item.IsString)
+                        expertiseSkills.Add(item.AsString.Trim().ToLowerInvariant());
+                }
             }
 
             foreach (var kvp in SkillAbilityMap)
@@ -285,10 +272,28 @@ namespace Kwill.Api
                 string ability = kvp.Value;
 
                 int total = abilityModifiers.GetValue(ability, 0).ToInt32();
+                bool proficient = false;
+                bool expertise = false;
 
+                if (skillsDoc != null && skillsDoc.Contains(skill) && skillsDoc[skill].IsBsonDocument)
+                {
+                    var skillDoc = skillsDoc[skill].AsBsonDocument;
+
+                    if (skillDoc.Contains("proficiency"))
+                        proficient = skillDoc["proficiency"].ToBoolean();
+
+                    // New frontend-friendly expertise flag
+                    if (skillDoc.Contains("expertise"))
+                        expertise = skillDoc["expertise"].ToBoolean();
+                }
+
+                // Legacy/global expertise array can also mark expertise
                 if (expertiseSkills.Contains(skill))
+                    expertise = true;
+
+                if (expertise)
                     total += proficiencyBonus * 2;
-                else if (proficientSkills.Contains(skill))
+                else if (proficient)
                     total += proficiencyBonus;
 
                 result[skill] = total;
@@ -361,9 +366,26 @@ namespace Kwill.Api
         }
 
         //Used to replace spaces and dashes with _
-        private static string NormalizeKey(string value)
+        private static string NormalizeSrdIndex(string value)
         {
-            return value.Trim().ToLowerInvariant().Replace(" ", "_").Replace("-", "_");
+            if (string.IsNullOrWhiteSpace(value))
+                return string.Empty;
+
+            return value.Trim().ToLowerInvariant().Replace(" ", "-");
+        }
+
+        //helps to safely parse ints due to potential null values
+        private static int ParseInt(BsonValue value, int defaultValue = 0)
+        {
+            if (value == null || value.IsBsonNull)
+                return defaultValue;
+
+            if (value.IsInt32) return value.AsInt32;
+            if (value.IsInt64) return (int)value.AsInt64;
+            if (value.IsDouble) return (int)value.AsDouble;
+            if (value.IsString && int.TryParse(value.AsString, out int parsed)) return parsed;
+
+            return defaultValue;
         }
     }
 }
