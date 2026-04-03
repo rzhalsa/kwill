@@ -17,7 +17,7 @@ export function savePageData(data) {
  */
 export async function fetchApiData(path) {
     try {
-        const response = await axios.get(`http://localhost:5262/${path}`)
+        const response = await api.get(`${path}`)
         return response.data
     } catch (error) {
         console.error("Failed to fetch API data: ", error)

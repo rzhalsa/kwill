@@ -1,31 +1,44 @@
 <template>
-    <v-card width="40vw" height="50vh">
+    <v-card>
         <v-row>
-            <v-card-title class="mt-3 ml-3">Step 1/8: Class and Names</v-card-title>
-            <v-divider horizontal class="mt-2 mb-6"></v-divider>
-            <v-col>
-                <!-- Character Name -->
-                <p class="ma-2">Character Name
-                    <input type="text" v-model="character_name" required class="login-input px-2 py-2 d-flex justify-end" style="border-radius: 15px; border-style: solid; border-color: black;">
-                </p>
-                <!-- Player Name -->
-                <p class="ma-2">Player Name
-                    <input type="text" v-model="player_name" required class="login-input px-2 py-2 d-flex justify-end" style="border-radius: 15px; border-style: solid; border-color: black;">
-                </p>
+            <v-card-title class="mt-3 ml-3 cc-title">Step 1/8: Class and Names</v-card-title>
+            <v-divider horizontal class="mt-2"></v-divider>
+            <v-col class="mr-4">
+                <v-row class="ml-2">
+                    <v-col>
+                        <p>Character Name:</p>
+                    </v-col>
+                    <v-col class="mr-14">
+                        <v-text-field v-model="character_name" rounded="pill" variant="outlined" density="compact"></v-text-field>
+                    </v-col>
+                </v-row>
+                <v-row class="ml-2">
+                    <v-col>
+                        <p>Player Name:</p>
+                    </v-col>
+                    <v-col class="mr-14">
+                        <v-text-field v-model="player_name" rounded="pill" variant="outlined" density="compact"></v-text-field>
+                    </v-col>
+                </v-row>
                 <!-- Class dropdown -->
                 <v-select
                     v-model="selected"
                     :items="classes"
                     label="Class"
-                    class="ma-4"
+                    class="ml-4 mr-12"
                 ></v-select>
                 <!-- Class level -->
                  <v-select
                     v-model="level"
                     :items="levels"
                     label="Level"
-                    class="ma-4"
+                    class="ml-4 mr-12"            
                  ></v-select>
+            </v-col>
+            <v-col class="ml-4">
+                <ul>
+                    <li class="mb-13" v-for="point in bullet_points" :key="point">{{ point.text }}</li>
+                </ul>
             </v-col>
         </v-row>
     </v-card>
@@ -34,15 +47,21 @@
 <script setup>
     import { ref, onMounted, onBeforeUnmount } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
-    import axios from 'axios'
     import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'
+import { eventName } from 'vuetify/lib/util/helpers.mjs'
     const store = useCharacterCreationStore()                        // pinia store for character creation
     const character_name = ref(store.getCharacterState.get('name'))  // currently entered character name
     const player_name = ref(store.getCharacterState.get('player'))   // currently entered player name
     const selected = ref(store.getCharacterState.get('class'))       // currently selected item in the v-select menu
     const classes = ref([])                                          // array of all classes
-    const level = ref(store.getCharacterState.get('classlevel'))     // class level
+    const level = ref(store.getCharacterState.get('level'))          // class level
     const levels = ref(Array.from({length: 20}, (_, i) => 1 + i))    // valid levels are 1 to 20
+    const bullet_points = [
+        {text: "Enter your character's name"},
+        {text: "Enter your name"},
+        {text: "Choose your character's class"},
+        {text: "Select your character's level"}
+    ]
 
     /**
      * Saves currently entered class and name data before the page unmounts
@@ -51,6 +70,7 @@
         store.setCharacterState('name', character_name)
         store.setCharacterState('player', player_name)
         store.setCharacterState('class', selected)
+        store.setCharacterState('level', level)
     }
 
     /**
@@ -71,9 +91,11 @@
 </script>
 
 <style>
-    .login-input {
-        color: black;
-        background-color: white;
-        width: 20vw;
+    p, li {
+        font-size: clamp(1rem, calc(1vw + 0.3rem), 3rem);
+    }
+
+    .v-select .v-field-label, .v-select .v-field__input, .v-text-field .v-field__input {
+        font-size: clamp(1rem, calc(1vw + 0.1rem), 3rem);
     }
 </style>

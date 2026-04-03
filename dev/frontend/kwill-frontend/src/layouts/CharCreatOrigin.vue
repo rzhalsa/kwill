@@ -1,30 +1,35 @@
 <template>
-    <v-card width="40vw" height="50vh">
+    <v-card>
         <v-row>
-            <v-card-title class="mt-3 ml-3">Step 2/8: Character Origin</v-card-title>
-            <v-divider horizontal class="mt-2 mb-6"></v-divider>
+            <v-card-title class="mt-3 ml-3 cc-title">Step 2/8: Character Origin</v-card-title>
+            <v-divider horizontal class="mt-2 mb-4"></v-divider>
             <v-col>  
                 <!-- Race dropdown -->
                 <v-select
                     v-model="selected_race"
                     :items="races"
                     label="Race"
-                    class="ma-4"
+                    class="ml-6 mb-6 mr-6"
                 ></v-select>
                 <!-- Alignment dropdown -->
                 <v-select
                     v-model="selected_alignment"
                     :items="alignments"
                     label="Alignment"
-                    class="ma-4"
+                    class="ma-6"
                 ></v-select>
                 <!-- Background dropdown -->
                 <v-select
                     v-model="selected_background"
                     :items="backgrounds"
                     label="Background"
-                    class="ma-4"
+                    class="ma-6"
                 ></v-select>
+            </v-col>
+            <v-col class="ml-4">
+                <ul>
+                    <li class="mb-16" v-for="point in bullet_points" :key="point">{{ point.text }}</li>
+                </ul>
             </v-col>
         </v-row>
     </v-card>
@@ -49,7 +54,12 @@
         "Lawful Evil",
         "Neutral Evil",
         "Chaotic Evil"
-    ])         
+    ])   
+    const bullet_points = [
+        {text: "Select your character's race"},
+        {text: "Enter your character's moral alignment"},
+        {text: "Choose your character's background"},
+    ]      
     const selected_background = ref(store.getCharacterState.get('background')) // currently selected background
     const backgrounds = ref([])                                                // array of all backgrounds
 

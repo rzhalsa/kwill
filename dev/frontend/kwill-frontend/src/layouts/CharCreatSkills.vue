@@ -1,10 +1,10 @@
 <template>
-    <v-card width="40vw" height="50vh">
+    <v-card>
         <v-row>
-            <v-card-title class="mt-3 ml-3">Step 4/8: Skills</v-card-title>
+            <v-card-title class="mt-3 ml-3 cc-title">Step 4/8: Skills</v-card-title>
             <v-divider horizontal class="mt-2 mb-6"></v-divider>
             <v-col>
-                <p class="ml-3">Select {{ amt }} of the following:</p>
+                <p class="ml-3">Select {{ amt }} of the following skills to have proficiency in:</p>
                 <div class="skill-area">
                     <v-list>
                         <v-list-item v-for="option in options" :key="option">
@@ -20,12 +20,11 @@
 <script setup>
     import { ref, onMounted, onBeforeUnmount } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
-    import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'
-    const store = useCharacterCreationStore()                        // pinia store for character creation
-    const selected_class = ref(store.getCharacterState.get('class')) // the player's selected class
-    const amt = ref(null)                                            // max amount of skill proficiencies
-    const options = ref([])                                          // skill proficiency options
-    const selected_skills = ref([])                                  // skills the player has selected to have proficiency in
+    const store = useCharacterCreationStore()                                    // pinia store for character creation
+    const selected_class = ref(store.getCharacterState.get('class'))             // the player's selected class
+    const amt = ref(null)                                                        // max amount of skill proficiencies
+    const options = ref([])                                                      // skill proficiency options
+    const selected_skills = ref(store.getCharacterState.get('selected_skills'))  // skills the player has selected to have proficiency in
     const skill_data = {
         "Barbarian" : {
             amt: 2,
@@ -81,8 +80,12 @@
      * Saves currently entered feat data before the page unmounts
      */
     function saveSkillData() {
+        store.setCharacterState('selected_skills', selected_skills)
     }
 
+    /**
+     * Assigns values to amt and options to reflect the player's chosen class
+     */
     function setSkillData() {
         if(selected_class.value in skill_data) {
             amt.value = skill_data[selected_class.value].amt
@@ -90,16 +93,15 @@
         }
     }
 
+    /**
+     * Toggles a skill checkbox in the skills dropdown for character creation
+     * @param option the skill checkbox to toggle
+     */
     function toggle(option) {
-        console.log("in here")
         if(selected_skills.value.includes(option)) {
             selected_skills.value = selected_skills.value.filter(o => o != option)
         } else {
-            console.log("In else")
-            console.log(selected_skills.length)
-            console.log(amt)
             if(selected_skills.value.length < amt.value) {
-                console.log("Adding")
                 selected_skills.value.push(option)
             }
         }

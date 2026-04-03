@@ -40,9 +40,14 @@ background: linear-gradient(to bottom, #3b3b3b 0%, #373333 50%, #2b2a2a 100%) !i
 }
 
 .v-theme--kwillTheme .gradient-character-creator {
-background: linear-gradient(to bottom, #776363, rgb(177, 173, 173)) !important;  
+background: linear-gradient(to bottom, #706a6a, rgb(177, 175, 175)) !important;  
 }
 
 .v-theme--kwillThemeDark .gradient-character-creator {
-background: linear-gradient(to bottom, rgb(65, 47, 47), #080606) !important;
+background: linear-gradient(to bottom, rgb(67, 62, 62), #2d2c2c) !important;
+}
+
+.cc-title {
+  font-size: clamp(0.5rem, calc(1.5vw + 0.3rem), 5rem);
+  font-weight: bold;
 }

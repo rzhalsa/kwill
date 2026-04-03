@@ -1,11 +1,20 @@
 <template>
-    <v-card width="40vw" height="50vh">
+    <v-card>
         <v-row>
-            <v-card-title class="mt-3 ml-3">Confirmation and Creation</v-card-title>
+            <v-card-title class="mt-3 ml-3 cc-title">Confirmation and Creation</v-card-title>
             <v-divider horizontal class="mt-2 mb-6"></v-divider>
-            <v-col>
-                <p>You've reached the end of the character creation process! You may click the button below to create your character.</p>
-                <v-btn @click="create">Create Character</v-btn>
+            <v-col class="d-flex justify-center">
+                <h2 class="mr-3 ml-4 mb-2">You've reached the end of the character creation process!</h2>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col class="d-flex justify-center">
+                <h2 class="mr-3 ml-4 mb-12">You may click the button below to create your character.</h2>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col class="d-flex justify-center">
+                <v-btn size="x-large" color="primary" @click="create">Create Character</v-btn>
             </v-col>
         </v-row>
     </v-card>
@@ -25,5 +34,4 @@
 </script>
 
 <style>
-
 </style>

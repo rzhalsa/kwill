@@ -1,25 +1,45 @@
 <template>
-    <v-card width="40vw" height="50vh">
+    <v-card>
         <v-row>
-            <v-card-title class="mt-3 ml-3">Step 8/8: Personal Information</v-card-title>
+            <v-card-title class="mt-3 ml-3 cc-title">Step 8/8: Personal Information</v-card-title>
             <v-divider horizontal class="mt-2 mb-6"></v-divider>
-            <v-col md="8">
-                <v-col>
-                    <!-- Personality -->
-                    <textarea v-model="personality" placeholder="Personality" class="mr-2 mb-2" rows="3" cols="23"></textarea>
-                    <!-- Ideals -->
-                    <textarea v-model="ideals" placeholder="Ideals" class="ml-2 mb-2" rows="3" cols="23"></textarea>
+            <!-- Bullet point -->
+            <v-row>
+                <v-col class="ml-16">
+                    <ul>
+                        <li class="mb-2" v-for="point in bullet_points" :key="point">{{ point.text }}</li>
+                    </ul>
                 </v-col>
-                <v-col>
-                    <!-- Bonds -->
-                    <textarea v-model="bonds" placeholder="Bonds" class="mr-2 mt-2" rows="3" cols="23"></textarea>
-                    <!-- Flaws -->
-                    <textarea v-model="flaws" placeholder="Flaws" class="ml-2 mt-2" rows="3" cols="23"></textarea>
-                </v-col>   
+            </v-row>
+        </v-row>
+        <!-- Personality textarea components -->
+        <v-row class="ml-16">
+            <v-col>
+                <v-row>
+                    <v-col>
+                        <!-- Personality -->
+                        <textarea v-model="personality" placeholder="Personality" rows="4" cols="23"></textarea>
+                    </v-col>
+                    <v-col>
+                        <!-- Bonds -->
+                        <textarea v-model="bonds" placeholder="Bonds"  rows="4" cols="23"></textarea>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col>
+                        <!-- Ideals -->
+                        <textarea v-model="ideals" placeholder="Ideals"  rows="4" cols="23"></textarea>
+                    </v-col>
+                    <v-col>
+                        <!-- Flaws -->
+                        <textarea v-model="flaws" placeholder="Flaws" rows="4" cols="23"></textarea>
+                    </v-col>
+                
+                </v-row>
             </v-col>
-            <v-col sm="4" class="d-flex justify-end ">
-                <!-- Backstory -->
-                <textarea v-model="backstory" placeholder="Backstory" class="ma-3" rows="6" cols="25"></textarea>
+            <v-col>
+                    <!-- Backstory -->
+                    <textarea v-model="backstory" placeholder="Backstory" rows="10" cols="25"></textarea>
             </v-col>
         </v-row>
     </v-card>
@@ -34,6 +54,9 @@
     const bonds = ref(store.getCharacterState.get('text.bonds'))
     const flaws = ref(store.getCharacterState.get('text.flaws'))
     const backstory = ref(store.getCharacterState.get('backstory'))
+    const bullet_points = [
+        {text: "Enter the following information for describing your character's personality"},
+    ]
 
     /**
      * Saves currently entered feat data before the page unmounts
@@ -62,7 +85,7 @@
     }
 
     textarea {
-        font-size: larger;
+        font-size: xx-large;
         border-radius: 25px;
         outline-style: solid;
         outline-color: black;

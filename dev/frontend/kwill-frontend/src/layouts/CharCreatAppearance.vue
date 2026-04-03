@@ -1,35 +1,41 @@
 <template>
-    <v-card width="40vw" height="50vh">
+    <v-card>
         <v-row>
-            <v-card-title class="mt-3 ml-3">Step 7/8: Character Appearance</v-card-title>
+            <v-card-title class="mt-3 ml-3 cc-title">Step 7/8: Character Appearance</v-card-title>
             <v-divider horizontal class="mt-2 mb-6"></v-divider>
-            <v-col>    
-                <!-- Age -->
-                <p class="ma-2">Age
-                    <input type="text" v-model="age" required class="login-input px-2 py-2 d-flex justify-end" style="border-radius: 15px; border-style: solid; border-color: black;">
-                </p>
-                <!-- Height -->
-                <p class="ma-2">Height
-                    <input type="text" v-model="height" required class="login-input px-2 py-2 d-flex justify-end" style="border-radius: 15px; border-style: solid; border-color: black;">
-                </p>
-                <!-- Weight -->
-                <p class="ma-2">Weight
-                    <input type="text" v-model="weight" required class="login-input px-2 py-2 d-flex justify-end" style="border-radius: 15px; border-style: solid; border-color: black;">
-                </p>
+            <v-col class="ma-3">
+                <!-- Age and Eyes -->
+                <v-row>
+                    <v-col>
+                        <v-text-field v-model="age" rounded="pill" variant="outlined" placeholder="Age" density="compact"></v-text-field>
+                    </v-col>
+                    <v-col>
+                        <v-text-field v-model="eyes" rounded="pill" variant="outlined" placeholder="Eye Color" density="compact"></v-text-field>
+                    </v-col>
+                </v-row>  
+                <!-- Height and Hair -->    
+                <v-row>
+                    <v-col>
+                        <v-text-field v-model="height" rounded="pill" variant="outlined" placeholder="Height" density="compact"></v-text-field>
+                    </v-col>
+                    <v-col>
+                        <v-text-field v-model="hair" rounded="pill" variant="outlined" placeholder="Hair Color" density="compact"></v-text-field>
+                    </v-col>
+                </v-row>
+                <!-- Weight and Skin -->
+                <v-row>
+                    <v-col>
+                        <v-text-field v-model="weight" rounded="pill" variant="outlined" placeholder="Weight" density="compact"></v-text-field>
+                    </v-col>
+                    <v-col>
+                        <v-text-field v-model="skin" rounded="pill" variant="outlined" placeholder="Skin Color" density="compact"></v-text-field>
+                    </v-col>
+                </v-row>
             </v-col>
-            <v-col>
-                <!-- Eyes -->
-                <p class="ma-2">Eyes
-                    <input type="text" v-model="eyes" required class="login-input px-2 py-2 d-flex justify-end" style="border-radius: 15px; border-style: solid; border-color: black;">
-                </p>
-                <!-- Hair -->
-                <p class="ma-2">Hair
-                    <input type="text" v-model="hair" required class="login-input px-2 py-2 d-flex justify-end" style="border-radius: 15px; border-style: solid; border-color: black;">
-                </p>
-                <!-- Skin -->
-                <p class="ma-2">Skin
-                    <input type="text" v-model="skin" required class="login-input px-2 py-2 d-flex justify-end" style="border-radius: 15px; border-style: solid; border-color: black;">
-                </p>
+            <v-col class="ml-4 mr-4">
+                <ul>
+                    <li class="mb-13" v-for="point in bullet_points" :key="point">{{ point.text }}</li>
+                </ul>
             </v-col>
         </v-row>
     </v-card>
@@ -45,7 +51,10 @@
     const eyes = ref(store.getCharacterState.get('eyes'))     // currently entered eyes
     const hair = ref(store.getCharacterState.get('hair'))     // currently entered hair
     const skin = ref(store.getCharacterState.get('skin'))     // currently entered eyes
-    
+    const bullet_points = [
+        {text: "Enter the following information for describing your character's appearance"},
+    ]
+
     /**
      * Saves currently selected appearance data before the page unmounts
      */

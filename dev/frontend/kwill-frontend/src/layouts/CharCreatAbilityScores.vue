@@ -1,7 +1,7 @@
 <template>
-    <v-card width="40vw" height="50vh">
+    <v-card>
         <v-row>
-            <v-card-title class="mt-3 ml-3">Step 3/8: Ability Scores</v-card-title>
+            <v-card-title class="mt-3 ml-3 cc-title">Step 3/8: Ability Scores</v-card-title>
             <v-divider horizontal class="mt-2 mb-2"></v-divider>
             <v-col cols="6">    
                 <!-- Strength -->
