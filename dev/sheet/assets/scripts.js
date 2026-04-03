@@ -688,6 +688,9 @@ document.addEventListener('DOMContentLoaded', () => {
 //   - Collapsed stats summary: damage, action, range shown when collapsed
 //   - Tooltip: shows a hover tooltip with spell stats when the block is collapsed
 //   - Input/change listeners: keep the in-memory overrides current
+//   - formulaActiveCollapsed checkbox in the minimized header
+//   - Bidirectional sync between collapsed and expanded formula toggles
+//   - Proper initialization and event handling
 //
 // Depends on: applyPanelOverrides (called on input/change)
 function createPanelBlock(panelId, data = {}) {
@@ -796,15 +799,12 @@ function createPanelBlock(panelId, data = {}) {
     // Defer first call so the cloned element is in the DOM before querying.
     setTimeout(updateSaveTypeVisibility, 0);
 
-    // ── Uses display ───────────────────────────────────────
-    // Shows "current/max" uses in the collapsed header row as a
-    // small informational label, keeping the block compact.
-    const usesDisplay = document.createElement('span');
+ const usesDisplay = document.createElement('span');
     usesDisplay.style.cssText = 'font-size:11px; color:#555; flex-shrink:0;';
-
+ 
     const mainRow = clone.querySelector('.panel-block > div');
     if (mainRow) mainRow.insertBefore(usesDisplay, expandBtn);
-
+ 
     function updateUsesDisplay() {
         const current = clone.querySelector('[data-field-key="uses_current"]');
         const max = clone.querySelector('[data-field-key="uses_max"]');
@@ -816,8 +816,63 @@ function createPanelBlock(panelId, data = {}) {
             usesDisplay.textContent = '';
         }
     }
-
-    // ── Collapsed stats summary ────────────────────────────
+ 
+    // ── Formula activation toggle (collapsed header) ─────────────────────
+    // A checkbox in the minimized header that mirrors the formula_active
+    // checkbox in the expanded section. Clicking it toggles formula activation
+    // without expanding the block. Only shown if the formula field has content.
+    const formulaActiveCollapsed = document.createElement('input');
+    formulaActiveCollapsed.type = 'checkbox';
+    formulaActiveCollapsed.title = 'Toggle formula';
+    formulaActiveCollapsed.style.cssText = [
+        'flex-shrink:0',
+        'width:14px',
+        'height:14px',
+        'cursor:pointer',
+        'accent-color:#8b6914',
+        'display:none'  // Start hidden; only show if formula has content
+    ].join(';');
+ 
+    // Find the expanded section's formula_active checkbox (the canonical source of truth).
+    const formulaActiveExpanded = expandedSection.querySelector('[data-field-key="formula_active"]');
+    const formulaInput = expandedSection.querySelector('[data-field-key="formula"]');
+ 
+    // Helper function to update the visibility of the formula toggle based on whether
+    // the formula field has content.
+    function updateFormulaCheckboxVisibility() {
+        const hasFormula = formulaInput?.value?.trim().length > 0;
+        formulaActiveCollapsed.style.display = hasFormula ? 'inline-flex' : 'none';
+    }
+ 
+    // Sync collapsed → expanded when the collapsed checkbox changes.
+    formulaActiveCollapsed.addEventListener('change', () => {
+        if (formulaActiveExpanded) {
+            formulaActiveExpanded.checked = formulaActiveCollapsed.checked;
+            // Trigger change event on the expanded checkbox to fire any listeners
+            // (including applyPanelOverrides).
+            formulaActiveExpanded.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    });
+ 
+    // Sync expanded → collapsed when the expanded checkbox changes.
+    if (formulaActiveExpanded) {
+        formulaActiveExpanded.addEventListener('change', () => {
+            formulaActiveCollapsed.checked = formulaActiveExpanded.checked;
+        });
+    }
+ 
+    // Update visibility whenever the formula input changes.
+    if (formulaInput) {
+        formulaInput.addEventListener('input', updateFormulaCheckboxVisibility);
+        formulaInput.addEventListener('change', updateFormulaCheckboxVisibility);
+    }
+ 
+    // Insert the formula toggle into the header row.
+    if (mainRow && expandBtn) {
+        mainRow.insertBefore(formulaActiveCollapsed, expandBtn);
+    }
+ 
+    // ── Collapsed stats summary ────────────────────────────────────────
     // When the expanded section is hidden, shows a condensed view of
     // damage, action type, and range in the collapsed header row.
     function updateCollapsedSpells() {
@@ -825,16 +880,16 @@ function createPanelBlock(panelId, data = {}) {
         const damageType = clone.querySelector('[data-field-key="damagetype"]');
         const action = clone.querySelector('[data-field-key="action"]');
         const range = clone.querySelector('[data-field-key="range"]');
-
+ 
         const dmgVal = damage?.value?.trim();
         const dmgTypeVal = damageType?.value?.trim();
         const actionVal = action?.value?.trim();
         const rangeVal = range?.value?.trim();
-
+ 
         const dmgDisplay = clone.querySelector('.collapsed-damage');
         const actionDisplay = clone.querySelector('.collapsed-action');
         const rangeDisplay = clone.querySelector('.collapsed-range');
-
+ 
         // Combine damage and damage type if both exist (e.g. "2d6 Fire").
         if (dmgDisplay) {
             if (dmgVal && dmgTypeVal) dmgDisplay.textContent = `${dmgVal} ${dmgTypeVal}`;
@@ -844,7 +899,7 @@ function createPanelBlock(panelId, data = {}) {
         if (actionDisplay) actionDisplay.textContent = actionVal || '';
         if (rangeDisplay) rangeDisplay.textContent = rangeVal || '';
     }
-
+ 
     // Listen for changes to relevant fields and update the collapsed
     // summary and uses display in real time.
     clone.addEventListener('input', (e) => {
@@ -852,16 +907,25 @@ function createPanelBlock(panelId, data = {}) {
         if (['damage', 'damagetype', 'action', 'range'].includes(key)) updateCollapsedSpells();
         if (key === 'uses_current' || key === 'uses_max') updateUsesDisplay();
     });
-
+ 
     clone.addEventListener('change', (e) => {
         const key = e.target.dataset.fieldKey;
         if (['damage', 'damagetype', 'action', 'range'].includes(key)) updateCollapsedSpells();
     });
-
+ 
     // Defer initial population until after the clone is appended.
     setTimeout(updateCollapsedSpells, 0);
     setTimeout(updateUsesDisplay, 0);
-
+ 
+    // Initialize the collapsed formula toggle to match the expanded state,
+    // and check formula visibility.
+    setTimeout(() => {
+        updateFormulaCheckboxVisibility();
+        if (formulaActiveExpanded) {
+            formulaActiveCollapsed.checked = formulaActiveExpanded.checked;
+        }
+    }, 0);
+ 
     // Wire the expand/collapse button after the collapsed-stats helpers
     // are defined so the button can reference expandedSection.
     if (expandBtn && expandedSection) {
@@ -872,6 +936,7 @@ function createPanelBlock(panelId, data = {}) {
             tooltip.style.display = 'none'; // hide tooltip when toggling
         });
     }
+ 
 
     // ── Hover tooltip ──────────────────────────────────────
     // A fixed-position tooltip div (appended to document.body so it
