@@ -31,8 +31,9 @@ namespace Kwill.Validation
     {
         private static readonly HashSet<string> ValidObjectIds = new HashSet<string>
         {
-            "character_sheet", "race", "class", "traits", 
-            "feature", "operation", "ability_scores", "background"
+            "character", "race", "class", "traits",
+            "feature", "operation", "ability", "background",
+            "saves", "skills"
         };
 
         private static readonly HashSet<string> ValidOperationTypes = new HashSet<string>
@@ -287,110 +288,130 @@ namespace Kwill.Validation
                 result.IsValid = false;
                 return result; // Can't continue without required fields
             }
-            
+
             // Character Level Validation
             // Extract level from operation structure
             // TODO: Implement operation parser to resolve level value
-            
+
             // Class Validation
-            if (character.Contains("class") && character["class"].IsBsonArray)
+            if (character.Contains("class"))
             {
-                var classes = character["class"].AsBsonArray;
-                
-                foreach (BsonDocument classObj in classes)
+                if (character["class"].IsString)
                 {
-                    // Validate class_id exists
-                    if (classObj.Contains("class_id"))
+                    string className = character["class"].AsString;
+
+                    if (string.IsNullOrWhiteSpace(className))
                     {
-                        string classId = classObj["class_id"].AsString;
-                        if (!SRDValidators.ValidateClassExists(classId, srdData["srd_classes"]))
-                        {
-                            result.AddError($"Invalid class_id: {classId}");
-                        }
-                        
-                        // Validate hit die matches class
-                        if (classObj.Contains("traits"))
-                        {
-                            var traits = classObj["traits"].AsBsonDocument;
-                            if (traits.Contains("hit_point_die"))
-                            {
-                                string hitDie = traits["hit_point_die"].AsString;
-                                if (!SRDValidators.ValidateClassHitDie(classId, hitDie, srdData["srd_classes"]))
-                                {
-                                    result.AddError($"Hit die {hitDie} does not match class {classId}");
-                                }
-                            }
-                        }
+                        result.AddError("Class cannot be empty");
                     }
-                    
-                    // Validate class level
-                    if (classObj.Contains("class_level"))
+                    else
                     {
-                        if (int.TryParse(classObj["class_level"].AsString, out int classLevel))
+                        string normalizedClass = NormalizeKey(className);
+                        if (!SRDValidators.ValidateClassExists(normalizedClass, srdData["srd_classes"]))
                         {
-                            if (!CharacterValidators.ValidateClassLevel(classLevel))
-                            {
-                                result.AddError($"Invalid class level: {classLevel}");
-                            }
+                            result.AddError($"Invalid class: {className}");
                         }
                     }
                 }
+                else
+                {
+                    result.AddError("class must be a string");
+                }
             }
-            
+
             // Ability Score Validation 
-            if (character.Contains("ability_scores") && character["ability_scores"].IsBsonArray)
+            if (character.Contains("ability") && character["ability"].IsBsonDocument)
             {
-                var abilityScores = character["ability_scores"].AsBsonArray[0].AsBsonDocument;
-                
-                var abilities = new[] { 
-                    "score_strength", "score_dexterity", "score_constitution",
-                    "score_intelligence", "score_wisdom", "score_charisma" 
-                };
-                
-                foreach (var ability in abilities)
+                var ability = character["ability"].AsBsonDocument;
+
+                var abilities = new[]
                 {
-                    if (abilityScores.Contains(ability))
+        "strength", "dexterity", "constitution",
+        "intelligence", "wisdom", "charisma"
+    };
+
+                foreach (var stat in abilities)
+                {
+                    if (!ability.Contains(stat) || !ability[stat].IsBsonDocument)
                     {
-                        if (int.TryParse(abilityScores[ability].AsString, out int score))
-                        {
-                            if (!CharacterValidators.ValidateAbilityScore(score))
-                            {
-                                result.AddError($"Invalid {ability}: {score} (must be 1-30)");
-                            }
-                        }
+                        result.AddError($"Missing ability block: {stat}");
+                        continue;
+                    }
+
+                    var statDoc = ability[stat].AsBsonDocument;
+
+                    if (!statDoc.Contains("modifier") || !statDoc["modifier"].IsBsonDocument)
+                    {
+                        result.AddError($"Missing modifier block for {stat}");
+                        continue;
+                    }
+
+                    var modifierDoc = statDoc["modifier"].AsBsonDocument;
+
+                    if (!modifierDoc.Contains("score"))
+                    {
+                        result.AddError($"Missing score for {stat}");
+                        continue;
+                    }
+
+                    int score;
+                    var scoreValue = modifierDoc["score"];
+
+                    if (scoreValue.IsInt32)
+                        score = scoreValue.AsInt32;
+                    else if (scoreValue.IsString && int.TryParse(scoreValue.AsString, out int parsed))
+                        score = parsed;
+                    else
+                    {
+                        result.AddError($"Invalid score format for {stat}");
+                        continue;
+                    }
+
+                    if (!CharacterValidators.ValidateAbilityScore(score))
+                    {
+                        result.AddError($"Invalid {stat} score: {score} (must be 1-30)");
                     }
                 }
             }
-            
+            else
+            {
+                result.AddError("Missing ability object");
+            }
+
             // Race Validation
             if (character.Contains("race"))
             {
-                var race = character["race"].AsBsonDocument;
-                if (race.Contains("race_id"))
+                if (character["race"].IsString)
                 {
-                    string raceId = race["race_id"].AsString;
-                    if (!SRDValidators.ValidateRaceExists(raceId, srdData["srd_races"]))
+                    string raceName = character["race"].AsString;
+
+                    if (string.IsNullOrWhiteSpace(raceName))
                     {
-                        result.AddError($"Invalid race_id: {raceId}");
+                        result.AddError("Race cannot be empty");
                     }
-                }
-                
-                // Validate subrace if present
-                if (race.Contains("race") && race["race"].IsBsonDocument)
-                {
-                    var subrace = race["race"].AsBsonDocument;
-                    if (subrace.Contains("race_id"))
+                    else
                     {
-                        string subraceId = subrace["race_id"].AsString;
-                        if (!SRDValidators.ValidateRaceExists(subraceId, srdData["srd_races"]))
+                        string normalizedRace = NormalizeKey(raceName);
+                        if (!SRDValidators.ValidateRaceExists(normalizedRace, srdData["srd_races"]))
                         {
-                            result.AddError($"Invalid subrace_id: {subraceId}");
+                            result.AddError($"Invalid race: {raceName}");
                         }
                     }
                 }
+                else
+                {
+                    result.AddError("race must be a string");
+                }
             }
-            
+
             return result;
         }
-    }
+        private static string NormalizeKey(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return string.Empty;
+
+            return value.Trim().ToLowerInvariant().Replace(" ", "-");
+        }
+    } 
 }

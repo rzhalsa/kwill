@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Microsoft.Extensions.Configuration;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace KwillDB 
@@ -9,16 +10,22 @@ namespace KwillDB
      */
     public sealed class KwillDB 
     {
-        private const string ConnectionUri = "mongodb://localhost:27017"; // hard coded local db
-        private const string DatabaseName = "Kwill";
+        //private const string ConnectionUri = "mongodb://localhost:27017"; // hard coded local db
+       // private const string DatabaseName = "Kwill";
 
         private readonly IMongoDatabase db;
 
-        //Creates a local database given the db name.
-        public KwillDB()
+        //Creates a local database given the db name
+        //.
+        public KwillDB(IConfiguration configuration)
         {
-            var client = new MongoClient(ConnectionUri);
-            db = client.GetDatabase(DatabaseName);
+            //var client = new MongoClient(ConnectionUri);
+            // db = client.GetDatabase(DatabaseName);
+            var connectionString = configuration["MongoDbSettings:ConnectionString"];
+            var databaseName = configuration["MongoDbSettings:DatabaseName"];
+
+            var client = new MongoClient(connectionString);
+            db = client.GetDatabase(databaseName);
         }
 
         public IMongoCollection<BsonDocument> SrdData =>
