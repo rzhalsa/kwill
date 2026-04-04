@@ -405,10 +405,14 @@
     </div>
 </template>
 <script setup>
-    import {ref, reactive, readonly, computed} from 'vue';
-    import { createCharacter } from '../models/characterModel';
+    import {ref, reactive, readonly, computed, watch} from 'vue';
+    import { createCharacter, updateCharacter } from '../models/characterModel';
+    import { debounce } from 'lodash'
     const character = createCharacter();
     const amourBonus = ref(0);
+    const changeCount = ref(0);
+    const characterId= ref(1);
+    const userId = ref(1);
      // ability mapping
     const skillAbilityMap = {
         acrobatics: 'dexterity',
@@ -488,6 +492,20 @@
         }
         return groups;
     });
+
+    //Check that prevents API spams with a half second interval incase someone spams three changes quickly
+    const debounceUpdate = debounce((newVal)=>{
+        updateCharacter(characterId,structuredClone(newVal),userId);
+        changeCount.value=0;
+    }, 500);
+
+    //watches character model and waits for three changes to be made before calling debounce
+    watch(character,(newVal)=>{
+        changeCount++;
+        if(changeCount >= 3){
+            debounceUpdate(newVal);
+        }
+    })
 
     // proficiency boncus calculation
     const proficiencyBonus = computed(() => {
