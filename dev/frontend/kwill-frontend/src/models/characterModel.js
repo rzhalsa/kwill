@@ -1,4 +1,6 @@
 import {reactive} from 'vue';
+import api from '../services/api';
+
 export function createCharacter(){
     return reactive({
         object_id: "character",
@@ -145,7 +147,7 @@ export function createCharacter(){
 export async function updateCharacter(characterId, characterData, userId){
     try {
         const payload = {...characterData, user_id: userId}
-        const response = await axios.put(`/api/character/${characterId}`, payload);
+        const response = await api.put(`/api/character/${characterId}`, payload);
         console.log("created character successfully: ",response.data );
         return response.data;
     } catch (error) {
@@ -155,7 +157,7 @@ export async function updateCharacter(characterId, characterData, userId){
 export async function postCharacter(characterData, userId){
     try {
         const payload = {...characterData, user_id: userId};
-        const response = await axios.post("/api/character", payload);
+        const response = await api.post("/api/character", payload);
         console.log("created character successfully: ",response.data );
         return response.data;
     } catch (error) {
