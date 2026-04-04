@@ -52,10 +52,6 @@ export async function createNewCharacter(characterData, userId, characterId){
     try {
         const payload = {...characterData, user_id: userId, character_id: characterId};
         console.log(payload)
-        console.log(typeof payload)
-        for(const key in payload) {
-            console.log(key, typeof payload[key])
-        }
         const response = await api.post("/api/character", payload);
         console.log("created character successfully: ",response.data );
         return response.data;
