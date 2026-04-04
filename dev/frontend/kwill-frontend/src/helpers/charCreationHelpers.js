@@ -51,7 +51,6 @@ export async function updateCharacter(characterId, characterData, userId){
 export async function createNewCharacter(characterData, userId, characterId){
     try {
         const payload = {...characterData, user_id: userId, character_id: characterId};
-        console.log(payload)
         const response = await api.post("/api/character", payload);
         console.log("created character successfully: ",response.data );
         return response.data;

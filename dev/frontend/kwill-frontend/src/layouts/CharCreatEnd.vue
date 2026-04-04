@@ -24,12 +24,16 @@
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import { createNewCharacter } from '../helpers/charCreationHelpers'
     import { createCharacter, toJson } from '../models/characterModel';
+    import { useRouter } from 'vue-router'
     const store = useCharacterCreationStore() // pinia store for character creation
     const character = createCharacter()
+    const router = useRouter()
     
     function create() {
         const filled_character = toJson(character, store.getCharacterState)
         createNewCharacter(filled_character, 'user001', 'character001')
+        store.resetStore()
+        router.replace('/characters')
     }
 </script>
 

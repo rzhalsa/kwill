@@ -48,7 +48,6 @@
     import { ref, onMounted, onBeforeUnmount } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'
-import { eventName } from 'vuetify/lib/util/helpers.mjs'
     const store = useCharacterCreationStore()                        // pinia store for character creation
     const character_name = ref(store.getCharacterState.get('name'))  // currently entered character name
     const player_name = ref(store.getCharacterState.get('player'))   // currently entered player name

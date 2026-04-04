@@ -68,8 +68,28 @@ export const useCharacterCreationStore = defineStore('character_creation', {
          * Resets all values in the character state map
          */
         resetStore() {
-            for(key in this.character_state) {
-                this.character_state.set(key, null)
+            for(const [key, value] of this.character_state) {
+                switch(key) {
+                    case 'feat_amt':
+                    case 'gear_amt':
+                        this.character_state.set(key, 0)
+                        break
+                    case 'points_remaining':
+                        this.character_state.set(key, 27)
+                        break
+                    case 'selections':
+                    case 'selected_skills':
+                    case 'features':
+                    case 'equipment':
+                        this.character_state.set(key, [])
+                        break
+                    case 'character_ability_scores':
+                        this.character_state.set(key, [8, 8, 8, 8, 8, 8])
+                        break
+                    default:
+                        this.character_state.set(key, null)
+                        break
+                }
             }
         }
     }
