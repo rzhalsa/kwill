@@ -95,7 +95,7 @@ export function createCharacter(){
         },
         attacks: "",
         coins: { copper: "", silver: "", electrum: "", gold: "", platinum: "" },
-        equipment: "",
+        equipment: {text: ""},
         text: {
             personality: "",
             ideals: "",
@@ -139,8 +139,12 @@ export function createCharacter(){
             eighth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
             ninth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: ""}
         },
-        classlevel: "",
-        class: { object_id: "class", name: "", level: "" }
+        classes:{
+            firstclass:{
+                name: "",
+                level: ""
+            }
+        }
         });
 }
 
