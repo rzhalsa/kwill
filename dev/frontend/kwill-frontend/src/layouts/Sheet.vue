@@ -501,7 +501,7 @@
 
     //watches character model and waits for three changes to be made before calling debounce
     watch(character,(newVal)=>{
-        changeCount++;
+        changeCount.value++;
         if(changeCount >= 3){
             debounceUpdate(newVal);
         }
