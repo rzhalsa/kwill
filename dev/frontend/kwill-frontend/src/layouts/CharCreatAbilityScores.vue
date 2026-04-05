@@ -8,14 +8,14 @@
                     <!-- Ability score radio buttons -->
                     <div v-for="(slot, slotIndex) in 6" :key="slotIndex">
                         <div>{{ labels[slotIndex] }}</div>
-                        <v-radio-group v-model="selections[slotIndex]">
+                        <v-radio-group v-model="store.character_state.selections[slotIndex]">
                             <v-radio
-                                v-for="(score, i) in ability_scores"
+                                v-for="(score, i) in store.character_state.ability_scores"
                                 :key="i"
                                 :label="score.toString()"
                                 :value="i"
                                 color="primary"
-                                :disabled="selections.includes(i) && selections[slotIndex] !== i"
+                                :disabled="store.character_state.selections.includes(i) && store.character_state.selections[slotIndex] !== i"
                             ></v-radio>
                         </v-radio-group>
                     </div>
@@ -59,16 +59,16 @@
                 <v-row>
                     <v-col>
                         <!-- Area to display scores -->
-                        <div v-if="(selected_absc_method === 'standard_array' || selected_absc_method === 'random_rolls')">
+                        <div v-if="(store.character_state.ability_score_method === 'standard_array' || store.character_state.ability_score_method === 'random_rolls')">
                             <p>Your Scores:</p>
                             <div class="score-grid">
-                                <p v-for="score in ability_scores"> {{ score }} </p>
+                                <p v-for="score in store.character_state.ability_scores"> {{ score }} </p>
                             </div>
                         </div>
-                        <div v-else-if="selected_absc_method === 'point_buy'">
+                        <div v-else-if="store.character_state.ability_score_method === 'point_buy'">
                             <p>{{ remaining_points }} points remaining</p>
                             <div class="score-grid">
-                                <div v-for="(score, i) in ability_scores" :key="i">
+                                <div v-for="(score, i) in store.character_state.ability_scores" :key="i">
                                     <v-btn rounded="xl" size="x-small" variant="text" @click="pointBuy(i, score - 1)" icon="mdi-minus"></v-btn>
                                     {{ score }}
                                     <v-btn rounded="xl" size="x-small" variant="text"  @click="pointBuy(i, score + 1)" icon="mdi-plus"></v-btn>
@@ -89,11 +89,8 @@
     const bullet_points = [            
         {text: "Select a method to determine your ability scores:"},
     ]
-    const selected_absc_method = ref(store.getCharacterState.get('ability_score_method')) // the selected method to determine ability scores
-    const ability_scores = ref(store.getCharacterState.get('character_ability_scores'))   // array of possible ability scores for a character
-    const selections = ref(store.getCharacterState.get('selections'))
     const total_points = 27                                                                                         // total amount of points for Point Buy
-    const used_points = computed(() => ability_scores.value.reduce((sum, score) => sum + point_buy_cost[score], 0)) // the amount of points already used
+    const used_points = computed(() => store.character_state.ability_scores.reduce((sum, score) => sum + point_buy_cost[score], 0)) // the amount of points already used
     const remaining_points = computed(() => total_points - used_points.value)                                       // the amount of points remaining
     // Maps the cost for each point in point buy
     const point_buy_cost = {
@@ -120,14 +117,14 @@
      * Saves currently selected ability scores and selected method before the page unmounts
      */
     function saveAbilityScores() {
-        store.setCharacterState('ability.strength.modifier.score', ability_scores.value[selections.value[0]])
-        store.setCharacterState('ability.dexterity.modifier.score', ability_scores.value[selections.value[1]])
-        store.setCharacterState('ability.constitution.modifier.score', ability_scores.value[selections.value[2]])
-        store.setCharacterState('ability.wisdom.modifier.score', ability_scores.value[selections.value[3]])
-        store.setCharacterState('ability.intelligence.modifier.score', ability_scores.value[selections.value[4]])
-        store.setCharacterState('ability.charisma.modifier.score', ability_scores.value[selections.value[5]])
-        store.setCharacterState('ability_score_method', selected_absc_method)
-        store.setCharacterState('character_ability_scores', ability_scores)
+        if(store.character_state.selections.length === 6) {
+            store.character_state['ability.strength.modifier.score'] = store.character_state.ability_scores[store.character_state.selections[0]]
+            store.character_state['ability.dexterity.modifier.score'] = store.character_state.ability_scores[store.character_state.selections[1]]
+            store.character_state['ability.constitution.modifier.score'] = store.character_state.ability_scores[store.character_state.selections[2]]
+            store.character_state['ability.wisdom.modifier.score'] = store.character_state.ability_scores[store.character_state.selections[3]]
+            store.character_state['ability.intelligence.modifier.score'] = store.character_state.ability_scores[store.character_state.selections[4]]
+            store.character_state['ability.charisma.modifier.score'] = store.character_state.ability_scores[store.character_state.selections[5]]
+        }
     }
 
     /**
@@ -135,7 +132,7 @@
      * @param method the ability score method to be used
      */
     function determineAbilityScores(method) {
-        selected_absc_method.value = method
+        store.character_state.ability_score_method = method
         switch(method) {
             case 'standard_array':
                 standardArray()
@@ -153,7 +150,7 @@
      * Sets ability_scores to reflect the values of a standard array
      */
     function standardArray() {
-        ability_scores.value = [15, 14, 13, 12, 10, 8]
+        store.character_state.ability_scores = [15, 14, 13, 12, 10, 8]
     }
 
     /**
@@ -161,7 +158,7 @@
      */
     function randomRoll() {
         for(let i = 0; i < 6; i++) {
-            ability_scores.value[i] = roll4d6()
+            store.character_state.ability_scores[i] = roll4d6()
         }
     }
 
@@ -189,7 +186,7 @@
             return
         }
 
-        const old_score = ability_scores.value[index]
+        const old_score = store.character_state.ability_scores[index]
         const cost_difference = point_buy_cost[new_score] - point_buy_cost[old_score]
 
         // Prevent the player from spending more points than they are allotted
@@ -197,21 +194,21 @@
             return
         }
 
-        ability_scores.value[index] = new_score
+        store.character_state.ability_scores[index] = new_score
     }
 
     /**
      * Resets the value of ability_scores for the Point Buy method
      */
     function resetAbilityScores() {
-        ability_scores.value = [8, 8, 8, 8, 8, 8]
+        store.character_state.ability_scores = [8, 8, 8, 8, 8, 8]
     }
 
     /**
      * Resets the value of selections
      */
     function resetSelections() {
-        selections.value = []
+        store.character_state.selections = []
     }
 
     /**

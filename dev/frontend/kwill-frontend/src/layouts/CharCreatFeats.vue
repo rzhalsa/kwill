@@ -9,9 +9,9 @@
                 <!-- Feats -->
                 <div class="feat-area mt-5">
                     <v-select
-                    v-for="index in feat_amt"
+                    v-for="index in store.character_state.feat_amt"
                     :key="index"
-                    v-model="selected_feats[index]"
+                    v-model="store.character_state.features[index]"
                     :items="feats"
                     label="Feats"
                     class="ma-4"
@@ -24,35 +24,25 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, onBeforeUnmount } from 'vue'
+    import { ref, onMounted } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'
     const store = useCharacterCreationStore()                           // pinia store for character creation
     const feats = ref([])                                               // array of all feats
-    const selected_feats = ref(store.getCharacterState.get('features')) // array of selected feats
-    const feat_amt = ref(store.getCharacterState.get('feat_amt'))       // amount of feats the character has
-
-    /**
-     * Saves currently entered feat data before the page unmounts
-     */
-    function saveFeatData() {
-        store.setCharacterState('feat_amt', feat_amt)
-        store.setCharacterState('features', selected_feats)
-    }
 
     /**
      * Adds an additional feat slot
      */
     function addFeatSlot() {
-        feat_amt.value++
+        store.character_state.feat_amt++
     }
 
     /**
      * Removes a feat slot
      */
     function removeFeatSlot() {
-        if(feat_amt.value > 0)
-            feat_amt.value--
+        if(store.character_state.feat_amt > 0)
+            store.character_state.feat_amt--
     }
 
     /**
@@ -62,13 +52,6 @@
     onMounted(async () => {
         const feat_data = await fetchApiData('api/srd/features')
         setCharCreateArrayData(feats, feat_data)
-    })
-
-    /**
-     * Calls saveFeatData() before the page unmounts
-     */
-    onBeforeUnmount(() => {
-        saveFeatData()
     })
 </script>
 

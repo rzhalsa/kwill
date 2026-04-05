@@ -177,13 +177,13 @@ export function createCharacter(){
  * be compatible with the structure in characterModel.js
  */
 export function toJson(character, map) {
-    for(const [key, value] of map) {
+    for(const key of Object.keys(map)) {
         // Create an array of keys indexed by '.' for the purpose of indexing nested indices
         const keys = key.split('.')
 
         // Call setValue() if the leftmost key in keys in in the first layer of character
         if(keys[0] in character) {
-            setValue(character, keys, value)
+            setValue(character, keys, map[key])
         }
     }
     return character

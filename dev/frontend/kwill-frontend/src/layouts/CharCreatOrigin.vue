@@ -6,21 +6,21 @@
             <v-col>  
                 <!-- Race dropdown -->
                 <v-select
-                    v-model="selected_race"
+                    v-model="store.character_state.race"
                     :items="races"
                     label="Race"
                     class="ml-6 mb-6 mr-6"
                 ></v-select>
                 <!-- Alignment dropdown -->
                 <v-select
-                    v-model="selected_alignment"
+                    v-model="store.character_state.alignment"
                     :items="alignments"
                     label="Alignment"
                     class="ma-6"
                 ></v-select>
                 <!-- Background dropdown -->
                 <v-select
-                    v-model="selected_background"
+                    v-model="store.character_state.background"
                     :items="backgrounds"
                     label="Background"
                     class="ma-6"
@@ -41,9 +41,7 @@
     import axios from 'axios'
     import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'
     const store = useCharacterCreationStore()                                  // pinia store for character creation
-    const selected_race = ref(store.getCharacterState.get('race'))             // currently selected race
     const races = ref([])                                                      // array of all races
-    const selected_alignment = ref(store.getCharacterState.get('alignment'))   // currently selected alignment
     const alignments = ref([                                                   // array of all alignments
         "Lawful Good",
         "Neutral Good",
@@ -60,7 +58,6 @@
         {text: "Enter your character's moral alignment"},
         {text: "Choose your character's background"},
     ]      
-    const selected_background = ref(store.getCharacterState.get('background')) // currently selected background
     const backgrounds = ref([])                                                // array of all backgrounds
 
     /**
@@ -89,15 +86,6 @@
     }
 
     /**
-     * Saves currently selected origin data before the page unmounts
-     */
-    function saveOriginData() {
-        store.setCharacterState('race', selected_race)
-        store.setCharacterState('alignment', selected_alignment)
-        store.setCharacterState('background', selected_background)
-    }
-
-    /**
      * Fetches race + background data and populate the races + background
      * vars with the fetched data on page mount
      */
@@ -106,13 +94,6 @@
         setCharCreateArrayData(races, race_data)
         const background_data = await fetchBackgroundData()
         setBackgrounds(background_data)
-    })
-
-    /**
-     * Calls saveOriginData() before the page unmounts
-     */
-    onBeforeUnmount(() => {
-        saveOriginData()
     })
 </script>
 

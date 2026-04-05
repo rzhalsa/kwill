@@ -18,11 +18,23 @@
             </v-card>
         </div>
     </v-card>
+    <!-- Dialog box that shows if the user tries to leave partway through character creation process -->
+    <v-dialog persistent max-width="500" v-model="show_dialog">
+        <v-card class="gradient-cc-dialog">
+            <v-card-title>Leave Character Creation?</v-card-title>
+            <v-card-text>Your progress will be lost.</v-card-text>
+            <v-card-actions>
+                <v-btn variant="elevated" @click="show_dialog = false">Cancel</v-btn>
+                <v-btn variant="elevated" color="error" @click="confirmLeave">Leave</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script setup>
     import { ref, shallowRef, onMounted } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state';
+    import { onBeforeRouteLeave } from 'vue-router';
     import CharCreatClass from '../layouts/CharCreatClass.vue';                     // character class
     import CharCreatOrigin from '../layouts/CharCreatOrigin.vue';                   // character race, background, languages, and alignment
     import CharCreatAbilityScores from '../layouts/CharCreatAbilityScores.vue';     // character stats
@@ -31,10 +43,12 @@
     import CharCreatFeats from '../layouts/CharCreatFeats.vue';                     // character feats
     import CharCreatAppearance from '../layouts/CharCreatAppearance.vue';           // character appearance
     import CharCreatPersonal from '../layouts/CharCreatPersonal.vue';               // personal information about character
-    import CharCreatEnd from '../layouts/CharCreatEnd.vue';                         // confirmation page at the end
+    import CharCreatEnd from '../layouts/CharCreatEnd.vue';                         // confirmation page at the end 
     const currentLayout = shallowRef(CharCreatClass)                                // start at CharCreatClass layout
     const store = useCharacterCreationStore()                                       // pinia store for character creation
     const ready = ref(false)                                                        // flag for showing the layout once ready
+    const show_dialog = ref(false)                                                  // flag for showing the dialog box
+    const pending_nav = ref(null)
 
     // Maps and count var to track layout order
     const order_count = ref(0)
@@ -82,10 +96,33 @@
     }
 
     /**
-     * Reset pinia store on mount
+     * Show dialog box confirming the user wants to leave
+     */
+    onBeforeRouteLeave((to, from, next) => {
+        if(!store.allow_leave && store.is_dirty) {
+            show_dialog.value = true
+            pending_nav.value = next
+        } else {
+            next()
+        }
+    })
+
+    function confirmLeave() {
+        
+        pending_nav.value()
+        pending_nav.value = null
+        show_dialog.value = false
+    }
+    
+
+    /**
+     * Reset pinia store on page mount
      */
     onMounted(() => {
         store.resetStore()
+        store.$subscribe(() => {
+            store.is_dirty = true
+        })
         ready.value = true
     })
 </script>

@@ -9,7 +9,7 @@
                         <p>Character Name:</p>
                     </v-col>
                     <v-col class="mr-14">
-                        <v-text-field v-model="character_name" rounded="pill" variant="outlined" density="compact"></v-text-field>
+                        <v-text-field v-model="store.character_state.name" rounded="pill" variant="outlined" density="compact"></v-text-field>
                     </v-col>
                 </v-row>
                 <v-row class="ml-2">
@@ -17,19 +17,19 @@
                         <p>Player Name:</p>
                     </v-col>
                     <v-col class="mr-14">
-                        <v-text-field v-model="player_name" rounded="pill" variant="outlined" density="compact"></v-text-field>
+                        <v-text-field v-model="store.character_state.player" rounded="pill" variant="outlined" density="compact"></v-text-field>
                     </v-col>
                 </v-row>
                 <!-- Class dropdown -->
                 <v-select
-                    v-model="selected"
+                    v-model="store.character_state.class"
                     :items="classes"
                     label="Class"
                     class="ml-4 mr-12"
                 ></v-select>
                 <!-- Class level -->
                  <v-select
-                    v-model="level"
+                    v-model="store.character_state.level"
                     :items="levels"
                     label="Level"
                     class="ml-4 mr-12"            
@@ -49,11 +49,7 @@
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'
     const store = useCharacterCreationStore()                        // pinia store for character creation
-    const character_name = ref(store.getCharacterState.get('name'))  // currently entered character name
-    const player_name = ref(store.getCharacterState.get('player'))   // currently entered player name
-    const selected = ref(store.getCharacterState.get('class'))       // currently selected item in the v-select menu
     const classes = ref([])                                          // array of all classes
-    const level = ref(store.getCharacterState.get('level'))          // class level
     const levels = ref(Array.from({length: 20}, (_, i) => 1 + i))    // valid levels are 1 to 20
     const bullet_points = [
         {text: "Enter your character's name"},
@@ -61,17 +57,7 @@
         {text: "Choose your character's class"},
         {text: "Select your character's level"}
     ]
-
-    /**
-     * Saves currently entered class and name data before the page unmounts
-     */
-    function saveClassData() {
-        store.setCharacterState('name', character_name)
-        store.setCharacterState('player', player_name)
-        store.setCharacterState('class', selected)
-        store.setCharacterState('level', level)
-    }
-
+    
     /**
      * Fetch character data and populates the classes var with fetched data
      * on page mount
@@ -79,13 +65,6 @@
     onMounted(async () => {
         const character_data = await fetchApiData('api/srd/classes')
         setCharCreateArrayData(classes, character_data)
-    })
-
-    /**
-     * Calls saveClassData() before the page unmounts
-     */
-    onBeforeUnmount(() => {
-        saveClassData()
     })
 </script>
 

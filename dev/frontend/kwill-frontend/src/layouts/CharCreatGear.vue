@@ -9,8 +9,8 @@
                 <!-- Gear -->
                 <div class="gear-area mt-5">
                     <v-select
-                    v-for="index in gear_amt"
-                    v-model="selected_gear[index]"
+                    v-for="index in store.character_state.gear_amt"
+                    v-model="store.character_state.equipment[index]"
                     :items="gear"
                     label="Gear"
                     class="ma-4"
@@ -23,35 +23,25 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, onBeforeUnmount } from 'vue'
+    import { ref, onMounted } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'
     const store = useCharacterCreationStore()                           // pinia store for character creation
     const gear = ref([])                                                // array of all gear
-    const selected_gear = ref(store.getCharacterState.get('equipment')) // array of selected gear
-    const gear_amt = ref(store.getCharacterState.get('gear_amt'))       // amount of gear the character has
-
-    /**
-     * Saves currently entered feat data before the page unmounts
-     */
-    function saveGearData() {
-        store.setCharacterState('gear_amt', gear_amt)
-        store.setCharacterState('equipment', selected_gear)
-    }
 
     /**
      * Adds an additional gear slot
      */
     function addFeatSlot() {
-        gear_amt.value++
+        store.character_state.gear_amt++
     }
 
     /**
      * Removes a gear slot
      */
     function removeFeatSlot() {
-        if(gear_amt.value > 0)
-            gear_amt.value--
+        if(store.character_state.gear_amt > 0)
+            store.character_state.gear_amt--
     }
 
     /**
@@ -61,13 +51,6 @@
     onMounted(async () => {
         const feat_data = await fetchApiData('api/srd/equipment')
         setCharCreateArrayData(gear, feat_data)
-    })
-
-    /**
-     * Calls saveGearData() before the page unmounts
-     */
-    onBeforeUnmount(() => {
-        saveGearData()
     })
 </script>
 

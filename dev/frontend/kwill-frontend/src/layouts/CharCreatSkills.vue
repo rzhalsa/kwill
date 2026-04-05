@@ -8,7 +8,7 @@
                 <div class="skill-area">
                     <v-list>
                         <v-list-item v-for="option in options" :key="option">
-                            <v-checkbox :label="option" :model-value="selected_skills.includes(option)" @update:model-value="toggle(option)"></v-checkbox>
+                            <v-checkbox :label="option" :model-value="store.character_state.selected_skills.includes(option)" @update:model-value="toggle(option)"></v-checkbox>
                         </v-list-item>
                     </v-list>
                 </div>
@@ -21,10 +21,8 @@
     import { ref, onMounted, onBeforeUnmount } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     const store = useCharacterCreationStore()                                    // pinia store for character creation
-    const selected_class = ref(store.getCharacterState.get('class'))             // the player's selected class
     const amt = ref(null)                                                        // max amount of skill proficiencies
     const options = ref([])                                                      // skill proficiency options
-    const selected_skills = ref(store.getCharacterState.get('selected_skills'))  // skills the player has selected to have proficiency in
     const skill_data = {
         "Barbarian" : {
             amt: 2,
@@ -77,19 +75,12 @@
     }
 
     /**
-     * Saves currently entered feat data before the page unmounts
-     */
-    function saveSkillData() {
-        store.setCharacterState('selected_skills', selected_skills)
-    }
-
-    /**
      * Assigns values to amt and options to reflect the player's chosen class
      */
     function setSkillData() {
-        if(selected_class.value in skill_data) {
-            amt.value = skill_data[selected_class.value].amt
-            options.value = skill_data[selected_class.value].options
+        if(store.character_state.class in skill_data) {
+            amt.value = skill_data[store.character_state.class].amt
+            options.value = skill_data[store.character_state.class].options
         }
     }
 
@@ -98,11 +89,11 @@
      * @param option the skill checkbox to toggle
      */
     function toggle(option) {
-        if(selected_skills.value.includes(option)) {
-            selected_skills.value = selected_skills.value.filter(o => o != option)
+        if(store.character_state.selected_skills.includes(option)) {
+            store.character_state.selected_skills = store.character_state.selected_skills.filter(o => o != option)
         } else {
-            if(selected_skills.value.length < amt.value) {
-                selected_skills.value.push(option)
+            if(store.character_state.selected_skills.length < amt.value) {
+                store.character_state.selected_skills.push(option)
             }
         }
     }
@@ -113,13 +104,6 @@
      */
     onMounted(() => {
         setSkillData()
-    })
-
-    /**
-     * Calls saveGearData() before the page unmounts
-     */
-    onBeforeUnmount(() => {
-        saveSkillData()
     })
 </script>
 
