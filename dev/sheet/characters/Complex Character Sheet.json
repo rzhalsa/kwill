@@ -389,5 +389,11 @@
     "charisma": {
       "score": ""
     }
+  },
+  "classes": {
+    "firstclass": {
+      "name": "",
+      "level": ""
+    }
   }
 }
