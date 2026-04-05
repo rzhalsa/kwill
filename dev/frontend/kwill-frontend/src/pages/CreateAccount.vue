@@ -8,9 +8,9 @@
                     <v-form v-model="form" @submit.prevent="onSubmit">
                         <v-text-field class="mt-2 px-10" :rules="[required]" v-model="email" label="Email*:" variant="outlined"></v-text-field>
                         <v-text-field class="mt-2 px-10" :rules="[required]" v-model="username" label="Username*:" variant="outlined"></v-text-field>
-                        <v-text-field class="mt-2 px-10" :rules="[required]" v-model="password" label="Password*:" variant="outlined"></v-text-field>
+                        <v-text-field class="mt-2 px-10" :rules="[required, passwordLength]" v-model="password" label="Password*:" variant="outlined"></v-text-field>
                         <v-text-field class="mt-2 px-10" :rules="[required, mustMatch]" label="Verify Password*:" variant="outlined"></v-text-field>
-                        <v-btn class="jusitfy-center" :disabled="!form" color="secondary" size="large" type="submit" block>Sign Up</v-btn>
+                        <v-btn @click="createAccount()" class="jusitfy-center" :disabled="!form" color="secondary" size="large" type="submit" block>Sign Up</v-btn>
                     </v-form>
                 </v-card-item>
             </v-card>
@@ -28,7 +28,7 @@
  *      Captcha
  */
 import { ref, onMounted } from 'vue';
-
+import api from '../services/api';
 const form = ref(false);
 const loading = ref(false);
 const username = ref(null);
@@ -48,6 +48,26 @@ function mustMatch(value){
  */
 function required (value){
     return !!value || 'Field is required';
+}
+/**
+ * Rule set that confirms each password has a min length of 8
+ * @param value input value in verify password field
+ */
+function passwordLength(value){
+    return value.length >=8 || 'Password must be 8 characters long';
+}
+
+async function createAccount(){
+    try {
+        const Email = email.value;
+        const Username = username.value;
+        const Password = password.value;
+        const payload = {Email, Username, Password};
+        const response = await api.post("/api/auth/register", payload);
+        return response.data;
+    } catch (error) {
+        console.error("Failed to post API data: ", error)
+    }
 }
 
 
