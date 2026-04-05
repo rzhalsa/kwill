@@ -17,12 +17,38 @@ export const useCharacterCreationStore = defineStore('character_creation', {
             'race': null,
             'alignment': null,
             'background': null,
-            'ability.strength.modifier.score': null,
-            'ability.dexterity.modifier.score': null,
-            'ability.constitution.modifier.score': null,
-            'ability.wisdom.modifier.score': null,
-            'ability.intelligence.modifier.score': null,
-            'ability.charisma.modifier.score': null,
+            'ability': {
+                'strength': {
+                    'modifier': {
+                        'score': null
+                    }
+                },
+                'dexterity': {
+                    'modifier': {
+                        'score': null
+                    }
+                },
+                'constitution': {
+                    'modifier': {
+                        'score': null
+                    }
+                },
+                'wisdom': {
+                    'modifier': {
+                        'score': null
+                    }
+                },
+                'intelligence': {
+                    'modifier': {
+                        'score': null
+                    }
+                },
+                'charisma': {
+                    'modifier': {
+                        'score': null
+                    }
+                },
+            },
             'ability_score_method': null,
             'ability_scores': [8, 8, 8, 8, 8, 8],
             'selections': [],
@@ -33,6 +59,81 @@ export const useCharacterCreationStore = defineStore('character_creation', {
             'eyes': null,
             'hair': null,
             'skin': null,
+            "skills": {
+                "object_id": "skills",
+                "athletics": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "acrobatics": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "sleightofhand": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "stealth": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "arcana": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "history": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "investigation": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "nature": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "religion": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "animalhandling": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "insight": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "medicine": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "perception": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "survival": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "deception": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "intimidation": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "performance": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "persuasion": {
+                    "proficiency": false,
+                    "modifier": ""
+                }
+            },
             'selected_skills': [],
             'features': [],
             'feat_amt': 0,
@@ -43,10 +144,11 @@ export const useCharacterCreationStore = defineStore('character_creation', {
             'text.ideals': null,
             'text.bonds': null,
             'text.flaws': null,
-            'backstory': null
+            'backstory': null,
+            'appearance': null
         }),
-        is_dirty: false, // tracks whether changes have been made to character_state
-        allow_leave: false 
+        is_dirty: false,    // tracks whether changes have been made to character_state
+        allow_leave: false  // tracks whether the user has finished the character creation process
     }),
     getters: {
         /**
@@ -56,25 +158,16 @@ export const useCharacterCreationStore = defineStore('character_creation', {
         getCharacterState() {
             return this.character_state
         },
-        /**
-         * Returns the current is_dirty value
-         * @returns the current is_dirty value
-         */
-        getIsDirty() {
-            return this.is_dirty
-        }
     },
     actions: {
-        /*
-            /**
-             * Sets the value at key
-             * @param key the key to set the value at
-             * @param value the value to set
-             *
+        /**
+         * Sets the value at key
+         * @param key the key to set the value at
+         * @param value the value to set
+         */
         setCharacterState(key, value) {
-            this.character_state.set(key, value)
+            this.character_state[key] = value
         },
-        */
         /**
          * Sets is_dirty to be true
          */
@@ -106,8 +199,119 @@ export const useCharacterCreationStore = defineStore('character_creation', {
                     case 'equipment':
                         this.character_state[key] = []
                         break
-                    case 'character_ability_scores':
+                    case 'ability_scores':
                         this.character_state[key] = [8, 8, 8, 8, 8, 8]
+                        break
+                    case 'ability':
+                        this.character_state[key] = {
+                                'strength': {
+                                    'modifier': {
+                                        'score': null
+                                    }
+                                },
+                                'dexterity': {
+                                    'modifier': {
+                                        'score': null
+                                    }
+                                },
+                                'constitution': {
+                                    'modifier': {
+                                        'score': null
+                                    }
+                                },
+                                'wisdom': {
+                                    'modifier': {
+                                        'score': null
+                                    }
+                                },
+                                'intelligence': {
+                                    'modifier': {
+                                        'score': null
+                                    }
+                                },
+                                'charisma': {
+                                    'modifier': {
+                                        'score': null
+                                    }
+                                },
+                            }
+                        break
+                    case "skills":
+                        this.character_state[key] = {
+                                "object_id": "skills",
+                                "athletics": {
+                                    "proficiency": false,
+                                    "modifier": ""
+                                },
+                                "acrobatics": {
+                                    "proficiency": false,
+                                    "modifier": ""
+                                },
+                                "sleightofhand": {
+                                    "proficiency": false,
+                                    "modifier": ""
+                                },
+                                "stealth": {
+                                    "proficiency": false,
+                                    "modifier": ""
+                                },
+                                "arcana": {
+                                    "proficiency": false,
+                                    "modifier": ""
+                                },
+                                "history": {
+                                    "proficiency": false,
+                                    "modifier": ""
+                                },
+                                "investigation": {
+                                    "proficiency": false,
+                                    "modifier": ""
+                                },
+                                "nature": {
+                                    "proficiency": false,
+                                    "modifier": ""
+                                },
+                                "religion": {
+                                    "proficiency": false,
+                                    "modifier": ""
+                                },
+                                "animalhandling": {
+                                    "proficiency": false,
+                                    "modifier": ""
+                                },
+                                "insight": {
+                                    "proficiency": false,
+                                    "modifier": ""
+                                },
+                                "medicine": {
+                                    "proficiency": false,
+                                    "modifier": ""
+                                },
+                                "perception": {
+                                    "proficiency": false,
+                                    "modifier": ""
+                                },
+                                "survival": {
+                                    "proficiency": false,
+                                    "modifier": ""
+                                },
+                                "deception": {
+                                    "proficiency": false,
+                                    "modifier": ""
+                                },
+                                "intimidation": {
+                                    "proficiency": false,
+                                    "modifier": ""
+                                },
+                                "performance": {
+                                    "proficiency": false,
+                                    "modifier": ""
+                                },
+                                "persuasion": {
+                                    "proficiency": false,
+                                    "modifier": ""
+                                }
+                            }
                         break
                     default:
                         this.character_state[key] = null

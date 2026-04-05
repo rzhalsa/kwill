@@ -114,16 +114,22 @@
     ]
 
     /**
-     * Saves currently selected ability scores and selected method before the page unmounts
+     * Saves currently selected ability scores before the page unmounts
      */
     function saveAbilityScores() {
+        const scores = [
+            'strength',
+            'dexterity',
+            'constitution',
+            'wisdom',
+            'intelligence',
+            'charisma'
+        ]
+
         if(store.character_state.selections.length === 6) {
-            store.character_state['ability.strength.modifier.score'] = store.character_state.ability_scores[store.character_state.selections[0]]
-            store.character_state['ability.dexterity.modifier.score'] = store.character_state.ability_scores[store.character_state.selections[1]]
-            store.character_state['ability.constitution.modifier.score'] = store.character_state.ability_scores[store.character_state.selections[2]]
-            store.character_state['ability.wisdom.modifier.score'] = store.character_state.ability_scores[store.character_state.selections[3]]
-            store.character_state['ability.intelligence.modifier.score'] = store.character_state.ability_scores[store.character_state.selections[4]]
-            store.character_state['ability.charisma.modifier.score'] = store.character_state.ability_scores[store.character_state.selections[5]]
+            for(let i = 0; i < 6; i++) {
+                store.character_state['ability'][scores[i]]['modifier']['score'] = store.character_state.ability_scores[store.character_state.selections[i]]
+            }
         }
     }
 

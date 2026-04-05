@@ -4,21 +4,11 @@
             <v-card-title class="mt-3 ml-3 cc-title">Step 1/8: Class and Names</v-card-title>
             <v-divider horizontal class="mt-2"></v-divider>
             <v-col class="mr-4">
-                <v-row class="ml-2">
-                    <v-col>
-                        <p>Character Name:</p>
-                    </v-col>
-                    <v-col class="mr-14">
-                        <v-text-field v-model="store.character_state.name" rounded="pill" variant="outlined" density="compact"></v-text-field>
-                    </v-col>
+                <v-row class="mt-2 ml-4 mr-14 mb-3">
+                    <v-text-field v-model="store.character_state.name" rounded="pill" label="Character Name" variant="outlined" density="compact"></v-text-field>
                 </v-row>
-                <v-row class="ml-2">
-                    <v-col>
-                        <p>Player Name:</p>
-                    </v-col>
-                    <v-col class="mr-14">
-                        <v-text-field v-model="store.character_state.player" rounded="pill" variant="outlined" density="compact"></v-text-field>
-                    </v-col>
+                <v-row class="mt-2 ml-4 mr-14 mb-3">
+                    <v-text-field v-model="store.character_state.player" rounded="pill" label="Player Name" variant="outlined" density="compact"></v-text-field>
                 </v-row>
                 <!-- Class dropdown -->
                 <v-select
@@ -35,7 +25,7 @@
                     class="ml-4 mr-12"            
                  ></v-select>
             </v-col>
-            <v-col class="ml-4">
+            <v-col class="mt-2 ml-4">
                 <ul>
                     <li class="mb-13" v-for="point in bullet_points" :key="point">{{ point.text }}</li>
                 </ul>

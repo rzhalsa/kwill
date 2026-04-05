@@ -15,52 +15,52 @@ export function createCharacter(){
         ability: {
             object_id: "ability",
             strength: {
-            modifier: {
-                object_id: "operation",
-                operation_type: "conditional",
-                condition: "ability_strength_score",
-                score: ""
-            }
+                modifier: {
+                    object_id: "operation",
+                    operation_type: "conditional",
+                    condition: "ability_strength_score",
+                    score: ""
+                }
             },
             dexterity: {
-            modifier: {
-                object_id: "operation",
-                operation_type: "conditional",
-                condition: "ability_dexterity_score",
-                score: ""
-            }
+                modifier: {
+                    object_id: "operation",
+                    operation_type: "conditional",
+                    condition: "ability_dexterity_score",
+                    score: ""
+                }
             },
             constitution: {
-            modifier: {
-                object_id: "operation",
-                operation_type: "conditional",
-                condition: "ability_consitution_score",
-                score: ""
-            }
+                modifier: {
+                    object_id: "operation",
+                    operation_type: "conditional",
+                    condition: "ability_consitution_score",
+                    score: ""
+                }
             },
             intelligence: {
-            modifier: {
-                object_id: "operation",
-                operation_type: "conditional",
-                condition: "ability_intelligence_score",
-                score: ""
-            }
+                modifier: {
+                    object_id: "operation",
+                    operation_type: "conditional",
+                    condition: "ability_intelligence_score",
+                    score: ""
+                }
             },
             wisdom: {
-            modifier: {
-                object_id: "operation",
-                operation_type: "conditional",
-                condition: "ability_wisdom_score",
-                score: ""
-            }
+                modifier: {
+                    object_id: "operation",
+                    operation_type: "conditional",
+                    condition: "ability_wisdom_score",
+                    score: ""
+                }
             },
             charisma: {
-            modifier: {
-                object_id: "operation",
-                operation_type: "conditional",
-                condition: "ability_charisma_score",
-                score: ""
-            }
+                modifier: {
+                    object_id: "operation",
+                    operation_type: "conditional",
+                    condition: "ability_charisma_score",
+                    score: ""
+                }
             },
         },
         saves: {

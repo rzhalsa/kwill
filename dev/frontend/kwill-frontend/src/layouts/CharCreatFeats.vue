@@ -8,8 +8,9 @@
                 <v-btn color="secondary" @click="removeFeatSlot">Remove Feat</v-btn>
                 <!-- Feats -->
                 <div class="feat-area mt-5">
+                    <!-- Bug!!! make v-for loop from 0 to store-->
                     <v-select
-                    v-for="index in store.character_state.feat_amt"
+                    v-for="(item, index) in store.character_state.feat_amt"
                     :key="index"
                     v-model="store.character_state.features[index]"
                     :items="feats"

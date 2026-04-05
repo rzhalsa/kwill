@@ -6,8 +6,8 @@ import api from '../services/api'
  * @param {'*'} data the data to save to the pinia store
  */
 export function savePageData(data) {
-    for(item of data) {
-        store.setCharacterState()
+    for(const [key, value] of data) {
+        store.setCharacterState(key, value)
     }
 }
 
@@ -51,8 +51,9 @@ export async function updateCharacter(characterId, characterData, userId){
 export async function createNewCharacter(characterData, userId, characterId){
     try {
         const payload = {...characterData, user_id: userId, character_id: characterId};
+        console.log(payload)
         const response = await api.post("/api/character", payload);
-        console.log("created character successfully: ",response.data );
+        console.log("created character successfully: ", response.data );
         return response.data;
     } catch (error) {
         console.error("Failed to post API data: ", error)

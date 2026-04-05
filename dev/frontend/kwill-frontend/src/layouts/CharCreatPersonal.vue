@@ -18,28 +18,28 @@
                 <v-row>
                     <v-col>
                         <!-- Personality -->
-                        <textarea v-model="store.character_state['text.personality']" placeholder="Personality" rows="4" cols="23"></textarea>
+                        <v-textarea rows="3" v-model="store.character_state['text.personality']" label="Personality" clearable></v-textarea>
                     </v-col>
                     <v-col>
                         <!-- Bonds -->
-                        <textarea v-model="store.character_state['text.bonds']" placeholder="Bonds"  rows="4" cols="23"></textarea>
+                        <v-textarea rows="3" v-model="store.character_state['text.bonds']" label="Bonds" clearable></v-textarea>
                     </v-col>
                 </v-row>
                 <v-row>
                     <v-col>
                         <!-- Ideals -->
-                        <textarea v-model="store.character_state['text.ideals']" placeholder="Ideals"  rows="4" cols="23"></textarea>
+                        <v-textarea rows="3" v-model="store.character_state['text.ideals']" label="Ideals" clearable></v-textarea>
                     </v-col>
                     <v-col>
                         <!-- Flaws -->
-                        <textarea v-model="store.character_state['text.flaws']" placeholder="Flaws" rows="4" cols="23"></textarea>
+                        <v-textarea rows="3" v-model="store.character_state['text.flaws']" label="Flaws" clearable></v-textarea>
                     </v-col>
                 
                 </v-row>
             </v-col>
             <v-col>
                     <!-- Backstory -->
-                    <textarea v-model="store.character_state.backstory" placeholder="Backstory" rows="10" cols="25"></textarea>
+                    <v-textarea class="mr-6" rows="8" v-model="store.character_state.backstory" label="Backstory" clearable></v-textarea>
             </v-col>
         </v-row>
     </v-card>

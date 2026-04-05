@@ -33,11 +33,14 @@
     
     function create() {
         const filled_character = toJson(character, store.getCharacterState)
-        createNewCharacter(filled_character, 'user001', 'character002')
+        createNewCharacter(filled_character, 'user001', 'character003')
         store.allow_leave = true
         router.replace('/characters')
     }
 </script>
 
 <style>
+    h2 {
+        font-size: clamp(1rem, calc(1.25vw + 0.5rem), 3rem);
+    }
 </style>

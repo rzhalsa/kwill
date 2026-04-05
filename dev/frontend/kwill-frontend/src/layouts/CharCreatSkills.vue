@@ -85,6 +85,18 @@
     }
 
     /**
+     * Saves currently selected skills to pinia store
+     */
+    function saveSkills() {
+        // Set skill names to be all lower case and with no whitespace so they're compatible with pinia store
+        for(const item of store.character_state.selected_skills) {
+            store.character_state.selected_skills[item] = item.toLowerCase().replace(/\s+/g, '')
+            console.log(store.character_state.selected_skills[item])
+            store.character_state['skills'][store.character_state.selected_skills[item]]['proficiency'] = true
+        }
+    }
+
+    /**
      * Toggles a skill checkbox in the skills dropdown for character creation
      * @param option the skill checkbox to toggle
      */
@@ -104,6 +116,10 @@
      */
     onMounted(() => {
         setSkillData()
+    })
+
+    onBeforeUnmount(() => {
+        saveSkills()
     })
 </script>
 

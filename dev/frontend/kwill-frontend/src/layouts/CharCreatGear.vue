@@ -9,7 +9,7 @@
                 <!-- Gear -->
                 <div class="gear-area mt-5">
                     <v-select
-                    v-for="index in store.character_state.gear_amt"
+                    v-for="(item, index) in store.character_state.gear_amt"
                     v-model="store.character_state.equipment[index]"
                     :items="gear"
                     label="Gear"
