@@ -12,7 +12,11 @@
   "dependencies": {
     "@mdi/font": "^7.4.47",
     "axios": "^1.13.5",
+<<<<<<< HEAD
     "lodash": "^4.18.1",
+=======
+    "jszip": "^3.10.1",
+>>>>>>> main
     "pinia": "^3.0.4",
     "sass": "^1.97.3",
     "sass-loader": "^16.0.7",

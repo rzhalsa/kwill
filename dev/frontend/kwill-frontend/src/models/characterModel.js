@@ -1,66 +1,76 @@
+<<<<<<< HEAD
 import {reactive} from 'vue';
 import api from '../services/api';
 
 export function createCharacter(){
+=======
+import { reactive } from 'vue';
+/**
+ * Creates a JSON character model
+ * @returns a created character model
+ */
+export function createCharacter() {
+>>>>>>> main
     return reactive({
         object_id: "character",
         name: "",
-        race: {object_id: "race", name: ""},
+        race: { object_id: "race", name: "" },
         alignment: "",
-        background: {object_id: "background",name: ""},
+        background: { object_id: "background", name: "" },
         player: "",
         exp: "",
         ability: {
             object_id: "ability",
             strength: {
-                score: "10"
+                modifier: "",
+                score: ""
             },
             dexterity: {
-                score: "10"
+                modifier: "",
+                score: ""
             },
             constitution: {
-                score: "10"
+                modifier: "",
+                score: ""
             },
             intelligence: {
-                score: "10"
+                modifier: "",
+                score: ""
             },
             wisdom: {
-                score: "10"
+                modifier: "",
+                score: ""
             },
             charisma: {
-                score: "10"
+                modifier: "",
+                score: ""
             },
         },
         saves: {
             object_id: "saves",
             strength: {
-            proficiency: false,
-            modifier: ""
+                proficiency: false,
+                modifier: ""
             },
-            object_id: "saves",
             dexterity: {
-            proficiency: false,
-            modifier: ""
+                proficiency: false,
+                modifier: ""
             },
-            object_id: "saves",
             constitution: {
-            proficiency: false,
-            modifier: ""
+                proficiency: false,
+                modifier: ""
             },
-            object_id: "saves",
             intelligence: {
-            proficiency: false,
-            modifier: ""
+                proficiency: false,
+                modifier: ""
             },
-            object_id: "saves",
             wisdom: {
-            proficiency: false,
-            modifier: ""
+                proficiency: false,
+                modifier: ""
             },
-            object_id: "saves",
             charisma: {
-            proficiency: false,
-            modifier: ""
+                proficiency: false,
+                modifier: ""
             }
         },
         skills: {
@@ -83,8 +93,8 @@ export function createCharacter(){
             intimidation: { proficiency: false, modifier: "" },
             performance: { proficiency: false, modifier: "" },
             persuasion: { proficiency: false, modifier: "" }
-            },
-        ac: "10",
+        },
+        ac: "",
         initiative: "",
         speed: "",
         hitpoints: { current: "", maximum: "", temporary: "" },
@@ -95,7 +105,18 @@ export function createCharacter(){
         },
         attacks: "",
         coins: { copper: "", silver: "", electrum: "", gold: "", platinum: "" },
+<<<<<<< HEAD
         equipment: {text: ""},
+=======
+        equipment: { text: "" },
+        classes: {
+            firstclass: {
+                name: "",
+                level: ""
+            }
+        },
+
+>>>>>>> main
         text: {
             personality: "",
             ideals: "",
@@ -129,16 +150,17 @@ export function createCharacter(){
             cantrip10: "",
             cantrip11: "",
             cantrip12: "",
-            first: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, prepared10: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "", spell10:"" },
-            second: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, prepared10: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "", spell10:"" },
-            third: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, prepared10: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "", spell10:"" },
-            fourth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, prepared10: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "", spell10:"" },
+            first: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "" },
+            second: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "" },
+            third: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, prepared10: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "", spell10: "" },
+            fourth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, prepared10: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "", spell10: "" },
             fifth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
-            sixth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: ""},
-            seventh: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: ""},
+            sixth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
+            seventh: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
             eighth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
-            ninth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: ""}
+            ninth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" }
         },
+<<<<<<< HEAD
         classes:{
             firstclass:{
                 name: "",
@@ -166,5 +188,76 @@ export async function postCharacter(characterData, userId){
         return response.data;
     } catch (error) {
         console.error("Failed to post API data: ", error)
+=======
+    });
+}
+
+/**
+ * Turns currently created character to the characterModel JSON and logs it
+ * @param character an instance of createCharacter() from characterModel.js
+ * @param map the map data structure to translate into characterModel JSON. It MUST
+ * be compatible with the structure in characterModel.js
+ */
+export function toJson(character, map) {
+    for (const key of Object.keys(map)) {
+        // Create an array of keys indexed by '.' for the purpose of indexing nested indices
+        const keys = key.split('.')
+
+        // Call setValue() if the leftmost key in keys in in the first layer of character
+        if (keys[0] in character) {
+            setValue(character, keys, map[key])
+        }
     }
+    return character
+}
+
+/**
+ * Populates a character JSON object
+ * @param obj the JSON object to populate into
+ * @param keys the array of keys for indexing obj
+ * @param value the value to populate into obj
+ */
+function setValue(obj, keys, value) {
+    let current_layer = obj  // var for accessing the current layer of obj
+
+    // Loop through each layer of keys in order to access nested values
+    for (let i = 0; i < keys.length - 1; i++) {
+        if (!(keys[i] in current_layer)) { // return if keys[i] is not in this layer
+            return
+        }
+        current_layer = current_layer[keys[i]]  // update current layer
+    }
+
+    // Populate value
+    const lastKey = keys[keys.length - 1]
+    if (lastKey in current_layer) {
+        current_layer[lastKey] = value
+    }
+}
+
+export function copyJsonToCharacter(character, jsonData) {
+    const sourceData = jsonData.character || jsonData;
+    
+    function copyValues(target, source) {
+        for (const key in source) {
+            if (key === 'object_id') continue;
+            
+            if (source[key] !== null && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+                if (source[key].object_id === 'operation') {
+                    continue;
+                }
+                
+                if (target[key] && typeof target[key] === 'object') {
+                    copyValues(target[key], source[key]);
+                } else {
+                    target[key] = JSON.parse(JSON.stringify(source[key]));
+                }
+            } else {
+                target[key] = source[key];
+            }
+        }
+>>>>>>> main
+    }
+    
+    copyValues(character, sourceData);
 }

@@ -38,3 +38,24 @@ background: linear-gradient(to bottom, #383333 0%, #3c2e2e 50%, #1f1414 100%) !i
 .v-theme--kwillThemeDark .gradient-login {
 background: linear-gradient(to bottom, #3b3b3b 0%, #373333 50%, #2b2a2a 100%) !important;
 }
+
+.v-theme--kwillTheme .gradient-character-creator {
+background: linear-gradient(to bottom, #706a6a, rgb(177, 175, 175)) !important;  
+}
+
+.v-theme--kwillThemeDark .gradient-character-creator {
+background: linear-gradient(to bottom, rgb(67, 62, 62), #2d2c2c) !important;
+}
+
+.v-theme--kwillTheme .gradient-cc-dialog {
+background: linear-gradient(to bottom, rgb(202, 51, 51), rgb(222, 177, 177)) !important;
+}
+
+.v-theme--kwillThemeDark .gradient-cc-dialog {
+background: linear-gradient(to bottom, rgb(163, 95, 95), rgb(77, 17, 17)) !important;
+}
+
+.cc-title {
+  font-size: clamp(0.5rem, calc(1.3vw + 0.3rem), 5rem);
+  font-weight: bold;
+}

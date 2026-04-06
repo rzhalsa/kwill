@@ -1,0 +1,287 @@
+{
+  "object_id": "character",
+  "name": "Scrungus",
+  "race": "Dwarf",
+  "alignment": "Neutral Good",
+  "background": "Soldier",
+  "player": "Ryan",
+  "exp": "",
+  "ability": {
+    "object_id": "ability",
+    "strength": {
+      "modifier": {
+        "object_id": "operation",
+        "operation_type": "conditional",
+        "condition": "ability_strength_score",
+        "score": 14
+      }
+    },
+    "dexterity": {
+      "modifier": {
+        "object_id": "operation",
+        "operation_type": "conditional",
+        "condition": "ability_dexterity_score"
+        
+      },
+      "score": 11
+    },
+    "constitution": {
+      "modifier": {
+        "object_id": "operation",
+        "operation_type": "conditional",
+        "condition": "ability_consitution_score",
+        "score": 14
+      }
+    },
+    "intelligence": {
+      "modifier": {
+        "object_id": "operation",
+        "operation_type": "conditional",
+        "condition": "ability_intelligence_score",
+        "score": 12
+      }
+    },
+    "wisdom": {
+      "modifier": {
+        "object_id": "operation",
+        "operation_type": "conditional",
+        "condition": "ability_wisdom_score",
+        "score": 12
+      }
+    },
+    "charisma": {
+      "modifier": {
+        "object_id": "operation",
+        "operation_type": "conditional",
+        "condition": "ability_charisma_score",
+        "score": 12
+      }
+    }
+  },
+  "saves": {
+    "object_id": "saves",
+    "strength": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "dexterity": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "constitution": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "intelligence": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "wisdom": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "charisma": {
+      "proficiency": false,
+      "modifier": ""
+    }
+  },
+  "skills": {
+    "object_id": "skills",
+    "athletics": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "acrobatics": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "sleightofhand": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "stealth": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "arcana": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "history": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "investigation": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "nature": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "religion": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "animalhandling": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "insight": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "medicine": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "perception": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "survival": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "deception": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "intimidation": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "performance": {
+      "proficiency": false,
+      "modifier": ""
+    },
+    "persuasion": {
+      "proficiency": false,
+      "modifier": ""
+    }
+  },
+  "ac": "",
+  "initiative": "",
+  "speed": "",
+  "hitpoints": {
+    "current": "",
+    "maximum": "",
+    "temporary": ""
+  },
+  "hitDice": {
+    "total": "",
+    "current": ""
+  },
+  "death": {
+    "object_id": "",
+    "saves": {
+      "success1": false,
+      "success2": false,
+      "success3": false,
+      "failure1": false,
+      "failure2": false,
+      "failure3": false
+    }
+  },
+  "attacks": "",
+  "coins": {
+    "copper": "",
+    "silver": "",
+    "electrum": "",
+    "gold": ""
+  },
+  "equipment": [
+    null,
+    "Battleaxe",
+    "Bedroll",
+    "Blanket"
+  ],
+  "text": {
+    "personality": "Grumpy dward, about what you'd expect",
+    "ideals": "Loves alcohol and also alcohol",
+    "bonds": "Loves his pet cat",
+    "flaws": "Always drunk",
+    "features": ""
+  },
+  "age": "32",
+  "eyes": "Brown",
+  "height": "5'11\"",
+  "skin": "White",
+  "weight": "220",
+  "hair": "Brown",
+  "appearance": "",
+  "backstory": "Something horrible, tragic, and not fitting for the setting",
+  "alliesAndOrganizations": "",
+  "features": [
+    null,
+    "Action Surge (1 use)",
+    "Additional Fighting Style"
+  ],
+  "treasure": "",
+  "spellcasting": {
+    "class": ""
+  },
+  "spell": {
+    "castingAbility": "",
+    "saveDc": "",
+    "attackBonus": ""
+  },
+  "spells": {
+    "cantrip1": "",
+    "cantrip2": "",
+    "cantrip3": "",
+    "cantrip4": "",
+    "cantrip5": "",
+    "cantrip6": "",
+    "cantrip7": "",
+    "cantrip8": "",
+    "cantrip9": "",
+    "cantrip10": "",
+    "cantrip11": "",
+    "cantrip12": "",
+    "first": {
+      "prepared1": false,
+      "prepared2": false,
+      "prepared3": false,
+      "prepared4": false,
+      "prepared5": false,
+      "prepared6": false,
+      "prepared7": false,
+      "prepared8": false,
+      "prepared9": false,
+      "spell1": "",
+      "spell2": "",
+      "spell3": "",
+      "spell4": "",
+      "spell5": "",
+      "spell6": "",
+      "spell7": "",
+      "spell8": "",
+      "spell9": ""
+    },
+    "second": {
+      "prepared1": false,
+      "prepared2": false,
+      "prepared3": false,
+      "prepared4": false,
+      "prepared5": false,
+      "prepared6": false,
+      "prepared7": false,
+      "prepared8": false,
+      "prepared9": false,
+      "spell1": "",
+      "spell2": "",
+      "spell3": "",
+      "spell4": "",
+      "spell5": "",
+      "spell6": "",
+      "spell7": "",
+      "spell8": "",
+      "spell9": ""
+    }
+  },
+  "level": 14,
+  "class": "Fighter",
+  "user_id": "user001",
+  "character_id": "character001"
+}

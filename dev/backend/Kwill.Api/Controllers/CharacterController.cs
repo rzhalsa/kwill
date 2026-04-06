@@ -28,7 +28,6 @@ public class CharacterController : ControllerBase
             var doc = BsonDocument.Parse(body.GetRawText());
 
             var result = await _characterService.CreateAsync(doc);
-
             if (!result.Success)
             {
                 if (result.Errors != null)
@@ -112,10 +111,10 @@ public class CharacterController : ControllerBase
         {
             var doc = BsonDocument.Parse(body.GetRawText());
 
-            if (!doc.Contains("user_id"))
-                return BadRequest(new { message = "user_id is required" });
+            if (!doc.Contains("userid"))
+                return BadRequest(new { message = "userid is required" });
 
-            var userId = doc["user_id"].AsString;
+            var userId = doc["userid"].AsString;
 
             var result = await _characterService.UpdateAsync(userId, characterId, doc);
 
