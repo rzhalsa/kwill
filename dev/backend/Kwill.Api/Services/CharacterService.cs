@@ -16,7 +16,7 @@ namespace Kwill.Api.Services
         //Gets the calculated character sheet.
         public async Task<BsonDocument?> GetByCharacterIdAsync(string characterId)
         {
-            var filter = Builders<BsonDocument>.Filter.Eq("character_id", characterId);
+            var filter = Builders<BsonDocument>.Filter.Eq("characterid", characterId);
             var doc = await _db.CharacterSheets.Find(filter).FirstOrDefaultAsync();
 
             if (doc == null)
@@ -35,7 +35,7 @@ namespace Kwill.Api.Services
         //Gets all characters from given UserId
         public async Task<List<BsonDocument>> GetByUserIdAsync(string userId)
         {
-            var filter = Builders<BsonDocument>.Filter.Eq("user_id", userId);
+            var filter = Builders<BsonDocument>.Filter.Eq("userid", userId);
             var docs = await _db.CharacterSheets.Find(filter).ToListAsync();
 
             if (docs.Count == 0)
@@ -89,13 +89,13 @@ namespace Kwill.Api.Services
         {
             try
             {
-                var filter = Builders<BsonDocument>.Filter.Eq("character_id", characterId);
+                var filter = Builders<BsonDocument>.Filter.Eq("characterid", characterId);
                 var existing = await _db.CharacterSheets.Find(filter).FirstOrDefaultAsync();
 
                 if (existing == null)
                     return (false, null, null, null, true, false);
 
-                if (!existing.Contains("user_id") || existing["user_id"].AsString != userId)
+                if (!existing.Contains("userid") || existing["userid"].AsString != userId)
                     return (false, null, null, null, false, true);
 
                 var srdData = await LoadSrdDataAsync();
@@ -118,13 +118,13 @@ namespace Kwill.Api.Services
         {
             try
             {
-                var filter = Builders<BsonDocument>.Filter.Eq("character_id", characterId);
+                var filter = Builders<BsonDocument>.Filter.Eq("characterid", characterId);
                 var existing = await _db.CharacterSheets.Find(filter).FirstOrDefaultAsync();
 
                 if (existing == null)
                     return (false, true, false, null);
 
-                if (!existing.Contains("user_id") || existing["user_id"].AsString != userId)
+                if (!existing.Contains("userid") || existing["userid"].AsString != userId)
                     return (false, false, true, null);
 
                 await _db.CharacterSheets.DeleteOneAsync(filter);
