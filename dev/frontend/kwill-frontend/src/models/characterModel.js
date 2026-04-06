@@ -105,9 +105,6 @@ export function createCharacter() {
         },
         attacks: "",
         coins: { copper: "", silver: "", electrum: "", gold: "", platinum: "" },
-<<<<<<< HEAD
-        equipment: {text: ""},
-=======
         equipment: { text: "" },
         classes: {
             firstclass: {
@@ -116,7 +113,6 @@ export function createCharacter() {
             }
         },
 
->>>>>>> main
         text: {
             personality: "",
             ideals: "",
@@ -160,35 +156,6 @@ export function createCharacter() {
             eighth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
             ninth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" }
         },
-<<<<<<< HEAD
-        classes:{
-            firstclass:{
-                name: "",
-                level: ""
-            }
-        }
-        });
-}
-
-export async function updateCharacter(characterId, characterData, userId){
-    try {
-        const payload = {...characterData, user_id: userId}
-        const response = await api.put(`/api/character/${characterId}`, payload);
-        console.log("created character successfully: ",response.data );
-        return response.data;
-    } catch (error) {
-        console.error("Failed to post API data: ", error)
-    }
-}
-export async function postCharacter(characterData, userId){
-    try {
-        const payload = {...characterData, user_id: userId};
-        const response = await api.post("/api/character", payload);
-        console.log("created character successfully: ",response.data );
-        return response.data;
-    } catch (error) {
-        console.error("Failed to post API data: ", error)
-=======
     });
 }
 
@@ -256,7 +223,6 @@ export function copyJsonToCharacter(character, jsonData) {
                 target[key] = source[key];
             }
         }
->>>>>>> main
     }
     
     copyValues(character, sourceData);

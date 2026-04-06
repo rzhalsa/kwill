@@ -454,7 +454,6 @@
     </div>
 </template>
 <script setup>
-<<<<<<< HEAD
     import {ref, reactive, readonly, computed, watch} from 'vue';
     import { createCharacter, updateCharacter } from '../models/characterModel';
     import { debounce } from 'lodash'
@@ -514,55 +513,6 @@
                 label:label,
                 mod: modifier
             })
-=======
-import { ref, reactive, readonly, computed } from 'vue';
-import { createCharacter } from '../models/characterModel';
-const character = createCharacter();
-const amourBonus = ref(0);
-// ability mapping
-const skillAbilityMap = {
-    acrobatics: 'dexterity',
-    sleightofhand: 'dexterity',
-    stealth: 'dexterity',
-    athletics: 'strength',
-    arcana: 'intelligence',
-    history: 'intelligence',
-    investigation: 'intelligence',
-    nature: 'intelligence',
-    religion: 'intelligence',
-    animalhandling: 'wisdom',
-    insight: 'wisdom',
-    medicine: 'wisdom',
-    perception: 'wisdom',
-    survival: 'wisdom',
-    deception: 'charisma',
-    intimidation: 'charisma',
-    performance: 'charisma',
-    persuasion: 'charisma'
-};
-//labels for stats
-const abilityLabels = {
-    strength: "STR",
-    dexterity: "DEX",
-    constitution: "CON",
-    intelligence: "INT",
-    wisdom: "WIS",
-    charisma: "CHA"
-}
-//returns a computed list used to pull names, labels, values, from reactive character model and calculates ability mod score.
-const abilityList = computed(() => {
-    const list = [];
-    for (const key in character.ability) {
-        //skips over object id fields
-        if (key == "object_id") continue;
-        const modifier = getAbiltyMod(character.ability[key].score);
-        const label = abilityLabels[key];
-        //calculates saves mod
-        character.saves[key].modifier = modifier + (character.saves[key].proficiency ? proficiencyBonus.value : 0);
-        //calculates AC
-        if (key == "dexterity") {
-            character.ac = modifier + 10 + amourBonus.value;
->>>>>>> main
         }
         //populates list
         list.push({
@@ -570,9 +520,9 @@ const abilityList = computed(() => {
             label: label,
             mod: modifier
         })
-    }
-    return list;
-});
+        return list;
+    });
+
 
 function getAbiltyMod(score) {
     return Math.floor((score - 10) / 2);
@@ -628,30 +578,27 @@ defineExpose({
     getCharacterData
 });
 
-<<<<<<< HEAD
-    //Check that prevents API spams with a half second interval incase someone spams three changes quickly
-    const debounceUpdate = debounce((newVal)=>{
-        updateCharacter(characterId,structuredClone(newVal),userId);
-        changeCount.value=0;
-    }, 500);
+//Check that prevents API spams with a half second interval incase someone spams three changes quickly
+const debounceUpdate = debounce((newVal)=>{
+    updateCharacter(characterId,structuredClone(newVal),userId);
+    changeCount.value=0;
+}, 500);
 
-    //watches character model and waits for three changes to be made before calling debounce
-    watch(character,(newVal)=>{
-        changeCount.value++;
-        if(changeCount >= 3){
-            debounceUpdate(newVal);
-        }
-    })
+//watches character model and waits for three changes to be made before calling debounce
+watch(character,(newVal)=>{
+    changeCount.value++;
+    if(changeCount >= 3){
+        debounceUpdate(newVal);
+    }
+})
 
-    // proficiency boncus calculation
-    const proficiencyBonus = computed(() => {
-        if(character.classes.firstclass.level>=17){ return 6;}
-        if(character.classes.firstclass.level>=13){ return 5;}
-        if(character.classes.firstclass.level>=9){ return 4;}
-        if(character.classes.firstclass.level>=5){ return 3;}
-        return 2;
-    });
-=======
->>>>>>> main
+// proficiency boncus calculation
+const proficiencyBonus = computed(() => {
+    if(character.classes.firstclass.level>=17){ return 6;}
+    if(character.classes.firstclass.level>=13){ return 5;}
+    if(character.classes.firstclass.level>=9){ return 4;}
+    if(character.classes.firstclass.level>=5){ return 3;}
+    return 2;
+});
 </script>
 <style src="../character.css" scoped></style>
