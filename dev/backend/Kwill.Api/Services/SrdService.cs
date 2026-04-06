@@ -27,7 +27,6 @@ namespace Kwill.Api.Services
             return await _db.SrdData
                 .Find(filter)
                 .FirstOrDefaultAsync();
-            return await _db.SrdData.Find(filter).FirstOrDefaultAsync();
         }
 
         public async Task<List<object>> GetCollectionsAsync()
