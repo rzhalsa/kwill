@@ -28,35 +28,30 @@ export const useCharacterCreationStore = defineStore('character_creation', {
                 'name': "" 
             },
             'ability': {
+                'object_id': "ability",
                 'strength': {
-                    'modifier': {
-                        'score': null
-                    }
+                    'modifier': "",
+                    'score': ""
                 },
                 'dexterity': {
-                    'modifier': {
-                        'score': null
-                    }
+                    'modifier': "",
+                    'score': ""
                 },
                 'constitution': {
-                    'modifier': {
-                        'score': null
-                    }
-                },
-                'wisdom': {
-                    'modifier': {
-                        'score': null
-                    }
+                    'modifier': "",
+                    'score': ""
                 },
                 'intelligence': {
-                    'modifier': {
-                        'score': null
-                    }
+                    'modifier': "",
+                    'score': ""
+                },
+                'wisdom': {
+                    'modifier': "",
+                    'score': ""
                 },
                 'charisma': {
-                    'modifier': {
-                        'score': null
-                    }
+                    'modifier': "",
+                    'score': ""
                 },
             },
             'ability_score_method': null,
@@ -221,37 +216,32 @@ export const useCharacterCreationStore = defineStore('character_creation', {
                         break
                     case 'ability':
                         this.character_state[key] = {
-                                'strength': {
-                                    'modifier': {
-                                        'score': null
-                                    }
-                                },
-                                'dexterity': {
-                                    'modifier': {
-                                        'score': null
-                                    }
-                                },
-                                'constitution': {
-                                    'modifier': {
-                                        'score': null
-                                    }
-                                },
-                                'wisdom': {
-                                    'modifier': {
-                                        'score': null
-                                    }
-                                },
-                                'intelligence': {
-                                    'modifier': {
-                                        'score': null
-                                    }
-                                },
-                                'charisma': {
-                                    'modifier': {
-                                        'score': null
-                                    }
-                                },
-                            }
+                            'object_id': "ability",
+                            'strength': {
+                                'modifier': "",
+                                'score': ""
+                            },
+                            'dexterity': {
+                                'modifier': "",
+                                'score': ""
+                            },
+                            'constitution': {
+                                'modifier': "",
+                                'score': ""
+                            },
+                            'intelligence': {
+                                'modifier': "",
+                                'score': ""
+                            },
+                            'wisdom': {
+                                'modifier': "",
+                                'score': ""
+                            },
+                            'charisma': {
+                                'modifier': "",
+                                'score': ""
+                            },
+                        }
                         break
                     case 'classes': 
                         this.character_state[key] = {

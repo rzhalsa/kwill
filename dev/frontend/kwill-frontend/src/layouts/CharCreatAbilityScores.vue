@@ -128,7 +128,8 @@
 
         if(store.character_state.selections.length === 6) {
             for(let i = 0; i < 6; i++) {
-                store.character_state['ability'][scores[i]]['modifier']['score'] = store.character_state.ability_scores[store.character_state.selections[i]]
+                store.character_state['ability'][scores[i]]['score'] = store.character_state.ability_scores[store.character_state.selections[i]]
+                store.character_state['ability'][scores[i]]['modifier'] = Math.floor((store.character_state['ability'][scores[i]]['score'] - 10) / 2.0)
             }
         }
     }

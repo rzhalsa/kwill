@@ -28,7 +28,6 @@ public class CharacterController : ControllerBase
             var doc = BsonDocument.Parse(body.GetRawText());
 
             var result = await _characterService.CreateAsync(doc);
-
             if (!result.Success)
             {
                 if (result.Errors != null)

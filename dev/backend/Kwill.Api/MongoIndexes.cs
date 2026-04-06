@@ -20,7 +20,7 @@ namespace Kwill.Api
              // CharacterSheets: unique characterId only (globally unique)
             var csIndex = new CreateIndexModel<BsonDocument>(
                  Builders<BsonDocument>.IndexKeys
-                    .Ascending("character_id"),
+                    .Ascending("characterid"),
                 new CreateIndexOptions { Unique = true, Name = "uniq_character_id" }
             );
             await db.CharacterSheets.Indexes.CreateOneAsync(csIndex);
@@ -28,7 +28,7 @@ namespace Kwill.Api
             // Users: unique user_id
             var userIndex = new CreateIndexModel<BsonDocument>(
                  Builders<BsonDocument>.IndexKeys
-                    .Ascending("user_id"),
+                    .Ascending("userid"),
                  new CreateIndexOptions { Unique = true, Name = "uniq_user_id" }
             );
             await db.Users.Indexes.CreateOneAsync(userIndex);

@@ -465,33 +465,14 @@ namespace Kwill.Validation
                         result.AddError($"Invalid {stat} score: {score} (must be 1-30)");
                     }
 
-                    if (!statDoc.Contains("modifier") || !statDoc["modifier"].IsBsonDocument)
+                    if (!statDoc.Contains("modifier"))
                     {
                         result.AddError($"Missing modifier block for {stat}");
                         continue;
                     }
-
-                    var modifierDoc = statDoc["modifier"].AsBsonDocument;
-
-                    if (modifierDoc.Contains("object_id"))
-                    {
-                        if (!modifierDoc["object_id"].IsString ||
-                            !StructureValidators.ValidateObjectId(modifierDoc["object_id"].AsString))
-                        {
-                            result.AddError($"Invalid modifier object_id for {stat}");
-                        }
-                    }
-
-                    if (modifierDoc.Contains("operation_type"))
-                    {
-                        if (!modifierDoc["operation_type"].IsString ||
-                            !StructureValidators.ValidateOperationType(modifierDoc["operation_type"].AsString))
-                        {
-                            result.AddError($"Invalid operation_type for {stat}");
-                        }
-                    }
                 }
             }
+            
             else
             {
                 result.AddError("Missing ability object");
@@ -520,7 +501,7 @@ namespace Kwill.Validation
                         else
                         {
                             string normalizedRace = NormalizeKey(raceName);
-                            if (srdData.ContainsKey("srd_races") &&
+                            if (srdData.ContainsKey("races") &&
                                 !SRDValidators.ValidateRaceExists(normalizedRace, srdData["srd_races"]))
                             {
                                 result.AddError($"Invalid race: {raceName}");

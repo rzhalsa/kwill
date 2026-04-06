@@ -39,7 +39,7 @@ export function setCharCreateArrayData(arr, data) {
 
 export async function updateCharacter(characterId, characterData, userId){
     try {
-        const payload = {characterData, user_id: userId}
+        const payload = {characterData, userid: userId}
         const response = await axios.put(`/api/character/${characterId}`, payload);
         console.log("created character successfully: ",response.data );
         return response.data;
@@ -50,7 +50,7 @@ export async function updateCharacter(characterId, characterData, userId){
 
 export async function createNewCharacter(characterData, userId, characterId){
     try {
-        const payload = {...characterData, user_id: userId, character_id: characterId};
+        const payload = {...characterData, userid: userId, characterid: characterId};
         console.log(payload)
         const response = await api.post("/api/character", payload);
         console.log("created character successfully: ", response.data );
