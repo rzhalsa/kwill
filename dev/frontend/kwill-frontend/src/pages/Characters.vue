@@ -97,7 +97,7 @@
 
 <script setup>
 import JSZip from 'jszip';
-import { simpleSheetHTML, smartSheetHTML } from '@/sheets';
+import { simple_character_sheet, smart_character_sheet } from '@/sheets';
 import characterSheet from '../layouts/Sheet.vue';
 import { ref, onMounted, computed } from 'vue';
 import api from '../services/api';
