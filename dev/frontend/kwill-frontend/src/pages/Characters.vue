@@ -97,7 +97,7 @@
 
 <script setup>
 import JSZip from 'jszip';
-import { simple_character_sheet, smart_character_sheet } from '@/sheets';
+import { simpleSheetHTML, smartSheetHTML } from '../sheets';
 import characterSheet from '../layouts/Sheet.vue';
 import { ref, onMounted, computed } from 'vue';
 import api from '../services/api';
@@ -208,9 +208,9 @@ async function downloadSheet() {
     const assetsFolder = zip.folder('assets');
 
     // Import all assets
-    const kiwillSvg = await import('@/sheets/assets/kwill.svg?raw');
-    const scripts = await import('@/sheets/assets/scripts.js?raw');
-    const stylesCss = await import('@/sheets/assets/styles.css?raw');
+    const kiwillSvg = await import('../sheets/assets/kwill.svg?raw');
+    const scripts = await import('../sheets/assets/scripts.js?raw');
+    const stylesCss = await import('../sheets/assets/styles.css?raw');
 
     assetsFolder.file('kwill.svg', kiwillSvg.default);
     assetsFolder.file('scripts.js', scripts.default);
@@ -222,10 +222,10 @@ async function downloadSheet() {
     // Add character data ONLY if checkbox is selected
     if (includeCharData.value) {
         const characterData = sheetRef.value.getCharacterData();
-        charactersFolder.file(
-            `${characterData.name || 'character'}.json`,
-            JSON.stringify(characterData, null, 2)
-        );
+charactersFolder.file(
+    `${characterData.name || 'character'}.json`, 
+    JSON.stringify(characterData, null, 2)
+);
     }
 
     // Generate and download zip
@@ -245,29 +245,26 @@ async function downloadSheet() {
     showDownloadDialog.value = false;
 }
 
-const sheetCharacter = computed(() => {
-    return sheetRef.value?.character;
-});
 
 // Exports the current state of the sheet to json
 function exportCharacter() {
     const characterToExport = sheetRef.value.getCharacterData();
-
+    
     if (!characterToExport || !characterToExport.name) {
         alert('No character data to export');
         return;
     }
-
+    
     const jsonString = JSON.stringify(characterToExport, null, 2);
     const blob = new Blob([jsonString], { type: 'application/json' });
-
+    
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
     link.download = `${characterToExport.name || 'character'}.json`;
     document.body.appendChild(link);
     link.click();
-
+    
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 }
