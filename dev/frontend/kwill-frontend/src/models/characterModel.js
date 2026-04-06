@@ -1,9 +1,9 @@
-import {reactive} from 'vue';
+import { reactive } from 'vue';
 /**
  * Creates a JSON character model
  * @returns a created character model
  */
-export function createCharacter(){
+export function createCharacter() {
     return reactive({
         object_id: "character",
         name: "",
@@ -159,12 +159,12 @@ export function createCharacter(){
  * be compatible with the structure in characterModel.js
  */
 export function toJson(character, map) {
-    for(const key of Object.keys(map)) {
+    for (const key of Object.keys(map)) {
         // Create an array of keys indexed by '.' for the purpose of indexing nested indices
         const keys = key.split('.')
 
         // Call setValue() if the leftmost key in keys in in the first layer of character
-        if(keys[0] in character) {
+        if (keys[0] in character) {
             setValue(character, keys, map[key])
         }
     }
@@ -181,8 +181,8 @@ function setValue(obj, keys, value) {
     let current_layer = obj  // var for accessing the current layer of obj
 
     // Loop through each layer of keys in order to access nested values
-    for(let i = 0; i < keys.length - 1; i++) {
-        if(!(keys[i] in current_layer)) { // return if keys[i] is not in this layer
+    for (let i = 0; i < keys.length - 1; i++) {
+        if (!(keys[i] in current_layer)) { // return if keys[i] is not in this layer
             return
         }
         current_layer = current_layer[keys[i]]  // update current layer
@@ -190,7 +190,33 @@ function setValue(obj, keys, value) {
 
     // Populate value
     const lastKey = keys[keys.length - 1]
-    if(lastKey in current_layer) {
+    if (lastKey in current_layer) {
         current_layer[lastKey] = value
     }
+}
+
+export function copyJsonToCharacter(character, jsonData) {
+    const sourceData = jsonData.character || jsonData;
+    
+    function copyValues(target, source) {
+        for (const key in source) {
+            if (key === 'object_id') continue;
+            
+            if (source[key] !== null && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+                if (source[key].object_id === 'operation') {
+                    continue;
+                }
+                
+                if (target[key] && typeof target[key] === 'object') {
+                    copyValues(target[key], source[key]);
+                } else {
+                    target[key] = JSON.parse(JSON.stringify(source[key]));
+                }
+            } else {
+                target[key] = source[key];
+            }
+        }
+    }
+    
+    copyValues(character, sourceData);
 }

@@ -1,0 +1,382 @@
+{
+  "object_id": "character",
+  "name": "StandardFull",
+  "race": {
+    "object_id": "race",
+    "name": "Race"
+  },
+  "alignment": "Alignment",
+  "background": {
+    "object_id": "background",
+    "name": "BG"
+  },
+  "player": "Player",
+  "exp": "10000",
+  "ability": {
+    "object_id": "ability",
+    "strength": {
+      "modifier": "",
+      "score": "10"
+    },
+    "dexterity": {
+      "modifier": "",
+      "score": "10"
+    },
+    "constitution": {
+      "modifier": "",
+      "score": "10"
+    },
+    "intelligence": {
+      "modifier": "",
+      "score": "10"
+    },
+    "wisdom": {
+      "modifier": "",
+      "score": "10"
+    },
+    "charisma": {
+      "modifier": "",
+      "score": "10"
+    }
+  },
+  "saves": {
+    "object_id": "saves",
+    "strength": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "dexterity": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "constitution": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "intelligence": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "wisdom": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "charisma": {
+      "proficiency": true,
+      "modifier": 2
+    }
+  },
+  "skills": {
+    "object_id": "skills",
+    "athletics": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "acrobatics": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "sleightofhand": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "stealth": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "arcana": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "history": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "investigation": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "nature": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "religion": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "animalhandling": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "insight": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "medicine": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "perception": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "survival": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "deception": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "intimidation": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "performance": {
+      "proficiency": true,
+      "modifier": 2
+    },
+    "persuasion": {
+      "proficiency": true,
+      "modifier": 2
+    }
+  },
+  "ac": 10,
+  "initiative": "1",
+  "speed": "1",
+  "hitpoints": {
+    "current": "1",
+    "maximum": "1",
+    "temporary": "1"
+  },
+  "hitDice": {
+    "total": "1",
+    "current": "1"
+  },
+  "death": {
+    "object_id": "",
+    "saves": {
+      "success1": true,
+      "success2": true,
+      "success3": true,
+      "failure1": true,
+      "failure2": true,
+      "failure3": true
+    }
+  },
+  "attacks": "Is it work!?!?!",
+  "coins": {
+    "copper": "1",
+    "silver": "1",
+    "electrum": "1",
+    "gold": "1",
+    "platinum": "1"
+  },
+  "equipment": {
+    "text": "Equip"
+  },
+  "classes": {
+    "firstclass": {
+      "name": "Class",
+      "level": "1"
+    }
+  },
+  "text": {
+    "personality": "Person",
+    "ideals": "Ideals",
+    "bonds": "Bonds",
+    "flaws": "Flaws",
+    "features": "Features"
+  },
+  "age": "age",
+  "eyes": "eyes",
+  "height": "height",
+  "skin": "skin",
+  "weight": "weight",
+  "hair": "hair",
+  "appearance": "App",
+  "backstory": "Backstory",
+  "alliesAndOrganizations": "Allies",
+  "features": {
+    "additional": "Additional"
+  },
+  "treasure": "Treasure",
+  "spellcasting": {
+    "class": "SPC Class"
+  },
+  "spell": {
+    "castingAbility": "SP Abi",
+    "saveDc": "SP save dc",
+    "attackBonus": "SP AT bonus"
+  },
+  "spells": {
+    "cantrip1": "1",
+    "cantrip2": "2",
+    "cantrip3": "3",
+    "cantrip4": "4",
+    "cantrip5": "5",
+    "cantrip6": "6",
+    "cantrip7": "7",
+    "cantrip8": "8",
+    "cantrip9": "9",
+    "cantrip10": "10",
+    "cantrip11": "11",
+    "cantrip12": "12",
+    "first": {
+      "prepared1": true,
+      "prepared2": true,
+      "prepared3": true,
+      "prepared4": true,
+      "prepared5": true,
+      "prepared6": true,
+      "prepared7": true,
+      "prepared8": true,
+      "prepared9": true,
+      "spell1": "1",
+      "spell2": "1",
+      "spell3": "1",
+      "spell4": "1",
+      "spell5": "1",
+      "spell6": "1",
+      "spell7": "1",
+      "spell8": "1",
+      "spell9": "1"
+    },
+    "second": {
+      "prepared1": true,
+      "prepared2": true,
+      "prepared3": true,
+      "prepared4": true,
+      "prepared5": true,
+      "prepared6": true,
+      "prepared7": true,
+      "prepared8": true,
+      "prepared9": true,
+      "spell1": "2",
+      "spell2": "2",
+      "spell3": "2",
+      "spell4": "2",
+      "spell5": "2",
+      "spell6": "2",
+      "spell7": "2",
+      "spell8": "2",
+      "spell9": "2"
+    },
+    "third": {
+      "prepared1": true,
+      "prepared2": true,
+      "prepared3": true,
+      "prepared4": true,
+      "prepared5": true,
+      "prepared6": true,
+      "prepared7": true,
+      "prepared8": true,
+      "prepared9": true,
+      "prepared10": true,
+      "spell1": "3",
+      "spell2": "3",
+      "spell3": "3",
+      "spell4": "3",
+      "spell5": "3",
+      "spell6": "3",
+      "spell7": "3",
+      "spell8": "3",
+      "spell9": "3",
+      "spell10": "3"
+    },
+    "fourth": {
+      "prepared1": true,
+      "prepared2": true,
+      "prepared3": true,
+      "prepared4": true,
+      "prepared5": true,
+      "prepared6": true,
+      "prepared7": true,
+      "prepared8": true,
+      "prepared9": true,
+      "prepared10": true,
+      "spell1": "4",
+      "spell2": "4",
+      "spell3": "4",
+      "spell4": "4",
+      "spell5": "4",
+      "spell6": "4",
+      "spell7": "4",
+      "spell8": "4",
+      "spell9": "4",
+      "spell10": "4"
+    },
+    "fifth": {
+      "prepared1": true,
+      "prepared2": true,
+      "prepared3": true,
+      "prepared4": true,
+      "prepared5": true,
+      "prepared6": true,
+      "spell1": "5",
+      "spell2": "5",
+      "spell3": "5",
+      "spell4": "5",
+      "spell5": "5",
+      "spell6": "5"
+    },
+    "sixth": {
+      "prepared1": true,
+      "prepared2": true,
+      "prepared3": true,
+      "prepared4": true,
+      "prepared5": true,
+      "prepared6": true,
+      "spell1": "6",
+      "spell2": "6",
+      "spell3": "6",
+      "spell4": "6",
+      "spell5": "6",
+      "spell6": "6"
+    },
+    "seventh": {
+      "prepared1": true,
+      "prepared2": true,
+      "prepared3": true,
+      "prepared4": true,
+      "prepared5": true,
+      "prepared6": true,
+      "spell1": "7",
+      "spell2": "7",
+      "spell3": "7",
+      "spell4": "7",
+      "spell5": "7",
+      "spell6": "7"
+    },
+    "eighth": {
+      "prepared1": true,
+      "prepared2": true,
+      "prepared3": true,
+      "prepared4": true,
+      "prepared5": true,
+      "prepared6": true,
+      "spell1": "8",
+      "spell2": "8",
+      "spell3": "8",
+      "spell4": "8",
+      "spell5": "8",
+      "spell6": "8"
+    },
+    "ninth": {
+      "prepared1": true,
+      "prepared2": true,
+      "prepared3": true,
+      "prepared4": true,
+      "prepared5": true,
+      "prepared6": true,
+      "spell1": "9",
+      "spell2": "9",
+      "spell3": "9",
+      "spell4": "9",
+      "spell5": "9",
+      "spell6": "9"
+    }
+  },
+  "userid": "",
+  "characterid": ""
+}
