@@ -59,12 +59,4 @@
         background-color: white;
         width: 20vw;
     }
-
-    textarea {
-        font-size: xx-large;
-        border-radius: 25px;
-        outline-style: solid;
-        outline-color: black;
-        padding: 3%;
-    }
 </style>
