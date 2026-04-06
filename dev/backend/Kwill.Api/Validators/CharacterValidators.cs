@@ -15,9 +15,9 @@ namespace Kwill.Validation
 {
     public class ValidationResult
     {
-        public bool IsValid { get; set; }
+        public bool IsValid { get; set; } = true;
         public List<string> Errors { get; set; } = new List<string>();
-        
+
         public void AddError(string error)
         {
             IsValid = false;
@@ -33,12 +33,12 @@ namespace Kwill.Validation
         {
             "character", "race", "class", "traits",
             "feature", "operation", "ability", "background",
-            "saves", "skills"
+            "saves", "skills", "death"
         };
 
         private static readonly HashSet<string> ValidOperationTypes = new HashSet<string>
         {
-            "+", "-", "*", "/", "=", "conditional"
+            "+", "-", "*", "/", "=", "conditional", "mirror"
         };
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Kwill.Validation
         /// </summary>
         public static bool ValidateObjectId(string objectId)
         {
-            return !string.IsNullOrEmpty(objectId) && ValidObjectIds.Contains(objectId);
+            return !string.IsNullOrWhiteSpace(objectId) && ValidObjectIds.Contains(objectId);
         }
 
         /// <summary>
@@ -54,18 +54,22 @@ namespace Kwill.Validation
         /// </summary>
         public static bool ValidateOperationType(string operationType)
         {
-            return !string.IsNullOrEmpty(operationType) && ValidOperationTypes.Contains(operationType);
+            return !string.IsNullOrWhiteSpace(operationType) && ValidOperationTypes.Contains(operationType);
         }
 
         /// <summary>
         /// Validates that required fields exist in character sheet root
+        /// Updated for new sheet structure
         /// </summary>
         public static ValidationResult ValidateRequiredFields(BsonDocument character)
         {
-            var result = new ValidationResult { IsValid = true };
-            
-            var requiredFields = new[] { "object_id", "user_id", "character_id", "name", "level", "class" };
-            
+            var result = new ValidationResult();
+
+            var requiredFields = new[]
+            {
+                "object_id", "userid", "characterid", "name", "classes", "race", "ability"
+            };
+
             foreach (var field in requiredFields)
             {
                 if (!character.Contains(field))
@@ -73,7 +77,13 @@ namespace Kwill.Validation
                     result.AddError($"Missing required field: {field}");
                 }
             }
-            
+
+            if (character.Contains("object_id") &&
+                (!character["object_id"].IsString || character["object_id"].AsString != "character"))
+            {
+                result.AddError("object_id must be 'character'");
+            }
+
             return result;
         }
     }
@@ -100,34 +110,44 @@ namespace Kwill.Validation
         }
 
         /// <summary>
-        /// Validates that sum of all class levels equals total character level
-        /// Critical for multiclass validation
+        /// Validates that sum of all class levels forms a valid total character level
+        /// Updated for new sheet structure where classes is a BsonDocument, not BsonArray
         /// </summary>
-        public static ValidationResult ValidateTotalLevel(BsonArray classes, int expectedTotal)
+        public static ValidationResult ValidateTotalLevel(BsonDocument classes)
         {
-            var result = new ValidationResult { IsValid = true };
-            
+            var result = new ValidationResult();
             int sum = 0;
-            foreach (BsonDocument classObj in classes)
+
+            foreach (var element in classes.Elements)
             {
-                if (classObj.Contains("class_level"))
+                if (!element.Value.IsBsonDocument)
                 {
-                    if (int.TryParse(classObj["class_level"].AsString, out int level))
-                    {
-                        sum += level;
-                    }
-                    else
-                    {
-                        result.AddError($"Invalid class_level format: {classObj["class_level"]}");
-                    }
+                    result.AddError($"Class entry '{element.Name}' must be an object");
+                    continue;
                 }
+
+                var classObj = element.Value.AsBsonDocument;
+
+                if (!classObj.Contains("level"))
+                {
+                    result.AddError($"Class entry '{element.Name}' is missing level");
+                    continue;
+                }
+
+                if (!TryGetInt(classObj["level"], out int level))
+                {
+                    result.AddError($"Invalid level format in class entry '{element.Name}'");
+                    continue;
+                }
+
+                sum += level;
             }
-            
-            if (sum != expectedTotal)
+
+            if (!ValidateCharacterLevel(sum))
             {
-                result.AddError($"Sum of class levels ({sum}) does not equal total level ({expectedTotal})");
+                result.AddError($"Total character level is invalid: {sum} (must be 1-20)");
             }
-            
+
             return result;
         }
 
@@ -157,7 +177,7 @@ namespace Kwill.Validation
         /// </summary>
         public static bool ValidateAbilityModifier(int score, int modifier)
         {
-            int expected = (score - 10) / 2;
+            int expected = (int)Math.Floor((score - 10) / 2.0);
             return modifier == expected;
         }
 
@@ -168,7 +188,45 @@ namespace Kwill.Validation
         public static bool ValidateHitDie(string hitDie)
         {
             var validDice = new HashSet<string> { "d4", "d6", "d8", "d10", "d12", "d20" };
-            return !string.IsNullOrEmpty(hitDie) && validDice.Contains(hitDie.ToLower());
+            return !string.IsNullOrWhiteSpace(hitDie) && validDice.Contains(hitDie.ToLower());
+        }
+
+        /// <summary>
+        /// Safely converts BsonValue to int
+        /// Supports int, long, double, and numeric strings
+        /// </summary>
+        public static bool TryGetInt(BsonValue value, out int result)
+        {
+            result = 0;
+
+            if (value == null || value.IsBsonNull)
+                return false;
+
+            if (value.IsInt32)
+            {
+                result = value.AsInt32;
+                return true;
+            }
+
+            if (value.IsInt64)
+            {
+                result = (int)value.AsInt64;
+                return true;
+            }
+
+            if (value.IsDouble)
+            {
+                result = (int)value.AsDouble;
+                return true;
+            }
+
+            if (value.IsString && int.TryParse(value.AsString, out int parsed))
+            {
+                result = parsed;
+                return true;
+            }
+
+            return false;
         }
     }
 
@@ -181,7 +239,7 @@ namespace Kwill.Validation
         /// </summary>
         public static bool ValidateClassExists(string classId, List<BsonDocument> srdClasses)
         {
-            return srdClasses.Any(c => c["index"].AsString == classId);
+            return srdClasses.Any(c => c.Contains("index") && c["index"].AsString == classId);
         }
 
         /// <summary>
@@ -189,7 +247,7 @@ namespace Kwill.Validation
         /// </summary>
         public static bool ValidateRaceExists(string raceId, List<BsonDocument> srdRaces)
         {
-            return srdRaces.Any(r => r["index"].AsString == raceId);
+            return srdRaces.Any(r => r.Contains("index") && r["index"].AsString == raceId);
         }
 
         /// <summary>
@@ -198,9 +256,9 @@ namespace Kwill.Validation
         /// </summary>
         public static bool ValidateClassHitDie(string classId, string hitDie, List<BsonDocument> srdClasses)
         {
-            var classData = srdClasses.FirstOrDefault(c => c["index"].AsString == classId);
-            if (classData == null) return false;
-            
+            var classData = srdClasses.FirstOrDefault(c => c.Contains("index") && c["index"].AsString == classId);
+            if (classData == null || !classData.Contains("hit_die")) return false;
+
             int expectedHitDie = classData["hit_die"].AsInt32;
             return hitDie == $"d{expectedHitDie}";
         }
@@ -210,20 +268,20 @@ namespace Kwill.Validation
         /// Checks against SRD skills and proficiencies collections
         /// </summary>
         public static ValidationResult ValidateProficiencies(
-            List<string> proficiencies, 
+            List<string> proficiencies,
             List<BsonDocument> srdSkills,
             List<BsonDocument> srdProficiencies)
         {
-            var result = new ValidationResult { IsValid = true };
-            
+            var result = new ValidationResult();
+
             var validSkills = new HashSet<string>(
                 srdSkills.Select(s => s["index"].AsString)
             );
-            
+
             var validProficiencies = new HashSet<string>(
                 srdProficiencies.Select(p => p["index"].AsString)
             );
-            
+
             foreach (var prof in proficiencies)
             {
                 if (!validSkills.Contains(prof) && !validProficiencies.Contains(prof))
@@ -231,7 +289,7 @@ namespace Kwill.Validation
                     result.AddError($"Invalid proficiency: {prof}");
                 }
             }
-            
+
             return result;
         }
 
@@ -239,29 +297,29 @@ namespace Kwill.Validation
         /// Validates spell exists in SRD and is available to character's class
         /// </summary>
         public static ValidationResult ValidateSpell(
-            string spellId, 
+            string spellId,
             string classId,
             List<BsonDocument> srdSpells)
         {
-            var result = new ValidationResult { IsValid = true };
-            
+            var result = new ValidationResult();
+
             var spell = srdSpells.FirstOrDefault(s => s["index"].AsString == spellId);
-            
+
             if (spell == null)
             {
                 result.AddError($"Spell not found: {spellId}");
                 return result;
             }
-            
+
             var spellClasses = spell["classes"].AsBsonArray
                 .Select(c => c.AsString)
                 .ToList();
-            
+
             if (!spellClasses.Contains(classId))
             {
                 result.AddError($"Spell {spellId} not available to class {classId}");
             }
-            
+
             return result;
         }
     }
@@ -273,14 +331,15 @@ namespace Kwill.Validation
         /// <summary>
         /// Master validation function that checks entire character sheet
         /// Calls all modular validators and aggregates results
+        /// Updated for new character sheet structure
         /// </summary>
         public static ValidationResult ValidateCharacterSheet(
             BsonDocument character,
             Dictionary<string, List<BsonDocument>> srdData)
         {
-            var result = new ValidationResult { IsValid = true };
-            
-            // Structure Validation 
+            var result = new ValidationResult();
+
+            // Structure Validation
             var structureResult = StructureValidators.ValidateRequiredFields(character);
             if (!structureResult.IsValid)
             {
@@ -289,46 +348,92 @@ namespace Kwill.Validation
                 return result; // Can't continue without required fields
             }
 
-            // Character Level Validation
-            // Extract level from operation structure
-            // TODO: Implement operation parser to resolve level value
-
             // Class Validation
-            if (character.Contains("class"))
+            // New sheet uses classes.{slot}.name and classes.{slot}.level
+            if (character.Contains("classes"))
             {
-                if (character["class"].IsString)
+                if (character["classes"].IsBsonDocument)
                 {
-                    string className = character["class"].AsString;
+                    var classesDoc = character["classes"].AsBsonDocument;
 
-                    if (string.IsNullOrWhiteSpace(className))
+                    if (classesDoc.ElementCount == 0)
                     {
-                        result.AddError("Class cannot be empty");
+                        result.AddError("classes must contain at least one class");
                     }
                     else
                     {
-                        string normalizedClass = NormalizeKey(className);
-                        if (!SRDValidators.ValidateClassExists(normalizedClass, srdData["srd_classes"]))
+                        var totalLevelResult = CharacterValidators.ValidateTotalLevel(classesDoc);
+                        if (!totalLevelResult.IsValid)
                         {
-                            result.AddError($"Invalid class: {className}");
+                            result.Errors.AddRange(totalLevelResult.Errors);
+                            result.IsValid = false;
+                        }
+
+                        foreach (var classEntry in classesDoc.Elements)
+                        {
+                            if (!classEntry.Value.IsBsonDocument)
+                            {
+                                result.AddError($"Class entry '{classEntry.Name}' must be an object");
+                                continue;
+                            }
+
+                            var classDoc = classEntry.Value.AsBsonDocument;
+
+                            if (!classDoc.Contains("name") || !classDoc["name"].IsString)
+                            {
+                                result.AddError($"Class entry '{classEntry.Name}' missing valid name");
+                            }
+                            else
+                            {
+                                string className = classDoc["name"].AsString;
+
+                                if (string.IsNullOrWhiteSpace(className))
+                                {
+                                    result.AddError($"Class entry '{classEntry.Name}' has empty name");
+                                }
+                                else
+                                {
+                                    string normalizedClass = NormalizeKey(className);
+                                    if (srdData.ContainsKey("srd_classes") &&
+                                        !SRDValidators.ValidateClassExists(normalizedClass, srdData["srd_classes"]))
+                                    {
+                                        result.AddError($"Invalid class: {className}");
+                                    }
+                                }
+                            }
+
+                            if (!classDoc.Contains("level"))
+                            {
+                                result.AddError($"Class entry '{classEntry.Name}' missing level");
+                            }
+                            else if (!CharacterValidators.TryGetInt(classDoc["level"], out int classLevel))
+                            {
+                                result.AddError($"Invalid level format in class entry '{classEntry.Name}'");
+                            }
+                            else if (!CharacterValidators.ValidateClassLevel(classLevel))
+                            {
+                                result.AddError($"Invalid class level in '{classEntry.Name}': {classLevel}");
+                            }
                         }
                     }
                 }
                 else
                 {
-                    result.AddError("class must be a string");
+                    result.AddError("classes must be an object");
                 }
             }
 
-            // Ability Score Validation 
+            // Ability Score Validation
+            // New sheet stores score directly at ability.{stat}.score
             if (character.Contains("ability") && character["ability"].IsBsonDocument)
             {
                 var ability = character["ability"].AsBsonDocument;
 
                 var abilities = new[]
                 {
-        "strength", "dexterity", "constitution",
-        "intelligence", "wisdom", "charisma"
-    };
+                    "strength", "dexterity", "constitution",
+                    "intelligence", "wisdom", "charisma"
+                };
 
                 foreach (var stat in abilities)
                 {
@@ -340,28 +445,16 @@ namespace Kwill.Validation
 
                     var statDoc = ability[stat].AsBsonDocument;
 
-                    if (!statDoc.Contains("modifier") || !statDoc["modifier"].IsBsonDocument)
-                    {
-                        result.AddError($"Missing modifier block for {stat}");
-                        continue;
-                    }
-
-                    var modifierDoc = statDoc["modifier"].AsBsonDocument;
-
-                    if (!modifierDoc.Contains("score"))
+                    if (!statDoc.Contains("score"))
                     {
                         result.AddError($"Missing score for {stat}");
                         continue;
                     }
 
                     int score;
-                    var scoreValue = modifierDoc["score"];
+                    var scoreValue = statDoc["score"];
 
-                    if (scoreValue.IsInt32)
-                        score = scoreValue.AsInt32;
-                    else if (scoreValue.IsString && int.TryParse(scoreValue.AsString, out int parsed))
-                        score = parsed;
-                    else
+                    if (!CharacterValidators.TryGetInt(scoreValue, out score))
                     {
                         result.AddError($"Invalid score format for {stat}");
                         continue;
@@ -371,6 +464,32 @@ namespace Kwill.Validation
                     {
                         result.AddError($"Invalid {stat} score: {score} (must be 1-30)");
                     }
+
+                    if (!statDoc.Contains("modifier") || !statDoc["modifier"].IsBsonDocument)
+                    {
+                        result.AddError($"Missing modifier block for {stat}");
+                        continue;
+                    }
+
+                    var modifierDoc = statDoc["modifier"].AsBsonDocument;
+
+                    if (modifierDoc.Contains("object_id"))
+                    {
+                        if (!modifierDoc["object_id"].IsString ||
+                            !StructureValidators.ValidateObjectId(modifierDoc["object_id"].AsString))
+                        {
+                            result.AddError($"Invalid modifier object_id for {stat}");
+                        }
+                    }
+
+                    if (modifierDoc.Contains("operation_type"))
+                    {
+                        if (!modifierDoc["operation_type"].IsString ||
+                            !StructureValidators.ValidateOperationType(modifierDoc["operation_type"].AsString))
+                        {
+                            result.AddError($"Invalid operation_type for {stat}");
+                        }
+                    }
                 }
             }
             else
@@ -379,33 +498,45 @@ namespace Kwill.Validation
             }
 
             // Race Validation
+            // New sheet uses race.name instead of race as a plain string
             if (character.Contains("race"))
             {
-                if (character["race"].IsString)
+                if (character["race"].IsBsonDocument)
                 {
-                    string raceName = character["race"].AsString;
+                    var raceDoc = character["race"].AsBsonDocument;
 
-                    if (string.IsNullOrWhiteSpace(raceName))
+                    if (!raceDoc.Contains("name") || !raceDoc["name"].IsString)
                     {
-                        result.AddError("Race cannot be empty");
+                        result.AddError("race.name is required and must be a string");
                     }
                     else
                     {
-                        string normalizedRace = NormalizeKey(raceName);
-                        if (!SRDValidators.ValidateRaceExists(normalizedRace, srdData["srd_races"]))
+                        string raceName = raceDoc["name"].AsString;
+
+                        if (string.IsNullOrWhiteSpace(raceName))
                         {
-                            result.AddError($"Invalid race: {raceName}");
+                            result.AddError("Race cannot be empty");
+                        }
+                        else
+                        {
+                            string normalizedRace = NormalizeKey(raceName);
+                            if (srdData.ContainsKey("srd_races") &&
+                                !SRDValidators.ValidateRaceExists(normalizedRace, srdData["srd_races"]))
+                            {
+                                result.AddError($"Invalid race: {raceName}");
+                            }
                         }
                     }
                 }
                 else
                 {
-                    result.AddError("race must be a string");
+                    result.AddError("race must be an object");
                 }
             }
 
             return result;
         }
+
         private static string NormalizeKey(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
@@ -413,5 +544,5 @@ namespace Kwill.Validation
 
             return value.Trim().ToLowerInvariant().Replace(" ", "-");
         }
-    } 
+    }
 }
