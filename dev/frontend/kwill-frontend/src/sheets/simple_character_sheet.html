@@ -128,9 +128,8 @@
                         <div class="stat-box">
                             <div class="col">
                                 <span data-label style="font-size: 11px; font-weight: bold;">STR</span>
-                                <input class="ability-modifier" id="ability_strength_modifier_calculated" type="text"
-                                    autocomplete="off"
-                                    value="=ability_strength_score [0,3,4,6,8,10,12,14,16,18,20][-5,-4,-3,-2,-1,0,1,2,3,4,5]">
+                                <input class="ability-modifier" id="ability_strength_modifier_calculated"
+                                    autocomplete="off" value="=Math.floor((ability_strength_score - 10) / 2)">
                                 <input class="ability-score" id="ability_strength_score_value" type="number"
                                     autocomplete="off">
                             </div>
@@ -140,8 +139,7 @@
                             <div class="col">
                                 <span data-label style="font-size: 11px; font-weight: bold;">DEX</span>
                                 <input class="ability-modifier" id="ability_dexterity_modifier_calculated" type="text"
-                                    autocomplete="off"
-                                    value="=ability_dexterity_score [0,3,4,6,8,10,12,14,16,18,20][-5,-4,-3,-2,-1,0,1,2,3,4,5]">
+                                    autocomplete="off" value="=Math.floor((ability_dexterity_score - 10) / 2)">
                                 <input class="ability-score" id="ability_dexterity_score_value" type="number"
                                     autocomplete="off">
                             </div>
@@ -152,7 +150,7 @@
                                 <span data-label style="font-size: 11px; font-weight: bold;">CON</span>
                                 <input class="ability-modifier" id="ability_constitution_modifier_calculated"
                                     type="text" autocomplete="off"
-                                    value="=ability_constitution_score [0,3,4,6,8,10,12,14,16,18,20][-5,-4,-3,-2,-1,0,1,2,3,4,5]">
+                                    value="=Math.floor((ability_constitution_score - 10) / 2)">
                                 <input class="ability-score" id="ability_constitution_score_value" type="number"
                                     autocomplete="off">
                             </div>
@@ -163,7 +161,7 @@
                                 <span data-label style="font-size: 11px; font-weight: bold;">INT</span>
                                 <input class="ability-modifier" id="ability_intelligence_modifier_calculated"
                                     type="text" autocomplete="off"
-                                    value="=ability_intelligence_score [0,3,4,6,8,10,12,14,16,18,20][-5,-4,-3,-2,-1,0,1,2,3,4,5]">
+                                    value="=Math.floor((ability_intelligence_score - 10) / 2)">
                                 <input class="ability-score" id="ability_intelligence_score_value" type="number"
                                     autocomplete="off">
                             </div>
@@ -173,8 +171,7 @@
                             <div class="col">
                                 <span data-label style="font-size: 11px; font-weight: bold;">WIS</span>
                                 <input class="ability-modifier" id="ability_wisdom_modifier_calculated" type="text"
-                                    autocomplete="off"
-                                    value="=ability_wisdom_score [0,3,4,6,8,10,12,14,16,18,20][-5,-4,-3,-2,-1,0,1,2,3,4,5]">
+                                    autocomplete="off" value="=Math.floor((ability_wisdom_score - 10) / 2)">
                                 <input class="ability-score" id="ability_wisdom_score_value" type="number"
                                     autocomplete="off">
                             </div>
@@ -184,8 +181,7 @@
                             <div class="col">
                                 <span data-label style="font-size: 11px; font-weight: bold;">CHA</span>
                                 <input class="ability-modifier" id="ability_charisma_modifier_calculated" type="text"
-                                    autocomplete="off"
-                                    value="=ability_charisma_score [0,3,4,6,8,10,12,14,16,18,20][-5,-4,-3,-2,-1,0,1,2,3,4,5]">
+                                    autocomplete="off" value="=Math.floor((ability_charisma_score - 10) / 2)">
                                 <input class="ability-score" id="ability_charisma_score_value" type="number"
                                     autocomplete="off">
                             </div>
