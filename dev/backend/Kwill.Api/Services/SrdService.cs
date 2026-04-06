@@ -24,7 +24,9 @@ namespace Kwill.Api.Services
         public async Task<BsonDocument?> GetByKeyAsync(string key)
         {
             var filter = Builders<BsonDocument>.Filter.Eq("Key", key);
-            return await _db.SrdData.Find(filter).FirstOrDefaultAsync();
+            return await _db.SrdData
+                .Find(filter)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<List<object>> GetCollectionsAsync()
