@@ -23,8 +23,8 @@
                 <div class="mt-4 d-flex flex-column pr-4">
                     <v-btn icon="mdi-upload" color="primary" v-tooltip="'Import character'"
                         @click="showImportDialog = true" class="mb-4"></v-btn>
-                    <v-btn icon="mdi-export" color="primary" v-tooltip="'Export character'"
-                        @click="exportCurrentCharacter = true" class="mb-4"></v-btn>
+                    <v-btn icon="mdi-export" color="primary" v-tooltip="'Export character'" @click="exportCharacter"
+                        class="mb-4"></v-btn>
                     <v-btn icon="mdi-download" color="primary" v-tooltip="'Download local sheet'"
                         @click="showDownloadDialog = true"></v-btn>
                 </div>
@@ -39,11 +39,8 @@
             <v-card-text>
                 <div class="d-flex flex-column gap-4">
                     <!-- Drag and Drop Area -->
-                    <div 
-                        @drop.prevent="handleFileDrop"
-                        @dragover.prevent="isDragging = true"
-                        @dragleave.prevent="isDragging = false"
-                        :style="{
+                    <div @drop.prevent="handleFileDrop" @dragover.prevent="isDragging = true"
+                        @dragleave.prevent="isDragging = false" :style="{
                             border: '2px dashed #ccc',
                             borderRadius: '8px',
                             padding: '32px',
@@ -54,21 +51,13 @@
                         }">
                         <p class="mb-2">Drag and drop a JSON file here</p>
                         <p class="text-grey">or</p>
-                        <v-btn
-                            color="primary"
-                            size="small"
-                            @click.stop="fileInput.click()">
+                        <v-btn color="primary" size="small" @click.stop="fileInput.click()">
                             Browse Local Files
                         </v-btn>
-                        <input
-                            ref="fileInput"
-                            type="file"
-                            accept=".json"
-                            style="display: none;"
-                            @change="handleFileSelect"
-                        />
+                        <input ref="fileInput" type="file" accept=".json" style="display: none;"
+                            @change="handleFileSelect" />
                     </div>
-                    
+
                     <!-- Selected File Display -->
                     <div v-if="selectedFile" class="pa-3" style="background-color: #f5f5f5; border-radius: 8px;">
                         <p class="mb-0"><strong>Selected file:</strong> {{ selectedFile.name }}</p>
@@ -110,7 +99,7 @@
 import JSZip from 'jszip';
 import { simpleSheetHTML, smartSheetHTML } from '@/sheets';
 import characterSheet from '../layouts/Sheet.vue';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import api from '../services/api';
 
 const userID = ref(1);
@@ -121,7 +110,6 @@ const includeCharData = ref(false);
 const showDownloadDialog = ref(false);
 const showImportDialog = ref(false);
 const selectedSheetType = ref('simple');
-const exportCurrentCharacter = ref(false);
 const isDragging = ref(false);
 const selectedFile = ref(null);
 const fileInput = ref();
@@ -179,7 +167,7 @@ function handleFileSelect(event) {
 
 async function importFile() {
     if (!selectedFile.value) return;
-    
+
     try {
         const text = await new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -187,12 +175,12 @@ async function importFile() {
             reader.onerror = () => reject(new Error('Failed to read file'));
             reader.readAsText(selectedFile.value);
         });
-        
+
         console.log('File text:', text);
         console.log('Parsed:', JSON.parse(text));
-        
+
         sheetRef.value.populateSheet(text);
-        
+
         closeImportDialog();
     } catch (error) {
         console.error('Failed to import file:', error);
@@ -208,57 +196,80 @@ function closeImportDialog() {
 
 async function downloadSheet() {
     const zip = new JSZip();
-    
+
     // Add the appropriate sheet HTML
     if (selectedSheetType.value === 'simple') {
         zip.file('KwillSimpleCharacterSheet.html', simpleSheetHTML);
     } else if (selectedSheetType.value === 'smart') {
         zip.file('KwillSmartCharacterSheet.html', smartSheetHTML);
     }
-    
+
     // Add assets folder and its contents
     const assetsFolder = zip.folder('assets');
-    
+
     // Import all assets
     const kiwillSvg = await import('@/sheets/assets/kwill.svg?raw');
     const scripts = await import('@/sheets/assets/scripts.js?raw');
     const stylesCss = await import('@/sheets/assets/styles.css?raw');
-    
+
     assetsFolder.file('kwill.svg', kiwillSvg.default);
     assetsFolder.file('scripts.js', scripts.default);
     assetsFolder.file('styles.css', stylesCss.default);
 
     // Add characters folder
     const charactersFolder = zip.folder('characters');
-    
+
     // Add character data ONLY if checkbox is selected
     if (includeCharData.value) {
+        const characterData = sheetRef.value.getCharacterData();
         charactersFolder.file(
-            `character-${characterID.value}.json`, 
-            JSON.stringify(charData.value, null, 2)
+            `${characterData.name || 'character'}.json`,
+            JSON.stringify(characterData, null, 2)
         );
     }
-    
+
     // Generate and download zip
     const blob = await zip.generateAsync({ type: 'blob' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `Kwill${selectedSheetType.value.charAt(0).toUpperCase() + selectedSheetType.value.slice(1)}CharacterSheet.zip`;    
+    link.download = `Kwill${selectedSheetType.value.charAt(0).toUpperCase() + selectedSheetType.value.slice(1)}CharacterSheet.zip`;
     document.body.appendChild(link);
     link.click();
-    
+
     // Clean up
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-    
+
     // Close dialog
     showDownloadDialog.value = false;
 }
 
+const sheetCharacter = computed(() => {
+    return sheetRef.value?.character;
+});
+
+// Exports the current state of the sheet to json
 function exportCharacter() {
-    // Add export logic here
-    console.log('Exporting character:', charData.value);
+    const characterToExport = sheetRef.value.getCharacterData();
+
+    if (!characterToExport || !characterToExport.name) {
+        alert('No character data to export');
+        return;
+    }
+
+    const jsonString = JSON.stringify(characterToExport, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${characterToExport.name || 'character'}.json`;
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
 }
 
 </script>

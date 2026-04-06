@@ -549,8 +549,13 @@ function populateSheet(data) {
     copyJsonToCharacter(character, data);
 }
 
+function getCharacterData() {
+    return JSON.parse(JSON.stringify(character));
+}
+
 defineExpose({
-    populateSheet
+    populateSheet,
+    getCharacterData
 });
 
 </script>

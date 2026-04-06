@@ -1,12 +1,6 @@
 {
   "object_id": "character",
   "name": "StandardFull",
-  "classes": {
-    "firstclass": {
-      "name": "Class",
-      "level": "1"
-    }
-  },
   "race": {
     "object_id": "race",
     "name": "Race"
@@ -21,207 +15,27 @@
   "ability": {
     "object_id": "ability",
     "strength": {
-      "modifier": {
-        "object_id": "operation",
-        "operation_type": "conditional",
-        "condition": "ability_strength_score",
-        "thresholds": [
-          0,
-          3,
-          4,
-          6,
-          8,
-          10,
-          12,
-          14,
-          16,
-          18,
-          20
-        ],
-        "results": [
-          -5,
-          -4,
-          -3,
-          -2,
-          -1,
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
-      },
+      "modifier": "",
       "score": "10"
     },
     "dexterity": {
-      "modifier": {
-        "object_id": "operation",
-        "operation_type": "conditional",
-        "condition": "ability_dexterity_score",
-        "thresholds": [
-          0,
-          3,
-          4,
-          6,
-          8,
-          10,
-          12,
-          14,
-          16,
-          18,
-          20
-        ],
-        "results": [
-          -5,
-          -4,
-          -3,
-          -2,
-          -1,
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
-      },
+      "modifier": "",
       "score": "10"
     },
     "constitution": {
-      "modifier": {
-        "object_id": "operation",
-        "operation_type": "conditional",
-        "condition": "ability_constitution_score",
-        "thresholds": [
-          0,
-          3,
-          4,
-          6,
-          8,
-          10,
-          12,
-          14,
-          16,
-          18,
-          20
-        ],
-        "results": [
-          -5,
-          -4,
-          -3,
-          -2,
-          -1,
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
-      },
+      "modifier": "",
       "score": "10"
     },
     "intelligence": {
-      "modifier": {
-        "object_id": "operation",
-        "operation_type": "conditional",
-        "condition": "ability_intelligence_score",
-        "thresholds": [
-          0,
-          3,
-          4,
-          6,
-          8,
-          10,
-          12,
-          14,
-          16,
-          18,
-          20
-        ],
-        "results": [
-          -5,
-          -4,
-          -3,
-          -2,
-          -1,
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
-      },
+      "modifier": "",
       "score": "10"
     },
     "wisdom": {
-      "modifier": {
-        "object_id": "operation",
-        "operation_type": "conditional",
-        "condition": "ability_wisdom_score",
-        "thresholds": [
-          0,
-          3,
-          4,
-          6,
-          8,
-          10,
-          12,
-          14,
-          16,
-          18,
-          20
-        ],
-        "results": [
-          -5,
-          -4,
-          -3,
-          -2,
-          -1,
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
-      },
+      "modifier": "",
       "score": "10"
     },
     "charisma": {
-      "modifier": {
-        "object_id": "operation",
-        "operation_type": "conditional",
-        "condition": "ability_charisma_score",
-        "thresholds": [
-          0,
-          3,
-          4,
-          6,
-          8,
-          10,
-          12,
-          14,
-          16,
-          18,
-          20
-        ],
-        "results": [
-          -5,
-          -4,
-          -3,
-          -2,
-          -1,
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
-      },
+      "modifier": "",
       "score": "10"
     }
   },
@@ -229,105 +43,105 @@
     "object_id": "saves",
     "strength": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "dexterity": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "constitution": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "intelligence": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "wisdom": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "charisma": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     }
   },
   "skills": {
     "object_id": "skills",
     "athletics": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "acrobatics": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "sleightofhand": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "stealth": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "arcana": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "history": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "investigation": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "nature": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "religion": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "animalhandling": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "insight": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "medicine": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "perception": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "survival": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "deception": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "intimidation": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "performance": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     },
     "persuasion": {
       "proficiency": true,
-      "modifier": "1"
+      "modifier": 2
     }
   },
-  "ac": "1",
+  "ac": 10,
   "initiative": "1",
   "speed": "1",
   "hitpoints": {
@@ -340,7 +154,7 @@
     "current": "1"
   },
   "death": {
-    "object_id": "death",
+    "object_id": "",
     "saves": {
       "success1": true,
       "success2": true,
@@ -350,7 +164,7 @@
       "failure3": true
     }
   },
-  "attacks": "AT and SPC",
+  "attacks": "Is it work!?!?!",
   "coins": {
     "copper": "1",
     "silver": "1",
@@ -361,17 +175,18 @@
   "equipment": {
     "text": "Equip"
   },
+  "classes": {
+    "firstclass": {
+      "name": "Class",
+      "level": "1"
+    }
+  },
   "text": {
     "personality": "Person",
     "ideals": "Ideals",
     "bonds": "Bonds",
     "flaws": "Flaws",
     "features": "Features"
-  },
-  "name2": {
-    "object_id": "operation",
-    "operation_type": "mirror",
-    "condition": "name"
   },
   "age": "age",
   "eyes": "eyes",
@@ -564,5 +379,4 @@
   },
   "userid": "",
   "characterid": ""
-
 }
