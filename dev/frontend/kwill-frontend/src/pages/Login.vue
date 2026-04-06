@@ -23,7 +23,7 @@
                     </v-col>    
                     <v-row class="ma-1" justify="end">
                         <!-- Create Account Button -->
-                        <v-btn variant="text" class="my-4 text-white text-button">Create account</v-btn>
+                        <v-btn variant="text" class="my-4 text-white text-button" to="/createaccount">Create account</v-btn>
                         <!-- Login Button-->
                         <v-btn large @click="login" color="secondary" class="ma-4 text-button">Sign in</v-btn>
                     </v-row>

@@ -7,7 +7,7 @@
         <v-card-item class="">
             <v-col>
               <v-btn color="secondary" class="mr-2" >Get Started</v-btn>
-              <v-btn color="secondary" >Sign Up</v-btn>
+              <v-btn color="secondary" to="/createaccount" >Sign Up</v-btn>
             </v-col>
             <v-col>
               <v-btn color="secondary" class="mr-2" variant="outlined" >Why Kwill?</v-btn>
