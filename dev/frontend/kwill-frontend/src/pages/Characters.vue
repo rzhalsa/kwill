@@ -8,6 +8,16 @@
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
+                    <v-list v-for="(character, index) in characterList">
+                        <v-list-item
+                            v-if="loaded"
+                            lines="two"
+                            :key="index"
+                            :title="character.name"
+                            :value="character"
+                            @click="sheetRef.populateSheet(character);"
+                        ></v-list-item>
+                    </v-list>
                 </v-card-text>
             </v-card>
         </v-col>
@@ -102,8 +112,8 @@ import characterSheet from '../layouts/Sheet.vue';
 import { ref, onMounted, computed } from 'vue';
 import api from '../services/api';
 
-const userID = ref(1);
-const characterID = ref(1);
+const userID = ref("user001");
+const characterID = ref("character004");
 const sheetRef = ref();
 const charData = ref();
 const includeCharData = ref(false);
@@ -113,10 +123,8 @@ const selectedSheetType = ref('simple');
 const isDragging = ref(false);
 const selectedFile = ref(null);
 const fileInput = ref();
-
-function getCharData() {
-
-}
+const loaded = ref(null);
+const characterList=ref([]);
 
 function sendCharData() {
     sheetRef.value.populateSheet(charData.value);
@@ -125,10 +133,29 @@ function sendCharData() {
 
 async function fetchCharData() {
     try {
-        const response = await api.get(`/api/character/${userID.value}/${characterID.value}`)
+        const response = await api.get(`/api/character/${characterID.value}`)
         const data = response.data;
         console.log(data);
         charData.value = data;
+        loaded.value = true;
+        console.log('Character data retrieved:', charData.value);
+        sendCharData();
+    } catch (error) {
+        console.error('Failed to fetch character data:', error);
+    }
+}
+
+async function fetchCharName() {
+    try {
+        const response = await api.get(`/api/character/user/${userID.value}`)
+        const data = response.data;
+        console.log(data);
+        charData.value = data;
+        loaded.value = true;
+        for (const character of charData.value)
+        {
+            characterList.value.push(character);
+        }
         console.log('Character data retrieved:', charData.value);
         sendCharData();
     } catch (error) {
@@ -138,6 +165,7 @@ async function fetchCharData() {
 
 onMounted(() => {
     fetchCharData();
+    fetchCharName();
 });
 
 function handleFileDrop(event) {
@@ -222,10 +250,10 @@ async function downloadSheet() {
     // Add character data ONLY if checkbox is selected
     if (includeCharData.value) {
         const characterData = sheetRef.value.getCharacterData();
-charactersFolder.file(
-    `${characterData.name || 'character'}.json`, 
-    JSON.stringify(characterData, null, 2)
-);
+    charactersFolder.file(
+        `${characterData.name || 'character'}.json`, 
+        JSON.stringify(characterData, null, 2)
+    );
     }
 
     // Generate and download zip

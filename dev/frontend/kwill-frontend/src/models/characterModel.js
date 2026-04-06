@@ -1,16 +1,10 @@
-<<<<<<< HEAD
-import {reactive} from 'vue';
-import api from '../services/api';
-
-export function createCharacter(){
-=======
 import { reactive } from 'vue';
+import api from '../services/api';
 /**
  * Creates a JSON character model
  * @returns a created character model
  */
 export function createCharacter() {
->>>>>>> main
     return reactive({
         object_id: "character",
         name: "",
@@ -226,4 +220,24 @@ export function copyJsonToCharacter(character, jsonData) {
     }
     
     copyValues(character, sourceData);
+}
+export async function postCharacter(characterData, userId){
+    try {
+        const payload = {...characterData, user_id: userId};
+         const response = await api.post("/api/character", payload);
+        console.log("created character successfully: ",response.data );
+        return response.data;
+    } catch (error) {
+        console.error("Failed to post API data: ", error)
+    }
+}
+export async function updateCharacter(characterId, characterData, userId){
+    try {
+        const payload = {...characterData, user_id: userId}
+        const response = await api.put(`/api/character/${characterId}`, payload);
+        console.log("created character successfully: ",response.data );
+        return response.data;
+    } catch (error) {
+        console.error("Failed to post API data: ", error)
+    }
 }

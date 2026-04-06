@@ -11,20 +11,12 @@
                 <div class="page-top-col">
                     <div>
                         <div style="display: flex; flex-direction: row; align-items: center; gap: 0px;">
-<<<<<<< HEAD
-                            <input class="page1-top-input-value" v-model="character.classes.firstclass.name" placeholder="class" autocomplete="off"
-                                style="width: 70px; margin-top: 30px;">
-                            <input class="character-level" v-model="character.classes.firstclass.level" placeholder="1" autocomplete="off"
-                                style="position: absolute; width: 33px; height: 25px; margin-left: 75px; margin-top: 30px;" max="20" min="0"
-                                type="number">
-=======
                             <input class="page1-top-input-value" v-model="character.classes.firstclass.name"
                                 placeholder="class" autocomplete="off" style="width: 70px; margin-top: 30px;">
                             <input class="character-level" v-model="character.classes.firstclass.level" placeholder="1"
                                 autocomplete="off"
                                 style="position: absolute; width: 33px; height: 25px; margin-left: 75px; margin-top: 30px;"
                                 max="20" min="0" type="number">
->>>>>>> main
                         </div>
                     </div>
                     <div>
@@ -514,12 +506,6 @@
                 mod: modifier
             })
         }
-        //populates list
-        list.push({
-            name: key,
-            label: label,
-            mod: modifier
-        })
         return list;
     });
 
@@ -591,14 +577,5 @@ watch(character,(newVal)=>{
         debounceUpdate(newVal);
     }
 })
-
-// proficiency boncus calculation
-const proficiencyBonus = computed(() => {
-    if(character.classes.firstclass.level>=17){ return 6;}
-    if(character.classes.firstclass.level>=13){ return 5;}
-    if(character.classes.firstclass.level>=9){ return 4;}
-    if(character.classes.firstclass.level>=5){ return 3;}
-    return 2;
-});
 </script>
 <style src="../character.css" scoped></style>

@@ -12,7 +12,6 @@
             <v-col>
               <v-btn color="secondary" class="mr-2" variant="outlined" >Why Kwill?</v-btn>
             </v-col>
-            
         </v-card-item>
       </v-card>
     </v-col>
@@ -35,7 +34,7 @@
             <v-col cols="2">
               <router-link to="/characters" style="text-decoration: none; color: inherit;">
                 <v-card>
-                  <v-card-title class="text-center">Guides</v-card-title>
+                  <v-card-title class="text-center">Community</v-card-title>
                   <v-card-item class="justify-center"><img src="../assets/community.png" style="height:100px; width: 100px;" /></v-card-item>
                 </v-card>
               </router-link>
@@ -47,7 +46,32 @@
               </v-card>
             </v-col>
           </v-row>
-          
+          <v-row class="justify-center">
+            <v-col cols="2">
+              <router-link to="/" style="text-decoration: none; color: inherit;">
+                <v-card>
+                  <v-card-title class="text-center">Guides</v-card-title>
+                  <v-card-item class="justify-center"><img src="../assets/community.png" style="height:100px; width: 100px;" /></v-card-item>
+                </v-card>
+              </router-link>
+            </v-col>
+            <v-col cols="2">
+              <router-link to="/" style="text-decoration: none; color: inherit;">
+                <v-card>
+                  <v-card-title class="text-center">FAQs</v-card-title>
+                  <v-card-item class="justify-center"><img src="../assets/community.png" style="height:100px; width: 100px;" /></v-card-item>
+                </v-card>
+              </router-link>
+            </v-col>
+            <v-col cols="2">
+              <router-link to="/" style="text-decoration: none; color: inherit;">
+                <v-card>
+                  <v-card-title class="text-center">Guides</v-card-title>
+                  <v-card-item class="justify-center"><img src="../assets/community.png" style="height:100px; width: 100px;" /></v-card-item>
+                </v-card>
+              </router-link>
+            </v-col>
+          </v-row>
         </v-card-item>
       </v-card>
     </v-col>
