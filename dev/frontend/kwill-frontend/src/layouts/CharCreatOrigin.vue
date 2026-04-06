@@ -6,7 +6,7 @@
             <v-col>  
                 <!-- Race dropdown -->
                 <v-select
-                    v-model="store.character_state.race"
+                    v-model="store.character_state.race.name"
                     :items="races"
                     label="Race"
                     class="ml-6 mb-6 mr-6"
@@ -20,7 +20,7 @@
                 ></v-select>
                 <!-- Background dropdown -->
                 <v-select
-                    v-model="store.character_state.background"
+                    v-model="store.character_state.background.name"
                     :items="backgrounds"
                     label="Background"
                     class="ma-6"

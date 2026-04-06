@@ -12,11 +12,21 @@ export const useCharacterCreationStore = defineStore('character_creation', {
         character_state: reactive({
             'name': null,
             'player': null,
-            'class': null,
-            'level': null,
-            'race': null,
+            'race': {
+                'object_id': 'race',
+                'name': '',
+            },
+            'classes': {
+                'firstclass': {
+                    'name': "",
+                    'level': ""
+                }
+            },
             'alignment': null,
-            'background': null,
+            'background': { 
+                'object_id': "background",
+                'name': "" 
+            },
             'ability': {
                 'strength': {
                     'modifier': {
@@ -135,7 +145,6 @@ export const useCharacterCreationStore = defineStore('character_creation', {
                 }
             },
             'selected_skills': [],
-            'features': [],
             'feat_amt': 0,
             'equipment': [],
             'gear_amt': 0,
@@ -144,6 +153,7 @@ export const useCharacterCreationStore = defineStore('character_creation', {
             'text.ideals': null,
             'text.bonds': null,
             'text.flaws': null,
+            'text.features': [],
             'backstory': null,
             'appearance': null
         }),
@@ -193,10 +203,17 @@ export const useCharacterCreationStore = defineStore('character_creation', {
                     case 'points_remaining':
                         this.character_state[key] = 27
                         break
+                    case 'background':
+                        this.character_state[key] = { 
+                            'object_id': "background",
+                            'name': "" 
+                        }
+                        break
                     case 'selections':
                     case 'selected_skills':
                     case 'features':
                     case 'equipment':
+                    case 'text.features':
                         this.character_state[key] = []
                         break
                     case 'ability_scores':
@@ -235,6 +252,20 @@ export const useCharacterCreationStore = defineStore('character_creation', {
                                     }
                                 },
                             }
+                        break
+                    case 'classes': 
+                        this.character_state[key] = {
+                            'firstclass': {
+                                'name': "",
+                                'level': ""
+                            }
+                        }
+                        break
+                    case 'race': 
+                        this.character_state[key] = {
+                            'object_id': 'race',
+                            'name': '',
+                        }
                         break
                     case "skills":
                         this.character_state[key] = {

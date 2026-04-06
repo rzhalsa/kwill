@@ -78,9 +78,9 @@
      * Assigns values to amt and options to reflect the player's chosen class
      */
     function setSkillData() {
-        if(store.character_state.class in skill_data) {
-            amt.value = skill_data[store.character_state.class].amt
-            options.value = skill_data[store.character_state.class].options
+        if(store.character_state.classes.firstclass.name in skill_data) {
+            amt.value = skill_data[store.character_state.classes.firstclass.name].amt
+            options.value = skill_data[store.character_state.classes.firstclass.name].options
         }
     }
 

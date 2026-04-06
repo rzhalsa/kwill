@@ -12,14 +12,14 @@
                 </v-row>
                 <!-- Class dropdown -->
                 <v-select
-                    v-model="store.character_state.class"
+                    v-model="store.character_state.classes.firstclass.name"
                     :items="classes"
                     label="Class"
                     class="ml-4 mr-12"
                 ></v-select>
                 <!-- Class level -->
                  <v-select
-                    v-model="store.character_state.level"
+                    v-model="store.character_state.classes.firstclass.level"
                     :items="levels"
                     label="Level"
                     class="ml-4 mr-12"            

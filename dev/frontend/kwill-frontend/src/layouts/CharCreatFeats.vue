@@ -12,7 +12,7 @@
                     <v-select
                     v-for="(item, index) in store.character_state.feat_amt"
                     :key="index"
-                    v-model="store.character_state.features[index]"
+                    v-model="store.character_state['text.features'][index]"
                     :items="feats"
                     label="Feats"
                     class="ma-4"

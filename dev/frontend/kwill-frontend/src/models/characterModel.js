@@ -7,92 +7,63 @@ export function createCharacter(){
     return reactive({
         object_id: "character",
         name: "",
-        race: {object_id: "race", name: ""},
+        race: { object_id: "race", name: "" },
         alignment: "",
-        background: {object_id: "background",name: ""},
+        background: { object_id: "background", name: "" },
         player: "",
         exp: "",
         ability: {
             object_id: "ability",
             strength: {
-                modifier: {
-                    object_id: "operation",
-                    operation_type: "conditional",
-                    condition: "ability_strength_score",
-                    score: ""
-                }
+                modifier: "",
+                score: ""
             },
             dexterity: {
-                modifier: {
-                    object_id: "operation",
-                    operation_type: "conditional",
-                    condition: "ability_dexterity_score",
-                    score: ""
-                }
+                modifier: "",
+                score: ""
             },
             constitution: {
-                modifier: {
-                    object_id: "operation",
-                    operation_type: "conditional",
-                    condition: "ability_consitution_score",
-                    score: ""
-                }
+                modifier: "",
+                score: ""
             },
             intelligence: {
-                modifier: {
-                    object_id: "operation",
-                    operation_type: "conditional",
-                    condition: "ability_intelligence_score",
-                    score: ""
-                }
+                modifier: "",
+                score: ""
             },
             wisdom: {
-                modifier: {
-                    object_id: "operation",
-                    operation_type: "conditional",
-                    condition: "ability_wisdom_score",
-                    score: ""
-                }
+                modifier: "",
+                score: ""
             },
             charisma: {
-                modifier: {
-                    object_id: "operation",
-                    operation_type: "conditional",
-                    condition: "ability_charisma_score",
-                    score: ""
-                }
+                modifier: "",
+                score: ""
             },
         },
         saves: {
             object_id: "saves",
             strength: {
-            proficiency: false,
-            modifier: ""
+                proficiency: false,
+                modifier: ""
             },
-            object_id: "saves",
             dexterity: {
-            proficiency: false,
-            modifier: ""
+                proficiency: false,
+                modifier: ""
             },
-            object_id: "saves",
             constitution: {
-            proficiency: false,
-            modifier: ""
+                proficiency: false,
+                modifier: ""
             },
-            object_id: "saves",
             intelligence: {
-            proficiency: false,
-            modifier: ""
+                proficiency: false,
+                modifier: ""
             },
-            object_id: "saves",
             wisdom: {
-            proficiency: false,
-            modifier: ""
+                proficiency: false,
+                modifier: ""
             },
-            object_id: "saves",
             charisma: {
-            proficiency: false,
-            modifier: ""
+                proficiency: false,
+                modifier: ""
             }
         },
         skills: {
@@ -115,59 +86,70 @@ export function createCharacter(){
             intimidation: { proficiency: false, modifier: "" },
             performance: { proficiency: false, modifier: "" },
             persuasion: { proficiency: false, modifier: "" }
-            },
-            ac: "",
-            initiative: "",
-            speed: "",
-            hitpoints: { current: "", maximum: "", temporary: "" },
-            hitDice: { total: "", current: "" },
-            death: {
-                object_id: "",
-                saves: { success1: false, success2: false, success3: false, failure1: false, failure2: false, failure3: false }
-            },
-            attacks: "",
-            coins: { copper: "", silver: "", electrum: "", gold: "" },
-            equipment: "",
-            text: {
-                personality: "",
-                ideals: "",
-                bonds: "",
-                flaws: "",
-                features: ""
-            },
-            age: "",
-            eyes: "",
-            height: "",
-            skin: "",
-            weight: "",
-            hair: "",
-            appearance: "",
-            backstory: "",
-            alliesAndOrganizations: "",
-            features: { additional: "" },
-            treasure: "",
-            spellcasting: { class: "" },
-            spell: { castingAbility: "", saveDc: "", attackBonus: "" },
-            spells: {
-                cantrip1: "",
-                cantrip2: "",
-                cantrip3: "",
-                cantrip4: "",
-                cantrip5: "",
-                cantrip6: "",
-                cantrip7: "",
-                cantrip8: "",
-                cantrip9: "",
-                cantrip10: "",
-                cantrip11: "",
-                cantrip12: "",
-                "1st": { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "" },
-                "2nd": { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "" }
-                // … continue 3rd–9th as needed
-            },
-            level: "",
-            class: { object_id: "class", name: "", level: "" }
-        });
+        },
+        ac: "",
+        initiative: "",
+        speed: "",
+        hitpoints: { current: "", maximum: "", temporary: "" },
+        hitDice: { total: "", current: "" },
+        death: {
+            object_id: "",
+            saves: { success1: false, success2: false, success3: false, failure1: false, failure2: false, failure3: false }
+        },
+        attacks: "",
+        coins: { copper: "", silver: "", electrum: "", gold: "", platinum: "" },
+        equipment: { text: "" },
+        classes: {
+            firstclass: {
+                name: "",
+                level: ""
+            }
+        },
+
+        text: {
+            personality: "",
+            ideals: "",
+            bonds: "",
+            flaws: "",
+            features: ""
+        },
+        age: "",
+        eyes: "",
+        height: "",
+        skin: "",
+        weight: "",
+        hair: "",
+        appearance: "",
+        backstory: "",
+        alliesAndOrganizations: "",
+        features: { additional: "" },
+        treasure: "",
+        spellcasting: { class: "" },
+        spell: { castingAbility: "", saveDc: "", attackBonus: "" },
+        spells: {
+            cantrip1: "",
+            cantrip2: "",
+            cantrip3: "",
+            cantrip4: "",
+            cantrip5: "",
+            cantrip6: "",
+            cantrip7: "",
+            cantrip8: "",
+            cantrip9: "",
+            cantrip10: "",
+            cantrip11: "",
+            cantrip12: "",
+            first: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "" },
+            second: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "" },
+            third: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, prepared10: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "", spell10: "" },
+            fourth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, prepared10: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "", spell10: "" },
+            fifth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
+            sixth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
+            seventh: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
+            eighth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
+            ninth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" }
+        },
+    });
 }
 
 /**
