@@ -43,7 +43,6 @@ namespace Kwill.Api
         {
             var result = character.DeepClone().AsBsonDocument;
 
-            // Remove any legacy calculated fields from the returned copy
             result.Remove("calculated");
             result.Remove("calculated_weapons");
 
