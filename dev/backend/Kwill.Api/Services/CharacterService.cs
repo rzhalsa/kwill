@@ -24,12 +24,7 @@ namespace Kwill.Api.Services
 
             var srdData = await LoadSrdDataAsync();
 
-            var calculated = CharacterSheetCalculator.Calculate(doc, srdData);
-
-            var response = doc.DeepClone().AsBsonDocument;
-            response["calculated"] = calculated;
-
-            return response;
+            return CharacterSheetCalculator.Calculate(doc, srdData);
         }
 
         //Gets all characters from given UserId
@@ -46,12 +41,7 @@ namespace Kwill.Api.Services
 
             foreach (var doc in docs)
             {
-                var calculated = CharacterSheetCalculator.Calculate(doc, srdData);
-
-                var response = doc.DeepClone().AsBsonDocument;
-                response["calculated"] = calculated;
-
-                results.Add(response);
+                results.Add(CharacterSheetCalculator.Calculate(doc, srdData));
             }
 
             return results;
@@ -159,6 +149,10 @@ namespace Kwill.Api.Services
             var spellsFilter = Builders<BsonDocument>.Filter.Eq("Key", "spells");
             var spellDocuments = await _db.SrdData.Find(spellsFilter).ToListAsync();
             srdData["srd_spells"] = spellDocuments.Select(d => d["Data"].AsBsonDocument).ToList();
+
+            var equipmentFilter = Builders<BsonDocument>.Filter.Eq("Key", "equipment");
+            var equipmentDocuments = await _db.SrdData.Find(equipmentFilter).ToListAsync();
+            srdData["srd_equipment"] = equipmentDocuments.Select(d => d["Data"].AsBsonDocument).ToList();
 
             return srdData;
         }
