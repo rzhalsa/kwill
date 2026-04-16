@@ -446,14 +446,16 @@
     </div>
 </template>
 <script setup>
-    import {ref, reactive, readonly, computed, watch} from 'vue';
+    import {ref, computed, watch, nextTick} from 'vue';
     import { createCharacter, updateCharacter } from '../models/characterModel';
-    import { debounce } from 'lodash'
+    import { debounce, flatMap } from 'lodash'
     const character = createCharacter();
     const amourBonus = ref(0);
     const changeCount = ref(0);
-    const characterId= ref(1);
-    const userId = ref(1);
+    const userId = ref("user001");
+    const characterId = ref("character004");
+    const suppressSave = ref(false);
+
      // ability mapping
     const skillAbilityMap = {
         acrobatics: 'dexterity',
@@ -548,11 +550,15 @@ const proficiencyBonus = computed(() => {
 import { copyJsonToCharacter } from '../models/characterModel';
 
 function populateSheet(data) {
+    suppressSave.value = true;
     if (typeof data === 'string') {
         data = JSON.parse(data);
     }
-    
     copyJsonToCharacter(character, data);
+    console.log(character);
+    nextTick(()=>{
+        suppressSave.value = false;
+    });
 }
 
 function getCharacterData() {
@@ -566,14 +572,16 @@ defineExpose({
 
 //Check that prevents API spams with a half second interval incase someone spams three changes quickly
 const debounceUpdate = debounce((newVal)=>{
-    updateCharacter(characterId,structuredClone(newVal),userId);
+    const plainCharacter = JSON.parse(JSON.stringify(newVal));
+    updateCharacter(characterId.value ,plainCharacter ,userId.value);
     changeCount.value=0;
 }, 500);
 
 //watches character model and waits for three changes to be made before calling debounce
 watch(character,(newVal)=>{
+    if(suppressSave.value) return;
     changeCount.value++;
-    if(changeCount >= 3){
+    if(changeCount.value >= 3){
         debounceUpdate(newVal);
     }
 })
