@@ -36,10 +36,11 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, onBeforeUnmount } from 'vue'
+    import { ref, onMounted, onBeforeUnmount, defineExpose } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import axios from 'axios'
     import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'
+    defineExpose({ canSwap })
     const store = useCharacterCreationStore()                                  // pinia store for character creation
     const races = ref([])                                                      // array of all races
     const alignments = ref([                                                   // array of all alignments
@@ -59,6 +60,28 @@
         {text: "Choose your character's background"},
     ]      
     const backgrounds = ref([])                                                // array of all backgrounds
+
+    /**
+     * Whether this layout can be swapped forward or not in CharacterCreator.vue
+     * 
+     * A layout can be swapped once all required fields have been filled out
+     */
+    async function canSwap() {
+        const keys = [
+            store.character_state.race.name,
+            store.character_state.alignment,
+            store.character_state.background.name
+        ]
+
+        // Loop for each key in keys to check if they have a value
+        for(const key of keys) {
+            if(!key) { 
+                alert("Please enter all values")
+                return false
+            }
+        }
+        return true
+    }
 
     /**
      * Populate the backgrounds array with the fetched background data for use in the v-select menu
