@@ -83,8 +83,9 @@
 </template>
 
 <script setup>
-    import { ref, computed, onBeforeUnmount } from 'vue'
+    import { ref, computed, onBeforeUnmount, defineExpose } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
+    defineExpose({ canSwap })
     const store = useCharacterCreationStore()                                             // pinia store for character creation                                             
     const bullet_points = [            
         {text: "Select a method to determine your ability scores:"},
@@ -112,6 +113,22 @@
         "INT",
         "CHA"
     ]
+
+    /**
+     * Whether this layout can be swapped forward or not in CharacterCreator.vue
+     * 
+     * A layout can be swapped once all required fields have been filled out
+     */
+    async function canSwap() {
+        // Loop for each key in keys to check if they have a value
+        for(let i = 0; i < 6; i++) {
+            if(!store.character_state.ability_scores[store.character_state.selections[i]]) { 
+                alert("Please enter all values")
+                return false
+            }
+        }
+        return true
+    }
 
     /**
      * Saves currently selected ability scores before the page unmounts

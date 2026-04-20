@@ -9,7 +9,7 @@
                 </v-row>
                 <!-- Current layout for character creation -->
                 <v-row class="ma-8">
-                    <component v-if="ready" class="page-size" :is="currentLayout" />
+                    <component v-if="ready" ref="child" class="page-size" :is="currentLayout" />
                 </v-row>
                 <v-row class="d-flex justify-end mr-2 mb-2">
                     <!-- Move forward button -->
@@ -49,6 +49,7 @@
     const ready = ref(false)                                                        // flag for showing the layout once ready
     const show_dialog = ref(false)                                                  // flag for showing the dialog box
     const pending_nav = ref(null)
+    const child = ref(null)
 
     // Maps and count var to track layout order
     const order_count = ref(0)
@@ -76,11 +77,13 @@
     /**
      * Move forward a page
      */
-    function moveForward() {
+    async function moveForward() {
         if(order.has(order_count.value)) {
-            currentLayout.value = order.get(order_count.value)
-            order_count.value++
-            //console.log(order_count)
+            const can = child.value?.canSwap ? await child.value.canSwap() : true
+            if(can) {
+                currentLayout.value = order.get(order_count.value)
+                order_count.value++
+            }   
         }
     }
 
@@ -91,7 +94,6 @@
         if(rev_order.has(order_count.value)) {
             currentLayout.value = rev_order.get(order_count.value)
             order_count.value--
-            //console.log(order_count)
         }
     }
 
@@ -108,7 +110,6 @@
     })
 
     function confirmLeave() {
-        
         pending_nav.value()
         pending_nav.value = null
         show_dialog.value = false

@@ -5,10 +5,10 @@
             <v-divider horizontal class="mt-2"></v-divider>
             <v-col class="mr-4">
                 <v-row class="mt-2 ml-4 mr-14 mb-3">
-                    <v-text-field v-model="store.character_state.name" rounded="pill" label="Character Name" variant="outlined" density="compact"></v-text-field>
+                    <v-text-field v-model="store.character_state.name" rounded="pill" label="Character Name" variant="outlined" density="compact" required></v-text-field>
                 </v-row>
                 <v-row class="mt-2 ml-4 mr-14 mb-3">
-                    <v-text-field v-model="store.character_state.player" rounded="pill" label="Player Name" variant="outlined" density="compact"></v-text-field>
+                    <v-text-field v-model="store.character_state.player" rounded="pill" label="Player Name" variant="outlined" density="compact" required></v-text-field>
                 </v-row>
                 <!-- Class dropdown -->
                 <v-select
@@ -16,6 +16,7 @@
                     :items="classes"
                     label="Class"
                     class="ml-4 mr-12"
+                    required
                 ></v-select>
                 <!-- Class level -->
                  <v-select
@@ -23,6 +24,7 @@
                     :items="levels"
                     label="Level"
                     class="ml-4 mr-12"            
+                    required
                  ></v-select>
             </v-col>
             <v-col class="mt-2 ml-4">
@@ -35,9 +37,10 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, onBeforeUnmount } from 'vue'
+    import { ref, onMounted, defineExpose } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'
+    defineExpose({ canSwap })
     const store = useCharacterCreationStore()                        // pinia store for character creation
     const classes = ref([])                                          // array of all classes
     const levels = ref(Array.from({length: 20}, (_, i) => 1 + i))    // valid levels are 1 to 20
@@ -47,6 +50,29 @@
         {text: "Choose your character's class"},
         {text: "Select your character's level"}
     ]
+
+    /**
+     * Whether this layout can be swapped forward or not in CharacterCreator.vue
+     * 
+     * A layout can be swapped once all required fields have been filled out
+     */
+    async function canSwap() {
+        const keys = [
+            store.character_state.name,
+            store.character_state.player,
+            store.character_state.classes.firstclass.name,
+            store.character_state.classes.firstclass.level
+        ]
+
+        // Loop for each key in keys to check if they have a value
+        for(const key of keys) {
+            if(!key) { 
+                alert("Please enter all values")
+                return false
+            }
+        }
+        return true
+    }
     
     /**
      * Fetch character data and populates the classes var with fetched data

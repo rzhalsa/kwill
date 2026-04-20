@@ -47,11 +47,39 @@
 </template>
 
 <script setup>
+    import { ref, defineExpose } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     const store = useCharacterCreationStore()                 // pinia store for character creation
     const bullet_points = [
         {text: "Enter the following information for describing your character's appearance"},
     ]
+    defineExpose({ canSwap })
+
+    /**
+     * Whether this layout can be swapped forward or not in CharacterCreator.vue
+     * 
+     * A layout can be swapped once all required fields have been filled out
+     */
+    async function canSwap() {
+        const keys = [
+            store.character_state.age,
+            store.character_state.eyes,
+            store.character_state.height,
+            store.character_state.hair,
+            store.character_state.weight,
+            store.character_state.skin,
+            store.character_state.appearance
+        ]
+
+        // Loop for each key in keys to check if they have a value
+        for(const key of keys) {
+            if(!key) { 
+                alert("Please enter all values")
+                return false
+            }
+        }
+        return true
+    }
 </script>
 
 <style>

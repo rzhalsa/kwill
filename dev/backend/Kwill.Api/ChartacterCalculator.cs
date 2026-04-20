@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MongoDB.Bson;
 
 namespace Kwill.Api
 {
-    using MongoDB.Bson;
-
     public static class CharacterSheetCalculator
     {
         private static readonly Dictionary<string, string> SkillAbilityMap = new(StringComparer.OrdinalIgnoreCase)
@@ -40,36 +39,38 @@ namespace Kwill.Api
             "charisma"
         };
 
-        // Calls other methods to calculate the stats on the character sheet then returns the modified BsonDocument.
         public static BsonDocument Calculate(BsonDocument character, Dictionary<string, List<BsonDocument>> srdData)
         {
-            int level = GetTotalLevel(character);
+            var result = character.DeepClone().AsBsonDocument;
+
+            result.Remove("calculated");
+            result.Remove("calculated_weapons");
+
+            int level = GetTotalLevel(result);
             int proficiencyBonus = GetProficiencyBonus(level);
 
-            var abilityScores = GetAbilityScores(character);
+            var abilityScores = GetAbilityScores(result);
             var abilityModifiers = CalculateAbilityModifiers(abilityScores);
 
-            int maxHp = CalculateMaxHp(character, abilityModifiers, srdData, level);
+            int maxHp = CalculateMaxHp(result, abilityModifiers, srdData);
+            int ac = CalculateArmorClass(result, abilityModifiers, srdData);
+            string speed = CalculateSpeed(result, srdData);
+            string hitDiceTotal = CalculateHitDiceTotal(result, srdData);
 
-            var savingThrows = CalculateSavingThrows(character, abilityModifiers, proficiencyBonus);
-            var skills = CalculateSkills(character, abilityModifiers, proficiencyBonus);
-            var weapons = CalculateWeapons(character, abilityScores, proficiencyBonus);
 
-            return new BsonDocument
-            {
-                { "level", level },
-                { "proficiency_bonus", proficiencyBonus },
-                { "max_hp", maxHp },
-                { "ability_modifiers", abilityModifiers },
-                { "saving_throw_bonuses", savingThrows },
-                { "skill_bonuses", skills },
-                { "weapon_stats", weapons }
-            };
+            var savingThrows = CalculateSavingThrows(result, abilityModifiers, proficiencyBonus);
+            var skills = CalculateSkills(result, abilityModifiers, proficiencyBonus);
+
+            FillAbilityModifiers(result, abilityModifiers);
+            FillSavingThrows(result, savingThrows);
+            FillSkills(result, skills);
+            FillHitPoints(result, maxHp);
+            FillHitDice(result, hitDiceTotal);
+            FillTopLevelStats(result, level, proficiencyBonus, ac, speed, abilityModifiers);
+
+            return result;
         }
 
-        
-        // Gets total character level.
-        
         private static int GetTotalLevel(BsonDocument character)
         {
             if (!character.Contains("classes") || !character["classes"].IsBsonDocument)
@@ -94,7 +95,6 @@ namespace Kwill.Api
             return total > 0 ? total : 1;
         }
 
-        // Gets the ability scores
         private static BsonDocument GetAbilityScores(BsonDocument character)
         {
             var result = new BsonDocument
@@ -128,22 +128,6 @@ namespace Kwill.Api
             return result;
         }
 
-        // Parses the score so it can be calculated.
-        private static int ParseScore(BsonDocument doc, string fieldName)
-        {
-            if (!doc.Contains(fieldName))
-                return 10;
-
-            var value = doc[fieldName];
-
-            if (value.IsInt32) return value.AsInt32;
-            if (value.IsInt64) return (int)value.AsInt64;
-            if (value.IsString && int.TryParse(value.AsString, out int parsed)) return parsed;
-
-            return 10;
-        }
-
-        // Calculates ability modifiers
         private static BsonDocument CalculateAbilityModifiers(BsonDocument abilityScores)
         {
             var mods = new BsonDocument();
@@ -157,13 +141,11 @@ namespace Kwill.Api
             return mods;
         }
 
-        // Gets the ability modifier
         private static int GetAbilityModifier(int score)
         {
             return (int)Math.Floor((score - 10) / 2.0);
         }
 
-        // Gets proficiency bonuses
         private static int GetProficiencyBonus(int level)
         {
             if (level <= 4) return 2;
@@ -173,12 +155,10 @@ namespace Kwill.Api
             return 6;
         }
 
-        // Calculates the maximum hp for the character.
         private static int CalculateMaxHp(
             BsonDocument character,
             BsonDocument abilityModifiers,
-            Dictionary<string, List<BsonDocument>> srdData,
-            int totalLevel)
+            Dictionary<string, List<BsonDocument>> srdData)
         {
             int conMod = abilityModifiers.GetValue("constitution", 0).ToInt32();
 
@@ -231,8 +211,6 @@ namespace Kwill.Api
             return Math.Max(1, totalHp);
         }
 
-        // Gets hit die from SRD classes by class name.
-   
         private static int GetClassHitDie(string className, Dictionary<string, List<BsonDocument>> srdData)
         {
             string classIndex = NormalizeSrdIndex(className);
@@ -240,7 +218,9 @@ namespace Kwill.Api
             if (srdData.ContainsKey("srd_classes"))
             {
                 var classData = srdData["srd_classes"]
-                    .FirstOrDefault(c => c.Contains("index") && c["index"].AsString == classIndex);
+                    .FirstOrDefault(c =>
+                        c.Contains("index") &&
+                        NormalizeSrdIndex(c["index"].AsString) == classIndex);
 
                 if (classData != null && classData.Contains("hit_die"))
                     return ParseInt(classData["hit_die"], 8);
@@ -249,20 +229,6 @@ namespace Kwill.Api
             return 8;
         }
 
-        // Parses die text to an int so it can be used in calculations.
-        private static int ParseHitDie(string hitDieText)
-        {
-            return hitDieText.Trim().ToLowerInvariant() switch
-            {
-                "d6" => 6,
-                "d8" => 8,
-                "d10" => 10,
-                "d12" => 12,
-                _ => 8
-            };
-        }
-
-        // Converts fixed hitpoints into an int so it can be calculated.
         private static int GetFixedHpGain(int hitDie)
         {
             return hitDie switch
@@ -275,7 +241,6 @@ namespace Kwill.Api
             };
         }
 
-        // Calculates saving throws.
         private static BsonDocument CalculateSavingThrows(BsonDocument character, BsonDocument abilityModifiers, int proficiencyBonus)
         {
             var saves = new BsonDocument();
@@ -306,7 +271,6 @@ namespace Kwill.Api
             return saves;
         }
 
-        // Calculates the character's skills.
         private static BsonDocument CalculateSkills(BsonDocument character, BsonDocument abilityModifiers, int proficiencyBonus)
         {
             var result = new BsonDocument();
@@ -360,70 +324,334 @@ namespace Kwill.Api
             return result;
         }
 
-        // Calculates the weapon values.
-        private static BsonArray CalculateWeapons(BsonDocument character, BsonDocument abilityScores, int proficiencyBonus)
+        private static int CalculateArmorClass(
+            BsonDocument character,
+            BsonDocument abilityModifiers,
+            Dictionary<string, List<BsonDocument>> srdData)
         {
-            var result = new BsonArray();
+            int dexMod = abilityModifiers.GetValue("dexterity", 0).ToInt32();
 
-            if (!character.Contains("weapons") || !character["weapons"].IsBsonArray)
-                return result;
+            int bestAc = 10 + dexMod;
+            bool hasShield = false;
 
-            foreach (var weaponValue in character["weapons"].AsBsonArray)
+            if (!character.Contains("equipment") || !character["equipment"].IsBsonArray)
+                return bestAc;
+
+            foreach (var itemValue in character["equipment"].AsBsonArray)
             {
-                if (!weaponValue.IsBsonDocument)
+                if (!itemValue.IsString)
                     continue;
 
-                var weapon = weaponValue.AsBsonDocument;
+                string equipmentName = itemValue.AsString.Trim();
+                var srdItem = FindEquipmentInSrd(equipmentName, srdData);
 
-                string name = weapon.GetValue("name", "").AsString;
-                bool isMelee = weapon.GetValue("is_melee", false).ToBoolean();
-                bool isRanged = weapon.GetValue("is_ranged", false).ToBoolean();
-                bool hasFinesse = weapon.GetValue("has_finesse", false).ToBoolean();
-                bool isProficient = weapon.GetValue("is_proficient", false).ToBoolean();
+                if (srdItem == null)
+                    continue;
 
-                int magicAttackBonus = weapon.GetValue("magic_attack_bonus", 0).ToInt32();
-                int magicDamageBonus = weapon.GetValue("magic_damage_bonus", 0).ToInt32();
-
-                string attackAbility = GetWeaponAttackAbility(abilityScores, isMelee, isRanged, hasFinesse);
-                int abilityMod = GetAbilityModifier(abilityScores.GetValue(attackAbility, 10).ToInt32());
-
-                int attackBonus = abilityMod + magicAttackBonus + (isProficient ? proficiencyBonus : 0);
-                int damageBonus = abilityMod + magicDamageBonus;
-
-                result.Add(new BsonDocument
+                if (IsShield(srdItem))
                 {
-                    { "name", name },
-                    { "attack_ability_used", attackAbility },
-                    { "attack_bonus", attackBonus },
-                    { "damage_bonus", damageBonus },
-                    { "damage_dice", weapon.GetValue("damage_dice", "") },
-                    { "damage_type", weapon.GetValue("damage_type", "") }
-                });
+                    hasShield = true;
+                    continue;
+                }
+
+                if (TryGetArmorClassFromSrd(srdItem, dexMod, out int armorAc))
+                {
+                    if (armorAc > bestAc)
+                        bestAc = armorAc;
+                }
             }
 
-            return result;
+            if (hasShield)
+                bestAc += 2;
+
+            return bestAc;
         }
 
-        // Gets weapon attack ability
-        private static string GetWeaponAttackAbility(BsonDocument abilityScores, bool isMelee, bool isRanged, bool hasFinesse)
+        private static string CalculateSpeed(BsonDocument character, Dictionary<string, List<BsonDocument>> srdData)
         {
-            if (hasFinesse)
+            if (!character.Contains("race") || !character["race"].IsBsonDocument)
+                return "";
+
+            var raceDoc = character["race"].AsBsonDocument;
+            string raceName = raceDoc.GetValue("name", "").AsString;
+
+            if (string.IsNullOrWhiteSpace(raceName))
+                return "";
+
+            if (!srdData.ContainsKey("srd_races"))
+                return "";
+
+            string normalizedRaceIndex = NormalizeSrdIndex(raceName);
+
+            var raceData = srdData["srd_races"]
+                .FirstOrDefault(r =>
+                    (r.Contains("index") && NormalizeSrdIndex(r["index"].AsString) == normalizedRaceIndex) ||
+                    (r.Contains("name") && NormalizeSrdIndex(r["name"].AsString) == normalizedRaceIndex));
+
+            if (raceData == null)
+                return "";
+
+            if (raceData.Contains("speed"))
             {
-                int strMod = GetAbilityModifier(abilityScores.GetValue("strength", 10).ToInt32());
-                int dexMod = GetAbilityModifier(abilityScores.GetValue("dexterity", 10).ToInt32());
-                return dexMod > strMod ? "dexterity" : "strength";
+                int speed = ParseInt(raceData["speed"], 0);
+                if (speed > 0)
+                    return speed.ToString();
             }
 
-            if (isRanged)
-                return "dexterity";
+            if (raceData.Contains("speed") && raceData["speed"].IsString)
+                return raceData["speed"].AsString;
 
-            if (isMelee)
-                return "strength";
-
-            return "strength";
+            return "";
         }
 
-        // Used to replace spaces with dashes for SRD index lookup
+        private static string CalculateHitDiceTotal(BsonDocument character, Dictionary<string, List<BsonDocument>> srdData)
+        {
+            if (!character.Contains("classes") || !character["classes"].IsBsonDocument)
+                return "";
+
+            var classesDoc = character["classes"].AsBsonDocument;
+            if (classesDoc.ElementCount == 0)
+                return "";
+
+            var groupedDice = new Dictionary<int, int>();
+
+            foreach (var classEntry in classesDoc.Elements)
+            {
+                if (!classEntry.Value.IsBsonDocument)
+                    continue;
+
+                var classDoc = classEntry.Value.AsBsonDocument;
+                string className = classDoc.GetValue("name", "").AsString;
+                int level = ParseInt(classDoc.GetValue("level", 0), 0);
+
+                if (string.IsNullOrWhiteSpace(className) || level <= 0)
+                    continue;
+
+                int hitDie = GetClassHitDie(className, srdData);
+
+                if (!groupedDice.ContainsKey(hitDie))
+                    groupedDice[hitDie] = 0;
+
+                groupedDice[hitDie] += level;
+            }
+
+            if (groupedDice.Count == 0)
+                return "";
+
+            var parts = groupedDice
+                .OrderByDescending(kvp => kvp.Key)
+                .Select(kvp => $"{kvp.Value}d{kvp.Key}");
+
+            return string.Join(" + ", parts);
+        }
+
+        private static BsonDocument? FindEquipmentInSrd(string equipmentName, Dictionary<string, List<BsonDocument>> srdData)
+        {
+            if (!srdData.ContainsKey("srd_equipment"))
+                return null;
+
+            string normalizedName = NormalizeName(equipmentName);
+
+            foreach (var item in srdData["srd_equipment"])
+            {
+                string name = item.GetValue("name", "").AsString;
+                string index = item.GetValue("index", "").AsString;
+
+                if (NormalizeName(name) == normalizedName || NormalizeName(index) == normalizedName)
+                    return item;
+            }
+
+            return null;
+        }
+
+        private static bool IsShield(BsonDocument item)
+        {
+            string name = item.GetValue("name", "").AsString.ToLowerInvariant();
+            string index = item.GetValue("index", "").AsString.ToLowerInvariant();
+
+            if (name.Contains("shield") || index.Contains("shield"))
+                return true;
+
+            if (item.Contains("armor_category"))
+            {
+                string armorCategory = item["armor_category"].ToString().ToLowerInvariant();
+                if (armorCategory == "shield")
+                    return true;
+            }
+
+            return false;
+        }
+
+        private static bool TryGetArmorClassFromSrd(BsonDocument item, int dexMod, out int ac)
+        {
+            ac = 0;
+
+            if (item.Contains("armor_class") && item["armor_class"].IsBsonDocument)
+            {
+                var armorClassDoc = item["armor_class"].AsBsonDocument;
+
+                int baseAc = ParseInt(armorClassDoc.GetValue("base", 0), 0);
+                bool dexBonus = armorClassDoc.GetValue("dex_bonus", false).ToBoolean();
+
+                int dexToAdd = 0;
+                if (dexBonus)
+                {
+                    dexToAdd = dexMod;
+
+                    if (armorClassDoc.Contains("max_bonus") && !armorClassDoc["max_bonus"].IsBsonNull)
+                    {
+                        int maxBonus = ParseInt(armorClassDoc["max_bonus"], dexMod);
+                        dexToAdd = Math.Min(dexToAdd, maxBonus);
+                    }
+                }
+
+                ac = baseAc + dexToAdd;
+                return baseAc > 0;
+            }
+
+            if (item.Contains("base_ac"))
+            {
+                int baseOnly = ParseInt(item["base_ac"], 0);
+                if (baseOnly > 0)
+                {
+                    ac = baseOnly;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static void FillTopLevelStats(BsonDocument character, int level, int proficiencyBonus, int ac, string speed, BsonDocument abilityModifiers)
+        {
+            character["level"] = level;
+            character["proficiency_bonus"] = proficiencyBonus;
+            character["ac"] = ac;
+            character["speed"] = speed;
+
+
+            int dexMod = abilityModifiers.GetValue("dexterity", 0).ToInt32();
+            character["initiative"] = FormatSigned(dexMod);
+        }
+
+        private static void FillAbilityModifiers(BsonDocument character, BsonDocument abilityModifiers)
+        {
+            if (!character.Contains("ability") || !character["ability"].IsBsonDocument)
+                return;
+
+            var abilityDoc = character["ability"].AsBsonDocument;
+
+            foreach (var ability in Abilities)
+            {
+                if (!abilityDoc.Contains(ability) || !abilityDoc[ability].IsBsonDocument)
+                    continue;
+
+                var statDoc = abilityDoc[ability].AsBsonDocument;
+                int mod = abilityModifiers.GetValue(ability, 0).ToInt32();
+                statDoc["modifier"] = mod;
+            }
+        }
+
+        private static void FillHitDice(BsonDocument character, string hitDiceTotal)
+        {
+            if (!character.Contains("hitDice") || !character["hitDice"].IsBsonDocument)
+            {
+                character["hitDice"] = new BsonDocument
+        {
+            { "total", hitDiceTotal },
+            { "current", hitDiceTotal }
+        };
+                return;
+            }
+
+            var hitDiceDoc = character["hitDice"].AsBsonDocument;
+
+            hitDiceDoc["total"] = hitDiceTotal;
+
+            if (!hitDiceDoc.Contains("current") ||
+                hitDiceDoc["current"].IsBsonNull ||
+                string.IsNullOrWhiteSpace(hitDiceDoc["current"].ToString()))
+            {
+                hitDiceDoc["current"] = hitDiceTotal;
+            }
+        }
+
+        private static void FillSavingThrows(BsonDocument character, BsonDocument savingThrows)
+        {
+            if (!character.Contains("saves") || !character["saves"].IsBsonDocument)
+                return;
+
+            var savesDoc = character["saves"].AsBsonDocument;
+
+            foreach (var ability in Abilities)
+            {
+                if (!savesDoc.Contains(ability) || !savesDoc[ability].IsBsonDocument)
+                    continue;
+
+                var saveDoc = savesDoc[ability].AsBsonDocument;
+                int value = savingThrows.GetValue(ability, 0).ToInt32();
+                saveDoc["modifier"] = FormatSigned(value);
+            }
+        }
+
+        private static void FillSkills(BsonDocument character, BsonDocument skillBonuses)
+        {
+            if (!character.Contains("skills") || !character["skills"].IsBsonDocument)
+                return;
+
+            var skillsDoc = character["skills"].AsBsonDocument;
+
+            foreach (var kvp in SkillAbilityMap)
+            {
+                string skill = kvp.Key;
+
+                if (!skillsDoc.Contains(skill) || !skillsDoc[skill].IsBsonDocument)
+                    continue;
+
+                var skillDoc = skillsDoc[skill].AsBsonDocument;
+                int value = skillBonuses.GetValue(skill, 0).ToInt32();
+                skillDoc["modifier"] = FormatSigned(value);
+            }
+        }
+
+        private static void FillHitPoints(BsonDocument character, int maxHp)
+        {
+            if (!character.Contains("hitpoints") || !character["hitpoints"].IsBsonDocument)
+            {
+                character["hitpoints"] = new BsonDocument
+                {
+                    { "current", maxHp.ToString() },
+                    { "maximum", maxHp.ToString() },
+                    { "temporary", "" }
+                };
+                return;
+            }
+
+            var hpDoc = character["hitpoints"].AsBsonDocument;
+
+            hpDoc["maximum"] = maxHp.ToString();
+
+            if (!hpDoc.Contains("current") ||
+                hpDoc["current"].IsBsonNull ||
+                string.IsNullOrWhiteSpace(hpDoc["current"].ToString()))
+            {
+                hpDoc["current"] = maxHp.ToString();
+            }
+
+            if (!hpDoc.Contains("temporary"))
+                hpDoc["temporary"] = "";
+        }
+
+        private static string NormalizeName(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return string.Empty;
+
+            return value.Trim().ToLowerInvariant()
+                .Replace("-", " ")
+                .Replace("_", " ");
+        }
+
         private static string NormalizeSrdIndex(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
@@ -432,7 +660,11 @@ namespace Kwill.Api
             return value.Trim().ToLowerInvariant().Replace(" ", "-");
         }
 
-        // Helps to safely parse ints due to potential null values
+        private static string FormatSigned(int value)
+        {
+            return value >= 0 ? $"+{value}" : value.ToString();
+        }
+
         private static int ParseInt(BsonValue value, int defaultValue = 0)
         {
             if (value == null || value.IsBsonNull)

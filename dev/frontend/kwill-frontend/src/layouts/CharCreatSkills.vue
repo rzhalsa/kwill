@@ -18,8 +18,9 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, onBeforeUnmount } from 'vue'
+    import { ref, onMounted, onBeforeUnmount, defineExpose } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
+    defineExpose({ canSwap })
     const store = useCharacterCreationStore()                                    // pinia store for character creation
     const amt = ref(null)                                                        // max amount of skill proficiencies
     const options = ref([])                                                      // skill proficiency options
@@ -72,6 +73,21 @@
             amt: 2,
             options: ["Arcana", "History", "Insight", "Investigation", "Medicine", "Religion"],
         },
+    }
+
+    /**
+     * Whether this layout can be swapped forward or not in CharacterCreator.vue
+     * 
+     * A layout can be swapped once all required fields have been filled out
+     */
+    async function canSwap() {
+
+        // Loop for each key in keys to check if they have a value
+        if(store.character_state.selected_skills.length !== amt.value) {
+            alert("Please enter all values")
+            return false
+        }
+        return true
     }
 
     /**
