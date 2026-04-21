@@ -83,8 +83,8 @@ namespace Kwill.Api.Services
             await _db.SaveChangesAsync();
 
             var existingMongoUser = await _mongoDb.Users
-                .Find(Builders<BsonDocument>.Filter.Eq("user_id", user.UserId))
-                .FirstOrDefaultAsync();
+                 .Find(Builders<BsonDocument>.Filter.Eq("userid", new BsonBinaryData(user.UserId, GuidRepresentation.Standard)))
+                 .FirstOrDefaultAsync();
             try
             {
                 if (existingMongoUser == null)
@@ -93,7 +93,7 @@ namespace Kwill.Api.Services
                 var mongoUser = new BsonDocument
                 {
                     { "object_id", "user" },
-                    { "user_id", user.UserId }
+                    { "userid", new BsonBinaryData(user.UserId, GuidRepresentation.Standard) }
                 };
 
                 await _mongoDb.Users.InsertOneAsync(mongoUser);
@@ -163,7 +163,7 @@ namespace Kwill.Api.Services
             };
         }
 
-        public async Task<User?> GetUserByIdAsync(int userId)
+        public async Task<User?> GetUserByIdAsync(Guid userId)
         {
             return await _db.Users.FirstOrDefaultAsync(u => u.UserId == userId);
         }
