@@ -13,7 +13,13 @@
                         <v-text-field class="mt-2 px-10" :rules="[required]" v-model="username" label="Username*:" variant="outlined"></v-text-field>
                         <v-text-field class="mt-2 px-10" :rules="[required, passwordStrength]" v-model="password" label="Password*:" variant="outlined" :type="showPassword ? 'text':'password'"
                             :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'" @click:append-inner="showPassword = !showPassword"></v-text-field>
-                        <v-text-field class="mt-2 px-10" :rules="[required, mustMatch]" label="Verify Password*:" variant="outlined" :type="showVerifyPassword ? 'text':'password'"
+                        <div class="text-caption px-10 ">Password Must Contain:</div>
+                        <div class="text-caption px-14">*At least 8 characters</div>
+                        <div class="text-caption px-14">*One uppercase letter</div>
+                        <div class="text-caption px-14">*One lowercase letter</div>
+                        <div class="text-caption px-14">*One number</div>
+                        <div class="text-caption px-14">*One special character (!,@,#,$,%,*)</div>
+                        <v-text-field class="mt-3 px-10" :rules="[required, mustMatch]" label="Verify Password*:" variant="outlined" :type="showVerifyPassword ? 'text':'password'"
                             :append-inner-icon="showVerifyPassword ? 'mdi-eye-off' : 'mdi-eye'" @click:append-inner="showVerifyPassword = !showVerifyPassword"></v-text-field>
                         <v-btn type="submit" class="jusitfy-center" :disabled="!form" color="secondary" size="large" block>Sign Up</v-btn>
                         <div class="mt-5 d-flex justify-center" id="turnstile-container"></div>
@@ -30,11 +36,12 @@
  *      All Api calls to create user
  *      Auto login after creation
  *      2FA
- *      Captcha
+ *      Captcha  
  *      warnings if email already exists, or username
  */
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from './stores/character_creation_state';
 import api from '../services/api';
 const router = useRouter();
 const form = ref(false);
@@ -46,6 +53,7 @@ const showVerifyPassword = ref(false);
 const createAccountFail = ref(false);
 const errorMessage = ref('');
 const captchaToken = ref(null);
+const authStore = useAuthStore();
 
 
 /**
@@ -67,17 +75,17 @@ function required (value){
  * @param value input value in verify password field
  */
 function passwordStrength(value){
-    const hasUpper = false;
-    const hasLower = false;
-    const hasNumber = false;
-    const hasSpecial = false;
+    let hasUpper = false;
+    let hasLower = false;
+    let hasNumber = false;
+    let hasSpecial = false;
     for(const char of value){
         if(char >= 'A' && char <= 'Z') hasUpper=true;
         if(char >= 'a' && char <= 'z') hasLower=true;
         if(char >= '0' && char <= '9') hasNumber=true;
         if(char == '!' ||char == '@' ||char == '#' ||char == '$' ||char == '%' ||char == '?' || char == '*') hasSpecial = true;
     }
-    return (value.length >=8 && hasUpper && hasLower && hasSpecial) || 'Password must be 8 characters long';
+    return (value.length >=8 && hasUpper && hasLower && hasSpecial) || 'Password does not meet requirements';
 }
 
 onMounted(() => {
@@ -105,7 +113,10 @@ async function createAccount(){
         const payload = {Email, Username, Password};
         const response = await api.post("/api/auth/register", payload);
         if(response.data.success){
-            await loginAccount();
+            const token = response.data.token;
+            localStorage.setItem("token", token);
+            authStore.setToken(token);
+            api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
             router.push('/');
         }
     } catch (error) {
@@ -114,18 +125,6 @@ async function createAccount(){
         errorMessage.value = message ?? "Account creation failed";
         createAccountFail.value = true;
     }
-}
-
-async function loginAccount(){
-     try {
-        const Email = email.value;
-        const Password = password.value;
-        const payload = {Email, Password};
-        const response = await api.post("/api/auth/login", payload);
-        return response.data;
-    } catch (error) {
-        console.error("Failed to Login: ", error)
-    } 
 }
 
 </script>
