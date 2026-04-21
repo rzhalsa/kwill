@@ -123,7 +123,7 @@
         // Loop for each key in keys to check if they have a value
         for(let i = 0; i < 6; i++) {
             if(!store.character_state.ability_scores[store.character_state.selections[i]]) { 
-                alert("Please enter all values")
+                alert("Please select 6 ability scores")
                 return false
             }
         }

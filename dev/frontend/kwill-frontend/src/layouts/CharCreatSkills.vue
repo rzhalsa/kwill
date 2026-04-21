@@ -84,7 +84,7 @@
 
         // Loop for each key in keys to check if they have a value
         if(store.character_state.selected_skills.length !== amt.value) {
-            alert("Please enter all values")
+            alert(`Please select ${amt.value} skills`)
             return false
         }
         return true

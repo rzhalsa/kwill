@@ -6,6 +6,7 @@
             <v-col>  
                 <!-- Race dropdown -->
                 <v-select
+                    :rules="[required]"
                     v-model="store.character_state.race.name"
                     :items="races"
                     label="Race"
@@ -13,6 +14,7 @@
                 ></v-select>
                 <!-- Alignment dropdown -->
                 <v-select
+                    :rules="[required]"
                     v-model="store.character_state.alignment"
                     :items="alignments"
                     label="Alignment"
@@ -20,6 +22,7 @@
                 ></v-select>
                 <!-- Background dropdown -->
                 <v-select
+                    :rules="[required]"
                     v-model="store.character_state.background.name"
                     :items="backgrounds"
                     label="Background"
@@ -40,6 +43,7 @@
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import axios from 'axios'
     import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'
+    import { required } from '../helpers/requiredField'
     defineExpose({ canSwap })
     const store = useCharacterCreationStore()                                  // pinia store for character creation
     const races = ref([])                                                      // array of all races
@@ -76,7 +80,6 @@
         // Loop for each key in keys to check if they have a value
         for(const key of keys) {
             if(!key) { 
-                alert("Please enter all values")
                 return false
             }
         }

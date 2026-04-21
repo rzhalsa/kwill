@@ -5,13 +5,14 @@
             <v-divider horizontal class="mt-2"></v-divider>
             <v-col class="mr-4">
                 <v-row class="mt-2 ml-4 mr-14 mb-3">
-                    <v-text-field v-model="store.character_state.name" rounded="pill" label="Character Name" variant="outlined" density="compact" required></v-text-field>
+                    <v-text-field :rules="[required]" v-model="store.character_state.name" rounded="pill" label="Character Name" variant="outlined" density="compact" required></v-text-field>
                 </v-row>
                 <v-row class="mt-2 ml-4 mr-14 mb-3">
-                    <v-text-field v-model="store.character_state.player" rounded="pill" label="Player Name" variant="outlined" density="compact" required></v-text-field>
+                    <v-text-field :rules="[required]" v-model="store.character_state.player" rounded="pill" label="Player Name" variant="outlined" density="compact" required></v-text-field>
                 </v-row>
                 <!-- Class dropdown -->
                 <v-select
+                    :rules="[required]"
                     v-model="store.character_state.classes.firstclass.name"
                     :items="classes"
                     label="Class"
@@ -20,6 +21,7 @@
                 ></v-select>
                 <!-- Class level -->
                  <v-select
+                    :rules="[required]"
                     v-model="store.character_state.classes.firstclass.level"
                     :items="levels"
                     label="Level"
@@ -40,6 +42,7 @@
     import { ref, onMounted, defineExpose } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'
+    import { required } from '../helpers/requiredField';
     defineExpose({ canSwap })
     const store = useCharacterCreationStore()                        // pinia store for character creation
     const classes = ref([])                                          // array of all classes
@@ -67,7 +70,6 @@
         // Loop for each key in keys to check if they have a value
         for(const key of keys) {
             if(!key) { 
-                alert("Please enter all values")
                 return false
             }
         }

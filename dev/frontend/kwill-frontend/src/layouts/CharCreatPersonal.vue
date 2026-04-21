@@ -18,28 +18,28 @@
                 <v-row>
                     <v-col>
                         <!-- Personality -->
-                        <v-textarea rows="3" v-model="store.character_state['text.personality']" label="Personality" clearable></v-textarea>
+                        <v-textarea rows="3" :rules="[required]" v-model="store.character_state['text.personality']" label="Personality" clearable></v-textarea>
                     </v-col>
                     <v-col>
                         <!-- Bonds -->
-                        <v-textarea rows="3" v-model="store.character_state['text.bonds']" label="Bonds" clearable></v-textarea>
+                        <v-textarea rows="3" :rules="[required]" v-model="store.character_state['text.bonds']" label="Bonds" clearable></v-textarea>
                     </v-col>
                 </v-row>
                 <v-row>
                     <v-col>
                         <!-- Ideals -->
-                        <v-textarea rows="3" v-model="store.character_state['text.ideals']" label="Ideals" clearable></v-textarea>
+                        <v-textarea rows="3" :rules="[required]" v-model="store.character_state['text.ideals']" label="Ideals" clearable></v-textarea>
                     </v-col>
                     <v-col>
                         <!-- Flaws -->
-                        <v-textarea rows="3" v-model="store.character_state['text.flaws']" label="Flaws" clearable></v-textarea>
+                        <v-textarea rows="3" :rules="[required]" v-model="store.character_state['text.flaws']" label="Flaws" clearable></v-textarea>
                     </v-col>
                 
                 </v-row>
             </v-col>
             <v-col>
                     <!-- Backstory -->
-                    <v-textarea class="mr-6" rows="8" v-model="store.character_state.backstory" label="Backstory" clearable></v-textarea>
+                    <v-textarea class="mr-6" :rules="[required]" rows="8" v-model="store.character_state.backstory" label="Backstory" clearable></v-textarea>
             </v-col>
         </v-row>
     </v-card>
@@ -48,6 +48,7 @@
 <script setup>
     import { ref, defineExpose } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
+    import { required } from '../helpers/requiredField';
     defineExpose({ canSwap })
     const store = useCharacterCreationStore()                        // pinia store for character creation
     const bullet_points = [
@@ -71,7 +72,6 @@
         // Loop for each key in keys to check if they have a value
         for(const key of keys) {
             if(!key) { 
-                alert("Please enter all values")
                 return false
             }
         }

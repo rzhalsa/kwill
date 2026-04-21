@@ -43,7 +43,6 @@
         // Loop for each key in keys to check if they have a value
         for(const key of keys) {
             if(!key) { 
-                alert("Please enter all values")
                 return false
             }
         }
