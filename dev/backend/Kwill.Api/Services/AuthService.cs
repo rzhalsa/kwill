@@ -78,22 +78,20 @@ namespace Kwill.Api.Services
             };
 
             user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
-
+            
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
-
-            var existingMongoUser = await _mongoDb.Users
-                .Find(Builders<BsonDocument>.Filter.Eq("user_id", user.UserId))
-                .FirstOrDefaultAsync();
             try
             {
+                var existingMongoUser = await _mongoDb.Users
+                .Find(Builders<BsonDocument>.Filter.Eq("userid", user.UserId))
+                .FirstOrDefaultAsync();
                 if (existingMongoUser == null)
                 {
-
-                var mongoUser = new BsonDocument
+                    var mongoUser = new BsonDocument
                 {
                     { "object_id", "user" },
-                    { "user_id", user.UserId }
+                    { "userid", user.UserId.ToString() }
                 };
 
                 await _mongoDb.Users.InsertOneAsync(mongoUser);
@@ -163,7 +161,7 @@ namespace Kwill.Api.Services
             };
         }
 
-        public async Task<User?> GetUserByIdAsync(int userId)
+        public async Task<User?> GetUserByIdAsync(string userId)
         {
             return await _db.Users.FirstOrDefaultAsync(u => u.UserId == userId);
         }
