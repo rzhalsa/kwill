@@ -26,7 +26,7 @@ builder.Services.AddScoped<UserService>();  // YOUR addition
 builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // JWT config
 var jwtSection = builder.Configuration.GetSection("Jwt");
