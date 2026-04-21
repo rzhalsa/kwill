@@ -13,18 +13,13 @@ namespace Kwill.Api.Services
 
         public CharacterService(KwillDB.KwillDB db) => _db = db;
 
-        //Gets the calculated character sheet.
+        //Gets the character sheet.
         public async Task<BsonDocument?> GetByCharacterIdAsync(string characterId)
         {
             var filter = Builders<BsonDocument>.Filter.Eq("characterid", characterId);
             var doc = await _db.CharacterSheets.Find(filter).FirstOrDefaultAsync();
 
-            if (doc == null)
-                return null;
-
-            var srdData = await LoadSrdDataAsync();
-
-            return CharacterSheetCalculator.Calculate(doc, srdData);
+            return doc;
         }
 
         //Gets all characters from given UserId
@@ -33,18 +28,7 @@ namespace Kwill.Api.Services
             var filter = Builders<BsonDocument>.Filter.Eq("userid", userId);
             var docs = await _db.CharacterSheets.Find(filter).ToListAsync();
 
-            if (docs.Count == 0)
-                return new List<BsonDocument>();
-
-            var srdData = await LoadSrdDataAsync();
-            var results = new List<BsonDocument>();
-
-            foreach (var doc in docs)
-            {
-                results.Add(CharacterSheetCalculator.Calculate(doc, srdData));
-            }
-
-            return results;
+            return docs;
         }
 
         //Creates an entry in the mongoDb using the provided BsonDocument.
@@ -123,6 +107,39 @@ namespace Kwill.Api.Services
                 return (false, false, false, ex.Message);
             }
         }
+
+       //Gets character summaries (ID + name) for a user - for character list display
+    public async Task<List<object>> GetCharacterSummariesByUserIdAsync(string userId)
+    {
+        var filter = Builders<BsonDocument>.Filter.Eq("userid", userId);
+        var docs = await _db.CharacterSheets.Find(filter).ToListAsync();
+
+        var summaries = new List<object>();
+    
+        foreach (var doc in docs)
+        {
+         var characterId = doc.Contains("characterid") ? doc["characterid"].AsString : "";
+        
+            // Try to get name from root level first, then from data object
+            var characterName = "Unnamed Character";
+            if (doc.Contains("name"))
+            {
+            characterName = doc["name"].AsString;
+            }
+        else if (doc.Contains("data") && doc["data"].AsBsonDocument.Contains("name"))
+            {
+            characterName = doc["data"]["name"].AsString;
+            }
+
+        summaries.Add(new 
+        { 
+            characterId = characterId,
+            name = characterName
+        });
+    }
+
+    return summaries;
+}
 
         // Helper method to load SRD data for validation
 

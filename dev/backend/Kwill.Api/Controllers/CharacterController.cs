@@ -103,6 +103,27 @@ public class CharacterController : ControllerBase
         }
     }
 
+    // GET /api/character/user/{userId} - Get all characters for a user
+    [HttpGet("summaries/{userId}")]
+        public async Task<IActionResult> GetCharacterSummaries(string userId)
+        {
+            try
+            {
+                var summaries = await _characterService.GetCharacterSummariesByUserIdAsync(userId);
+                
+                if (summaries.Count == 0)
+                {
+                    return Ok(new { characters = new List<object>() });
+                }
+
+                return Ok(new { characters = summaries });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
     // PUT /api/character/{characterId} - Update character
     [HttpPut("{characterId}")]
     public async Task<IActionResult> Update(string characterId, [FromBody] JsonElement body)
