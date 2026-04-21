@@ -41,7 +41,7 @@
  */
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from './stores/character_creation_state';
+import { useAuthStore } from '../stores/user_login_state';
 import api from '../services/api';
 const router = useRouter();
 const form = ref(false);
@@ -99,6 +99,11 @@ onMounted(() => {
     }
 })
 
+/**
+ * Builds user payload to send to api end point, grabs and sets JWT from backend and updates local and pinia store to 
+ * automatically log the user in after creation and pushes them to the homepage. If creations fails sets error message
+ * to be displayed.
+ */
 async function createAccount(){
     //Checks if captcha is completed
     if (!captchaToken.value) {

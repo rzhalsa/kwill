@@ -161,7 +161,7 @@ namespace Kwill.Api.Services
             };
         }
 
-        public async Task<User?> GetUserByIdAsync(string userId)
+        public async Task<User?> GetUserByIdAsync(Guid userId)
         {
             return await _db.Users.FirstOrDefaultAsync(u => u.UserId == userId);
         }

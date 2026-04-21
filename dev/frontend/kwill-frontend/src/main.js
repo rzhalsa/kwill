@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import { useAuthStore } from './stores/character_creation_state';
+import { useAuthStore } from './stores/user_login_state';
 import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import router from './router'
