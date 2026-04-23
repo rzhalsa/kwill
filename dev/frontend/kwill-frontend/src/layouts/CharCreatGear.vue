@@ -1,9 +1,12 @@
 <template>
-    <v-card>
+    <v-card elevation="8">
         <v-form ref="form" @submit.prevent>
             <v-row>
-                <v-card-title class="mt-3 ml-3 cc-title">Step 5/8: Gear</v-card-title>
-                <v-divider horizontal class="mt-2 mb-3"></v-divider>
+                <v-card-title class="mt-3 ml-3 cc-title d-flex align-center justify-space-between">
+                    Step 5/8: Gear
+                    <v-icon class="ml-4" icon="mdi-sword"></v-icon>
+                </v-card-title>
+                <v-divider horizontal class="mb-3"></v-divider>
                 <v-col>
                     <v-btn color="primary" @click="addFeatSlot" class="ml-10 mr-10">Add Gear</v-btn>
                     <v-btn color="secondary" @click="removeFeatSlot">Remove Gear</v-btn>

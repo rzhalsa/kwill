@@ -1,9 +1,12 @@
 <template>
-    <v-card>
+    <v-card elevation="8">
         <v-form ref="form" @submit.prevent>
             <v-row>
-                <v-card-title class="mt-3 ml-3 cc-title">Step 1/8: Class and Names</v-card-title>
-                <v-divider horizontal class="mt-2"></v-divider>
+                <v-card-title class="mt-3 ml-3 cc-title d-flex align-center justify-space-between">
+                    Step 1/8: Class and Names
+                    <v-icon class="ml-4" icon="mdi-feather"></v-icon>
+                </v-card-title>
+                <v-divider horizontal></v-divider>
                 <v-col class="mr-4">
                     <v-row class="mt-2 ml-4 mr-14 mb-3">
                         <v-text-field :rules="[required]" v-model="store.character_state.name" rounded="pill" label="Character Name" variant="outlined" density="compact" required></v-text-field>

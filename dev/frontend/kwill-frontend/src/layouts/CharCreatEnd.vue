@@ -1,8 +1,11 @@
 <template>
-    <v-card>
+    <v-card elevation="8">
         <v-row>
-            <v-card-title class="mt-3 ml-3 cc-title">Confirmation and Creation</v-card-title>
-            <v-divider horizontal class="mt-2 mb-6"></v-divider>
+            <v-card-title class="mt-3 ml-3 cc-title d-flex align-center justify-space-between">
+                Confirmation and Creation
+                <v-icon class="ml-4" icon="mdi-party-popper"></v-icon>
+            </v-card-title>
+            <v-divider horizontal class="mb-6"></v-divider>
             <v-col class="d-flex justify-center">
                 <h2 class="mr-3 ml-4 mb-2">You've reached the end of the character creation process!</h2>
             </v-col>
@@ -29,8 +32,6 @@
     const character = createCharacter()
     const router = useRouter()
 
-    
-    
     function create() {
         const filled_character = toJson(character, store.getCharacterState)
         createNewCharacter(filled_character, 'user001', 'character004')

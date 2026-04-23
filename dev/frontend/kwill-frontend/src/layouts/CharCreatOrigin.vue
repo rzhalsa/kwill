@@ -1,9 +1,12 @@
 <template>
-    <v-card>
+    <v-card elevation="8">
         <v-form ref="form" @submit.prevent>
             <v-row>
-                <v-card-title class="mt-3 ml-3 cc-title">Step 2/8: Character Origin</v-card-title>
-                <v-divider horizontal class="mt-2 mb-4"></v-divider>
+                <v-card-title class="mt-3 ml-3 cc-title d-flex align-center justify-space-between">
+                    Step 2/8: Character Origin
+                    <v-icon class="ml-4" icon="mdi-alien-outline"></v-icon>
+                </v-card-title>
+                <v-divider horizontal></v-divider>
                 <v-col>  
                     <!-- Race dropdown -->
                     <v-select

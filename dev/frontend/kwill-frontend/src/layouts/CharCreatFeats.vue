@@ -1,9 +1,12 @@
 <template>
-    <v-card>
+    <v-card elevation="8">
         <v-form ref="form" @submit.prevent>
             <v-row>
-                <v-card-title class="mt-3 ml-3 cc-title">Step 6/8: Feats</v-card-title>
-                <v-divider horizontal class="mt-2 mb-3"></v-divider>
+                <v-card-title class="mt-3 ml-3 cc-title d-flex align-center justify-space-between">
+                    Step 6/8: Feats
+                    <v-icon class="ml-4" icon="mdi-weight-lifter"></v-icon>
+                </v-card-title>
+                <v-divider horizontal class="mb-3"></v-divider>
                 <v-col>
                     <v-btn color="primary" @click="addFeatSlot" class="ml-10 mr-10">Add Feat</v-btn>
                     <v-btn color="secondary" @click="removeFeatSlot">Remove Feat</v-btn>
@@ -35,25 +38,6 @@
     const store = useCharacterCreationStore()   // pinia store for character creation
     const form = ref(null)                      // for input validation
     const feats = ref([])                       // array of all feats
-    
-    /**
-     * Whether this layout can be swapped forward or not in CharacterCreator.vue
-     * 
-     * A layout can be swapped once all required fields have been filled out
-     */
-    async function canSwap() {
-        const keys = [
-            store.character_state['text.features']
-        ]
-
-        // Loop for each key in keys to check if they have a value
-        for(const key of keys) {
-            if(!key) { 
-                return false
-            }
-        }
-        return true
-    }
 
     /**
      * Adds an additional feat slot

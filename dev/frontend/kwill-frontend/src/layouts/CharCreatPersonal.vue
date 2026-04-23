@@ -1,9 +1,12 @@
 <template>
-    <v-card>
+    <v-card elevation="8">
         <v-form ref="form" @submit.prevent>
             <v-row>
-                <v-card-title class="mt-3 ml-3 cc-title">Step 8/8: Personal Information</v-card-title>
-                <v-divider horizontal class="mt-2 mb-6"></v-divider>
+                <v-card-title class="mt-3 ml-3 cc-title d-flex align-center justify-space-between">
+                    Step 8/8: Personal Information
+                    <v-icon class="ml-4" icon="mdi-human-greeting"></v-icon>
+                </v-card-title>
+                <v-divider horizontal class="mb-6"></v-divider>
                 <!-- Bullet point -->
                 <v-row>
                     <v-col class="ml-16">
@@ -48,7 +51,7 @@
 </template>
 
 <script setup>
-    import { ref, defineExpose } from 'vue'
+    import { ref, defineExpose, onMounted } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import { required } from '../helpers/requiredField';
     defineExpose({ validate })
@@ -64,6 +67,10 @@
     async function validate() {
         return form.value?.validate()
     }
+
+    onMounted(() => {
+        console.log(store.character_state['text.features'])
+    })
 </script>
 
 <style>

@@ -1,8 +1,11 @@
 <template>
-    <v-card>
+    <v-card elevation="8">
         <v-form ref="form" @submit.prevent>
             <v-row>
-                <v-card-title class="mt-3 ml-3 cc-title">Step 3/8: Ability Scores</v-card-title>
+                <v-card-title class="mt-3 ml-3 cc-title d-flex align-center justify-space-between">
+                    Step 3/8: Ability Scores
+                    <v-icon class="ml-4" icon="mdi-counter"></v-icon>
+                </v-card-title>
                 <v-divider horizontal></v-divider>
                 <v-col>
                     <div class="ability-grid ml-2">
@@ -21,7 +24,7 @@
                             </v-radio-group>
                         </div>
                     </div>
-                    <!-- Button to reset radio buttons -->
+                    <!-- Button to reset ability score radio buttons -->
                     <v-btn class="ml-3" color="primary" @click="resetSelections">Reset</v-btn>
                 </v-col>
                 <v-col class="mt-5 ml-4 mr-3">

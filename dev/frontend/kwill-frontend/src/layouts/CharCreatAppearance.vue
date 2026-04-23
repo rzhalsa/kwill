@@ -1,8 +1,11 @@
 <template>
-    <v-card>
+    <v-card elevation="8">
         <v-form ref="form" @submit.prevent>
             <v-row>
-                <v-card-title class="mt-3 ml-3 cc-title">Step 7/8: Character Appearance</v-card-title>
+                <v-card-title class="mt-3 ml-3 cc-title d-flex align-center justify-space-between">
+                    Step 7/8: Character Appearance
+                    <v-icon class="ml-4" icon="mdi-face-man"></v-icon>
+                </v-card-title>
                 <v-divider horizontal class="mt-2 mb-6"></v-divider>
                 <v-col class="ma-3">
                     <!-- Age and Eyes -->
