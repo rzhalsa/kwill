@@ -381,49 +381,8 @@ function setNested(json, parts, value, overwrite = false) {
 //
 //   anything else           → math expression evaluated as-is (operation_type "=")
 function parseFormulaToOperation(formulaText) {
-    // Mirror syntax: starts with ">" — return the resolved string value
-    // of the named field (used to copy e.g. a class name across sections).
-    if (formulaText.startsWith('>')) {
-        return {
-            object_id: 'operation',
-            operation_type: 'mirror',
-            condition: formulaText.slice(1).trim()
-        };
-    }
 
-    // Conditional syntax: "fieldName [threshold,list] [result,list]"
-    // Example: "level [4,8,12] [+1,+2,+3]"
-    const condMatch = formulaText.match(/^([a-zA-Z_][\w]*)\s*\[([^\]]*)\]\s*\[([^\]]*)\]$/);
-    if (condMatch) {
-        // Helper: split a comma-separated list into numbers where possible,
-        // leaving non-numeric tokens as strings.
-        const parseList = (str) => str.split(',').map(s => {
-            const t = s.trim();
-            const n = parseFloat(t);
-            return isNaN(n) ? t : n;
-        });
-        return {
-            object_id: 'operation',
-            operation_type: 'conditional',
-            condition: condMatch[1].trim(),
-            thresholds: parseList(condMatch[2]),
-            results: parseList(condMatch[3])
-        };
-    }
 
-    // Additive syntax: "+fieldName [addend1] [addend2] ..."
-    // Example: "+strMod [profBonus]" → strMod + profBonus, shown as "+5"
-    const addMatch = formulaText.match(/^\+([a-zA-Z_][\w]*)((?:\[[^\]]*\])*)/);
-    if (addMatch) {
-        // Extract each [addend] token's inner text into an array.
-        const addends = [...addMatch[2].matchAll(/\[([^\]]*)\]/g)].map(m => m[1].trim());
-        return {
-            object_id: 'operation',
-            operation_type: '+',
-            condition: addMatch[1].trim(),
-            addends: addends
-        };
-    }
 
     // Fallback: plain math expression stored as-is.
     // evaluateOperation will resolve variable names and eval the string.
@@ -590,38 +549,34 @@ function populateJsonFromHtml(existingJson = {}) {
         const isName = id.endsWith('_name');
 
         // Strip the suffix to get the base key, then handle each type.
-        if (isCalculated) id = id.slice(0, -'_calculated'.length);
-        else if (isValue) id = id.slice(0, -'_value'.length);
-else if (isName) {
-    // _name fields store a display name on their parent object.
-    // Use nested path splitting to handle multi-level objects correctly.
-    id = id.slice(0, -'_name'.length);
-    const parts = id.split('_');
-    
-    if (parts.length === 1) {
-        // Single level: base[id].name = value
-        if (!base[id]) base[id] = { object_id: id };
-        base[id].name = value;
-    } else {
-        // Multi-level: properly handle nested structures
-        const field = parts[parts.length - 1];
-        const stat = parts[parts.length - 2];
-        const objectId = parts.slice(0, -2).join('_');
-        
-        if (!objectId) {
-            // Two-part path: base[stat][field].name = value
-            if (!base[stat]) base[stat] = {};
-            if (!base[stat][field]) base[stat][field] = {};
-            base[stat][field].name = value;
-        } else {
-            // Three-or-more part path: base[objectId][stat][field].name = value
-            if (!base[objectId]) base[objectId] = { object_id: objectId };
-            if (!base[objectId][stat]) base[objectId][stat] = {};
-            if (!base[objectId][stat][field]) base[objectId][stat][field] = {};
-            base[objectId][stat][field].name = value;
-        }
-    }
-    return;
+        if (isCalculated) {
+            id = id.slice(0, -'_calculated'.length);
+        } else if (isValue) {
+            id = id.slice(0, -'_value'.length);
+        } else if (isName) {
+            id = id.slice(0, -'_name'.length);
+            const parts = id.split('_');
+
+            if (parts.length === 1) {
+                if (!base[id]) base[id] = { object_id: id };
+                base[id].name = value;
+            } else {
+                const field = parts[parts.length - 1];
+                const stat = parts[parts.length - 2];
+                const objectId = parts.slice(0, -2).join('_');
+
+                if (!objectId) {
+                    if (!base[stat]) base[stat] = {};
+                    if (!base[stat][field]) base[stat][field] = {};
+                    base[stat][field].name = value;
+                } else {
+                    if (!base[objectId]) base[objectId] = { object_id: objectId };
+                    if (!base[objectId][stat]) base[objectId][stat] = {};
+                    if (!base[objectId][stat][field]) base[objectId][stat][field] = {};
+                    base[objectId][stat][field].name = value;
+                }
+            }
+            return;
         }
 
         if (isCalculated) {
@@ -823,12 +778,12 @@ function createPanelBlock(panelId, data = {}) {
     // Defer first call so the cloned element is in the DOM before querying.
     setTimeout(updateSaveTypeVisibility, 0);
 
- const usesDisplay = document.createElement('span');
+    const usesDisplay = document.createElement('span');
     usesDisplay.style.cssText = 'font-size:11px; color:#555; flex-shrink:0;';
- 
+
     const mainRow = clone.querySelector('.panel-block > div');
     if (mainRow) mainRow.insertBefore(usesDisplay, expandBtn);
- 
+
     function updateUsesDisplay() {
         const current = clone.querySelector('[data-field-key="uses_current"]');
         const max = clone.querySelector('[data-field-key="uses_max"]');
@@ -840,7 +795,7 @@ function createPanelBlock(panelId, data = {}) {
             usesDisplay.textContent = '';
         }
     }
- 
+
     // ── Formula activation toggle (collapsed header) ─────────────────────
     // A checkbox in the minimized header that mirrors the formula_active
     // checkbox in the expanded section. Clicking it toggles formula activation
@@ -856,18 +811,18 @@ function createPanelBlock(panelId, data = {}) {
         'accent-color:#8b6914',
         'display:none'  // Start hidden; only show if formula has content
     ].join(';');
- 
+
     // Find the expanded section's formula_active checkbox (the canonical source of truth).
-    const formulaActiveExpanded = expandedSection.querySelector('[data-field-key="formula_active"]');
-    const formulaInput = expandedSection.querySelector('[data-field-key="formula"]');
- 
+const formulaActiveExpanded = expandedSection?.querySelector('[data-field-key="formula_active"]');
+const formulaInput = expandedSection?.querySelector('[data-field-key="formula"]');
+
     // Helper function to update the visibility of the formula toggle based on whether
     // the formula field has content.
     function updateFormulaCheckboxVisibility() {
         const hasFormula = formulaInput?.value?.trim().length > 0;
         formulaActiveCollapsed.style.display = hasFormula ? 'inline-flex' : 'none';
     }
- 
+
     // Sync collapsed → expanded when the collapsed checkbox changes.
     formulaActiveCollapsed.addEventListener('change', () => {
         if (formulaActiveExpanded) {
@@ -877,25 +832,25 @@ function createPanelBlock(panelId, data = {}) {
             formulaActiveExpanded.dispatchEvent(new Event('change', { bubbles: true }));
         }
     });
- 
+
     // Sync expanded → collapsed when the expanded checkbox changes.
     if (formulaActiveExpanded) {
         formulaActiveExpanded.addEventListener('change', () => {
             formulaActiveCollapsed.checked = formulaActiveExpanded.checked;
         });
     }
- 
+
     // Update visibility whenever the formula input changes.
     if (formulaInput) {
         formulaInput.addEventListener('input', updateFormulaCheckboxVisibility);
         formulaInput.addEventListener('change', updateFormulaCheckboxVisibility);
     }
- 
+
     // Insert the formula toggle into the header row.
     if (mainRow && expandBtn) {
         mainRow.insertBefore(formulaActiveCollapsed, expandBtn);
     }
- 
+
     // ── Collapsed stats summary ────────────────────────────────────────
     // When the expanded section is hidden, shows a condensed view of
     // damage, action type, and range in the collapsed header row.
@@ -904,16 +859,16 @@ function createPanelBlock(panelId, data = {}) {
         const damageType = clone.querySelector('[data-field-key="damagetype"]');
         const action = clone.querySelector('[data-field-key="action"]');
         const range = clone.querySelector('[data-field-key="range"]');
- 
+
         const dmgVal = damage?.value?.trim();
         const dmgTypeVal = damageType?.value?.trim();
         const actionVal = action?.value?.trim();
         const rangeVal = range?.value?.trim();
- 
+
         const dmgDisplay = clone.querySelector('.collapsed-damage');
         const actionDisplay = clone.querySelector('.collapsed-action');
         const rangeDisplay = clone.querySelector('.collapsed-range');
- 
+
         // Combine damage and damage type if both exist (e.g. "2d6 Fire").
         if (dmgDisplay) {
             if (dmgVal && dmgTypeVal) dmgDisplay.textContent = `${dmgVal} ${dmgTypeVal}`;
@@ -923,7 +878,7 @@ function createPanelBlock(panelId, data = {}) {
         if (actionDisplay) actionDisplay.textContent = actionVal || '';
         if (rangeDisplay) rangeDisplay.textContent = rangeVal || '';
     }
- 
+
     // Listen for changes to relevant fields and update the collapsed
     // summary and uses display in real time.
     clone.addEventListener('input', (e) => {
@@ -931,16 +886,16 @@ function createPanelBlock(panelId, data = {}) {
         if (['damage', 'damagetype', 'action', 'range'].includes(key)) updateCollapsedSpells();
         if (key === 'uses_current' || key === 'uses_max') updateUsesDisplay();
     });
- 
+
     clone.addEventListener('change', (e) => {
         const key = e.target.dataset.fieldKey;
         if (['damage', 'damagetype', 'action', 'range'].includes(key)) updateCollapsedSpells();
     });
- 
+
     // Defer initial population until after the clone is appended.
     setTimeout(updateCollapsedSpells, 0);
     setTimeout(updateUsesDisplay, 0);
- 
+
     // Initialize the collapsed formula toggle to match the expanded state,
     // and check formula visibility.
     setTimeout(() => {
@@ -949,7 +904,7 @@ function createPanelBlock(panelId, data = {}) {
             formulaActiveCollapsed.checked = formulaActiveExpanded.checked;
         }
     }, 0);
- 
+
     // Wire the expand/collapse button after the collapsed-stats helpers
     // are defined so the button can reference expandedSection.
     if (expandBtn && expandedSection) {
@@ -960,7 +915,7 @@ function createPanelBlock(panelId, data = {}) {
             tooltip.style.display = 'none'; // hide tooltip when toggling
         });
     }
- 
+
 
     // ── Hover tooltip ──────────────────────────────────────
     // A fixed-position tooltip div (appended to document.body so it
@@ -1156,8 +1111,8 @@ function clearAllPanels() {
 // main sheet fields. Raw JSON values are never modified.
 //
 // Syntax:
-//   =+ fieldName + expr        — adds expr to the base value of fieldName
-//   =+ fieldName = expr        — replaces the value of fieldName with expr
+//   fieldName = expr        — sets fieldName to the result of expr
+//   fieldName = fieldName + expr  — adds expr to fieldName's base value
 //
 // expr can include variable names (resolved from panel block, live DOM, or JSON),
 // literals, and any JS math expression using BUILTINS.
@@ -1166,10 +1121,9 @@ function clearAllPanels() {
 // values as visual overrides to main sheet _value fields. The underlying
 // JSON is never touched; overrides are purely a display layer.
 //
-// Override resolution order when multiple blocks target the same field:
-//   - If any override uses "=" (replace mode), the LAST replace wins
-//     and all additive overrides for that field are ignored.
-//   - If all overrides use "+" (add mode), they are summed.
+// Override resolution when multiple blocks target the same field:
+//   All formulas are evaluated independently, and the highest computed
+//   value is displayed.
 //
 // After computing overrides, fields that previously had overrides but
 // no longer do are restored to their JSON base values.
@@ -1199,8 +1153,8 @@ function applyPanelOverrides() {
 
         // Prefer the current DOM value (may itself be overridden).
         const liveEl = document.getElementById(`${alias}_value`)
-                    || document.getElementById(`${alias}_calculated`)
-                    || document.getElementById(alias);
+            || document.getElementById(`${alias}_calculated`)
+            || document.getElementById(alias);
         if (liveEl) return Number(liveEl.value) || 0;
 
         // Fall back to walking the JSON tree using the underscore-separated path.
@@ -1214,36 +1168,29 @@ function applyPanelOverrides() {
     }
 
     // First pass: collect all overrides per target field.
-    // Each entry in overrideList[targetId] is { mode: 'add'|'replace', value: number }.
+    // Each entry in overrideList[targetId] is { value: number }.
     const overrideList = {};
 
     document.querySelectorAll('.panel-block').forEach(block => {
         if (block.closest('template')) return; // skip template definitions
 
         const formulaEl = block.querySelector('[data-field-key="formula"]');
-        const activeEl  = block.querySelector('[data-field-key="formula_active"]');
+        const activeEl = block.querySelector('[data-field-key="formula_active"]');
 
         // Only process blocks where the formula toggle is checked.
         if (!formulaEl || !activeEl?.checked) return;
 
         const raw = formulaEl.value.trim();
-        if (!raw.startsWith('=+')) return; // only the "=+" prefix is supported here
+        // Match "fieldName = expr" syntax
+        const match = raw.match(/^([a-zA-Z_][\w]*)\s*=\s*(.+)$/);
+        if (!match) return;
 
-        const expr = raw.slice(2).trim(); // strip "=+"
-        // Match "targetFieldName [optional rest]" — the rest determines mode.
-        const tokenMatch = expr.match(/^([a-zA-Z_][\w]*)\s*([+=\-*/].*)?/);
-        if (!tokenMatch) return;
-
-        const targetKey = tokenMatch[1].replace(/^character_/, '');
-        const targetId  = `${targetKey}_value`;
-        const rest      = (tokenMatch[2] ?? '').trim();
+        const targetKey = match[1].replace(/^character_/, '');
+        const targetId = `${targetKey}_value`;
+        const expression = match[2].trim();
 
         // Verify the target field actually exists on the main sheet.
         if (!document.getElementById(targetId)) return;
-
-        // "= expr" means replace; anything else ("+", "-", etc.) means add.
-        const isReplace = rest.startsWith('=');
-        const expression = isReplace ? rest.slice(1).trim() : rest;
 
         // Substitute all non-builtin identifiers with their resolved values.
         const resolved = expression.replace(/\b[a-zA-Z_][a-zA-Z0-9_]*\b/g, (match) => {
@@ -1262,21 +1209,15 @@ function applyPanelOverrides() {
         }
 
         if (!overrideList[targetId]) overrideList[targetId] = [];
-        overrideList[targetId].push({ mode: isReplace ? 'replace' : 'add', value: computedValue });
+        overrideList[targetId].push({ value: computedValue });
     });
 
     // Second pass: reduce each field's list of overrides to a single value.
-    // Replace mode wins over add mode if any replace exists.
+    // Pick the highest value when multiple spells target the same field.
     const overrides = {};
     Object.entries(overrideList).forEach(([targetId, list]) => {
-        const replaces = list.filter(o => o.mode === 'replace');
-        if (replaces.length > 0) {
-            // Last replace wins.
-            overrides[targetId] = { mode: 'replace', value: replaces[replaces.length - 1].value };
-        } else {
-            // All additive — sum them.
-            overrides[targetId] = { mode: 'add', value: list.reduce((sum, o) => sum + o.value, 0) };
-        }
+        const values = list.map(o => o.value);
+        overrides[targetId] = { value: Math.max(...values) };
     });
 
     // Third pass: restore fields that had overrides in a previous call but
@@ -1303,32 +1244,15 @@ function applyPanelOverrides() {
 
     // Fourth pass: apply each computed override to its target element.
     Object.entries(overrides).forEach(([targetId, override]) => {
-        const el = document.getElementById(targetId);
-        if (!el) return;
-
-        if (override.mode === 'replace') {
-            el.value = override.value;
-            el.dataset.overrideApplied = 'true';
-            el.dataset.overrideValue = String(override.value);
-        } else {
-            // Additive mode: read the base value from JSON (not from the DOM,
-            // which may already show a previous override result), then add.
-            const key = targetId.replace(/_value$/, '');
-            const parts = key.split('_');
-            let baseVal = characterData;
-            for (const part of parts) {
-                if (baseVal && typeof baseVal === 'object') baseVal = baseVal[part];
-                else { baseVal = undefined; break; }
-            }
-            // If no JSON value found, fall back to the current DOM value.
-            const base = (baseVal === undefined || baseVal === null || typeof baseVal === 'object')
-                ? Number(el.value) || 0
-                : Number(baseVal) || 0;
-            const result = base + override.value;
-            el.value = result;
-            el.dataset.overrideApplied = 'true';
-            el.dataset.overrideValue = String(result);
+        let el = document.getElementById(targetId);
+        if (!el) {
+            console.warn(`Panel override target not found: ${targetId}`);
+            return;
         }
+
+        el.value = override.value;
+        el.dataset.overrideApplied = 'true';
+        el.dataset.overrideValue = String(override.value);
     });
 }
 
@@ -1341,12 +1265,6 @@ function applyPanelOverrides() {
 // or stored in the character JSON) against a JSON data context and returns
 // the computed result as a string or number.
 //
-// Supported operation_types:
-//   mirror      → return the string value of the named field
-//   conditional → compare a field value against thresholds; return matching result
-//   +           → sum a base field and zero or more addend fields; format as "+N"
-//   =           → evaluate a math expression string with variable substitution
-//
 // Variable resolution for numeric types prefers JSON path traversal;
 // for string types (_mirror), it also checks the live DOM for _calculated fields.
 //
@@ -1354,9 +1272,6 @@ function applyPanelOverrides() {
 function evaluateOperation(operationObj, jsonData) {
     if (!operationObj || operationObj.object_id !== 'operation') return '';
 
-    // Walks the JSON tree using an underscore-separated path string,
-    // trying progressively shorter prefixes to handle nested objects
-    // whose keys themselves contain underscores.
     function resolveByPath(obj, pathStr) {
         const parts = pathStr.split('_');
         for (let i = parts.length; i >= 1; i--) {
@@ -1371,8 +1286,6 @@ function evaluateOperation(operationObj, jsonData) {
         return undefined;
     }
 
-    // Recursively searches the entire JSON tree for a key, regardless
-    // of depth. Used as a fallback when resolveByPath doesn't find a value.
     function resolveByKey(obj, key) {
         if (!obj || typeof obj !== 'object') return undefined;
         if (obj[key] !== undefined) return obj[key];
@@ -1383,80 +1296,18 @@ function evaluateOperation(operationObj, jsonData) {
         return undefined;
     }
 
-    // Resolves a variable name to a number for use in math operations.
-    // Recursively evaluates nested operation objects if encountered.
-    // Returns 0 for undefined, empty, null, or non-numeric values.
     function resolveVar(name) {
         const clean = name.replace(/_(value|calculated)$/, '');
         let val = resolveByPath(jsonData, clean);
         if (val === undefined) val = resolveByKey(jsonData, clean);
-        // If the resolved value is itself a formula, evaluate it recursively.
+
         if (val && typeof val === 'object' && val.object_id === 'operation') {
             val = evaluateOperation(val, jsonData);
         }
-        if (val && typeof val === 'object') return 0; // objects are not numeric
+
+        if (val && typeof val === 'object') return 0;
         return (val === undefined || val === '' || val === null) ? 0 : Number(val) || 0;
     }
-
-    // Resolves a variable name to a string. For _calculated fields, reads
-    // the live DOM value directly since that may have been set by a formula
-    // that the JSON doesn't store as a string.
-    function resolveString(name) {
-        const clean = name.replace(/_(value|calculated)$/, '');
-
-        const liveCalc = document.getElementById(`${clean}_calculated`);
-        if (liveCalc) return liveCalc.value ?? '';
-
-        let val = resolveByPath(jsonData, clean);
-        if (val === undefined) val = resolveByKey(jsonData, clean);
-        if (val && typeof val === 'object' && val.object_id === 'operation') {
-            val = evaluateOperation(val, jsonData);
-        }
-        return val ?? '';
-    }
-
-    // ── operation_type: mirror ─────────────────────────────
-    // Copies the resolved string value of the named field.
-    // Useful for displaying the same data in multiple places on the sheet
-    // without duplicating it in the JSON.
-    if (operationObj.operation_type === 'mirror') {
-        return resolveString(operationObj.condition);
-    }
-
-    // ── operation_type: conditional ───────────────────────
-    // Returns one of the `results` entries based on which `thresholds`
-    // bucket the resolved condition value falls into.
-    // Example: proficiency bonus that increases at certain character levels.
-    if (operationObj.operation_type === 'conditional') {
-        const condVal = resolveVar(operationObj.condition);
-        const thresholds = operationObj.thresholds || [];
-        const results = operationObj.results || [];
-
-        // Walk thresholds in order; keep updating matchIndex while the
-        // condition value meets or exceeds each threshold.
-        let matchIndex = -1;
-        for (let i = 0; i < thresholds.length; i++) {
-            if (condVal >= parseFloat(thresholds[i])) matchIndex = i;
-        }
-
-        return matchIndex === -1 ? '' : (results[matchIndex] ?? '');
-    }
-
-    // ── operation_type: + ─────────────────────────────────
-    // Sums a base field and one or more addend fields. The result is
-    // formatted with a sign prefix ("+5" or "-2") for display as a bonus.
-    if (operationObj.operation_type === '+') {
-        const base = resolveVar(operationObj.condition);
-        const addends = operationObj.addends || [];
-        const total = addends.reduce((sum, key) => sum + resolveVar(key), base);
-        return total > 0 ? `+${total}` : `${total}`;
-    }
-
-    // ── operation_type: = (math expression) ───────────────
-    // Evaluates a free-form math expression string after substituting
-    // all non-builtin identifiers with their resolved numeric values.
-    // Uses Function() for eval-like execution in strict mode.
-    // A basic character-whitelist check guards against injection.
 
     const BUILTINS = new Set([
         'Math', 'floor', 'ceil', 'round', 'abs', 'max', 'min', 'sqrt', 'pow',
@@ -1467,15 +1318,24 @@ function evaluateOperation(operationObj, jsonData) {
     let formula = (operationObj.value ?? '').trim();
     if (!formula) return '';
 
-    // Replace every identifier in the formula with its resolved numeric value,
-    // leaving Math/floor/etc. builtins intact.
+    // Excel-style reference: =fieldName
+    if (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(formula)) {
+        let val = resolveByPath(jsonData, formula);
+        if (val === undefined) val = resolveByKey(jsonData, formula);
+
+        if (val && typeof val === 'object' && val.object_id === 'operation') {
+            return evaluateOperation(val, jsonData);
+        }
+
+        return val ?? '';
+    }
+
+    // Replace identifiers with numeric values for math expressions
     formula = formula.replace(/\b[a-zA-Z_][a-zA-Z0-9_]*\b/g, (match) => {
         if (BUILTINS.has(match)) return match;
         return resolveVar(match);
     });
 
-    // Reject any characters outside a safe math whitelist to prevent
-    // code injection via crafted JSON.
     if (/[^0-9a-zA-Z_+\-*/(). \t]/.test(formula)) {
         console.warn('Unsafe characters in formula:', formula);
         return '';
@@ -1488,6 +1348,7 @@ function evaluateOperation(operationObj, jsonData) {
         return '';
     }
 }
+
 
 
 // ── Zoom / Scale ─────────────────────────────────────────────
@@ -1606,15 +1467,15 @@ document.getElementById('character-sheet').addEventListener('change', (e) => {
     if (e.target.closest('[id$="_panel"]')) return;
 
     // If user is editing a formula field, store the formula and stop here
-if (e.target.id.endsWith('_calculated')) {
-    const trimmed = e.target.value.trim();
+    if (e.target.id.endsWith('_calculated')) {
+        const trimmed = e.target.value.trim();
 
-    if (trimmed.startsWith('=')) {
-        // Store the formula so populateJsonFromHtml can save it
-        e.target.dataset.formula = trimmed;
-        return; // do NOT evaluate or overwrite yet
+        if (trimmed.startsWith('=')) {
+            // Store the formula so populateJsonFromHtml can save it
+            e.target.dataset.formula = trimmed;
+            return; // do NOT evaluate or overwrite yet
+        }
     }
-}
 
 
     // Special handling for overridden number fields (e.g. HP modified by a spell):
@@ -1666,8 +1527,8 @@ if (e.target.id.endsWith('_calculated')) {
     document.querySelectorAll('[id$="_calculated"]').forEach(el => {
         if (el.closest('[id$="_panel"]')) return;
         if (el.hasAttribute('data-label')) return;
-const formula = el.dataset.formula || el.defaultValue?.trim();        
-if (!formula?.startsWith('=')) return;
+        const formula = el.dataset.formula || el.defaultValue?.trim();
+        if (!formula?.startsWith('=')) return;
         el.value = evaluateOperation(parseFormulaToOperation(formula.slice(1).trim()), characterData);
     });
 

@@ -1,22 +1,22 @@
 {
   "object_id": "character",
-  "name": "Standardized",
+  "name": "Alfred",
   "classes": {
     "firstclass": {
-      "name": "",
-      "level": ""
+      "name": "Paladin",
+      "level": "12"
     }
   },
   "race": {
     "object_id": "race",
-    "name": ""
+    "name": "Human"
   },
-  "alignment": "",
+  "alignment": "Lawful Neutral",
   "background": {
     "object_id": "background",
-    "name": ""
+    "name": "Guildmaster"
   },
-  "player": "",
+  "player": "Ryan",
   "exp": "",
   "ability": {
     "object_id": "ability",
