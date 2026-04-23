@@ -22,7 +22,7 @@ export const useCharacterCreationStore = defineStore('character_creation', {
                     'level': ""
                 }
             },
-            'alignment': null,
+            'alignment': '',
             'background': { 
                 'object_id': "background",
                 'name': "" 
@@ -335,7 +335,7 @@ export const useCharacterCreationStore = defineStore('character_creation', {
                             }
                         break
                     default:
-                        this.character_state[key] = null
+                        this.character_state[key] = ''
                         break
                 }
             }

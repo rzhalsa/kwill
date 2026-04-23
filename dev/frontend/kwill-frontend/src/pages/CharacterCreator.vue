@@ -75,12 +75,15 @@
     ])
 
     /**
-     * Move forward a page
+     * Move forward a step in the character creation process.
+     * Only move forward if the user has entered all required information
+     * on the current step.
      */
     async function moveForward() {
         if(order.has(order_count.value)) {
-            const can = child.value?.canSwap ? await child.value.canSwap() : true
-            if(can) {
+            // Only move forward if the user has entered all required info on the current step
+            const can = await child.value.validate()
+            if(can.valid) {
                 currentLayout.value = order.get(order_count.value)
                 order_count.value++
             }   
@@ -88,7 +91,7 @@
     }
 
     /**
-     * Move backwards a page
+     * Move backwards a step in the character creation process.
      */
     function moveBackwards() {
         if(rev_order.has(order_count.value)) {
