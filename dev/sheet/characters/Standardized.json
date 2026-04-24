@@ -329,7 +329,7 @@
   },
   "ac": "",
   "initiative": "",
-  "speed": "",
+  "speed": "30",
   "hitpoints": {
     "current": "",
     "maximum": "",
@@ -560,8 +560,31 @@
       "spell5": "",
       "spell6": ""
     }
-  }
-  ,
+  },
   "userid": "user001",
-  "characterid": "character001"
+  "characterid": "character001",
+  "panels": {
+    "spells_third": [
+      {
+        "level": "3",
+        "prepared": false,
+        "name": "Haste",
+        "school": "",
+        "action": "",
+        "attacksave": "",
+        "savetype": "",
+        "damage": "",
+        "damagetype": "",
+        "range": "",
+        "duration": "",
+        "areashape": "",
+        "areasize": "",
+        "tooltip": "",
+        "description": "speed * 2",
+        "formula": "",
+        "formula_active": false,
+        "showstats": true
+      }
+    ]
+  }
 }
