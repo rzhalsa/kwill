@@ -31,6 +31,7 @@ builder.Services.AddSingleton<KwillDB.KwillDB>(); // ASP.NET creates the instanc
 builder.Services.AddScoped<SrdService>();
 builder.Services.AddScoped<CharacterService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddHttpClient();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));

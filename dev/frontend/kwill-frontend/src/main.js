@@ -6,6 +6,7 @@ import vuetify from './plugins/vuetify'
 import router from './router'
 import '@mdi/font/css/materialdesignicons.css'
 import './main.css'
+import api from './services/api'
 
 const pinia = createPinia()
 

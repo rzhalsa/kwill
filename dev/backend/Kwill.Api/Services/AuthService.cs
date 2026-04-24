@@ -17,12 +17,14 @@ namespace Kwill.Api.Services
         private readonly IConfiguration _configuration;
         private readonly PasswordHasher<User> _passwordHasher;
         private readonly KwillDB.KwillDB _mongoDb;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public AuthService(AppDbContext db, IConfiguration configuration, KwillDB.KwillDB mongoDb)
+        public AuthService(AppDbContext db, IConfiguration configuration, KwillDB.KwillDB mongoDb, IHttpClientFactory httpClientFactory)
         {
             _db = db;
             _configuration = configuration;
             _mongoDb = mongoDb;
+            _httpClientFactory = httpClientFactory;
             _passwordHasher = new PasswordHasher<User>();
         }
 
@@ -48,6 +50,16 @@ namespace Kwill.Api.Services
                 {
                     Success = false,
                     Message = "Password must be at least 8 characters long."
+                };
+            }
+
+            // Validate captcha
+            if (!await VerifyCaptchaAsync(request.CaptchaToken))
+            {
+                return new AuthResponse
+                {
+                    Success = false,
+                    Message = "Captcha verification failed."
                 };
             }
 
@@ -84,7 +96,7 @@ namespace Kwill.Api.Services
             try
             {
                 var existingMongoUser = await _mongoDb.Users
-                .Find(Builders<BsonDocument>.Filter.Eq("userid", user.UserId))
+                .Find(Builders<BsonDocument>.Filter.Eq("userid", user.UserId.ToString()))
                 .FirstOrDefaultAsync();
                 if (existingMongoUser == null)
                 {
@@ -200,5 +212,33 @@ namespace Kwill.Api.Services
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
             return (tokenString, expiresAtUtc);
         }
+
+        private async Task<bool> VerifyCaptchaAsync(string token)
+        {
+            if (string.IsNullOrEmpty(token)) return false;
+
+            var secret = _configuration["Turnstile:Secret"];
+            if (string.IsNullOrEmpty(secret)) return false; // Or throw
+
+            using var client = _httpClientFactory.CreateClient();
+            var content = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("secret", secret),
+                new KeyValuePair<string, string>("response", token)
+            });
+
+            var response = await client.PostAsync("https://challenges.cloudflare.com/turnstile/v0/siteverify", content);
+            if (!response.IsSuccessStatusCode) return false;
+
+            var result = await response.Content.ReadFromJsonAsync<TurnstileResponse>();
+            return result?.Success == true;
+        }
+
+        private class TurnstileResponse
+        {
+            public bool Success { get; set; }
+            public string[] ErrorCodes { get; set; } = Array.Empty<string>();
+        }
     }
+}
 }

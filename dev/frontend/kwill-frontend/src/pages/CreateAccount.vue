@@ -9,7 +9,7 @@
                 <v-divider class="mx-5"></v-divider>
                 <v-card-item>
                     <v-form v-model="form" @submit.prevent="createAccount">
-                        <v-text-field class="mt-2 px-10" :rules="[required]" v-model="email" label="Email*:" variant="outlined"></v-text-field>
+                        <v-text-field class="mt-2 px-10" :rules="[required, validEmail]" v-model="email" label="Email*:" variant="outlined"></v-text-field>
                         <v-text-field class="mt-2 px-10" :rules="[required]" v-model="username" label="Username*:" variant="outlined"></v-text-field>
                         <v-text-field class="mt-2 px-10" :rules="[required, passwordStrength]" v-model="password" label="Password*:" variant="outlined" :type="showPassword ? 'text':'password'"
                             :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'" @click:append-inner="showPassword = !showPassword"></v-text-field>
@@ -32,12 +32,14 @@
 <script setup>
 /**
  * Things to implement: 
- *      api call that verifies email doesn't already have linked account and its a valid email
- *      All Api calls to create user
- *      Auto login after creation
- *      2FA
- *      Captcha  
- *      warnings if email already exists, or username
+ *      api call that verifies email doesn't already have linked account and its a valid email - done
+ *      All Api calls to create user - done
+ *      Auto login after creation - in progess
+ *      2FA -  not adding yet
+ *      Captcha  - link to backend
+ *      warnings if email already exists, or username - Done
+ *      If user is already loggedin make then logout aka make a logout dialogue
+ *      Does not check if email is valid nor if username is not obscenely named.
  */
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
@@ -87,11 +89,18 @@ function passwordStrength(value){
     }
     return (value.length >=8 && hasUpper && hasLower && hasSpecial) || 'Password does not meet requirements';
 }
+/**
+ * uses regex to check format of email inputted, does not check if email is valid or fake. That process will need to be done on the backend.
+ */
+function validEmail(value){
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(value) || "Invalid email format";
+}
 
 onMounted(() => {
     if (window.turnstile) {
         window.turnstile.render('#turnstile-container', {
-            sitekey: '0x4AAAAAAC_08CQM29zaEjQ4',
+            sitekey: import.meta.env.VITE_TURNSTILE_SITE_KEY,
             callback: (token) => {
                 captchaToken.value = token
             }
@@ -112,16 +121,16 @@ async function createAccount(){
         return
     }
     try {
-        const Email = email.value;
+        const Email = email.value.toLowerCase();
         const Username = username.value;
         const Password = password.value;
-        const payload = {Email, Username, Password};
+        const CaptchaToken = captchaToken.value;
+        const payload = {Email, Username, Password, CaptchaToken};
         const response = await api.post("/api/auth/register", payload);
         if(response.data.success){
             const token = response.data.token;
             localStorage.setItem("token", token);
             authStore.setToken(token);
-            api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
             router.push('/');
         }
     } catch (error) {

@@ -19,6 +19,7 @@ export const useAuthStore = defineStore('auth', {
             this.token = null,
             this.user = null,
             localStorage.removeItem("token");
+            delete api.defaults.headers.common["Authorization"];
         }
     }
 });
