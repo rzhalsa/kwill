@@ -1,22 +1,22 @@
 {
   "object_id": "character",
-  "name": "Standardized",
+  "name": "Alfred",
   "classes": {
     "firstclass": {
-      "name": "",
-      "level": ""
+      "name": "Paladin",
+      "level": "12"
     }
   },
   "race": {
     "object_id": "race",
-    "name": ""
+    "name": "Human"
   },
-  "alignment": "",
+  "alignment": "Lawful Neutral",
   "background": {
     "object_id": "background",
-    "name": ""
+    "name": "Guildmaster"
   },
-  "player": "",
+  "player": "Ryan",
   "exp": "",
   "ability": {
     "object_id": "ability",
@@ -329,7 +329,7 @@
   },
   "ac": "",
   "initiative": "",
-  "speed": "",
+  "speed": "30",
   "hitpoints": {
     "current": "",
     "maximum": "",
@@ -560,8 +560,45 @@
       "spell5": "",
       "spell6": ""
     }
-  }
-  ,
+  },
   "userid": "user001",
-  "characterid": "character001"
+  "characterid": "character001",
+  "panels": {
+    "features": [
+      {
+        "name": "Speed",
+        "level": "1",
+        "action": "Movement",
+        "uses_current": "1",
+        "uses_max": "1",
+        "restore": "At Will",
+        "tooltip": "Speed 2x",
+        "description": "Doubles movement speed",
+        "formula": "speed * 2\nspeed * 2\nspeed / 2\nspeed + 3 - 4 +1",
+        "formula_active": true
+      }
+    ],
+    "spells_third": [
+      {
+        "level": "3",
+        "prepared": false,
+        "name": "Haste",
+        "school": "",
+        "action": "",
+        "attacksave": "",
+        "savetype": "",
+        "damage": "",
+        "damagetype": "",
+        "range": "",
+        "duration": "",
+        "areashape": "",
+        "areasize": "",
+        "tooltip": "",
+        "description": "speed * 2",
+        "formula": "",
+        "formula_active": false,
+        "showstats": true
+      }
+    ]
+  }
 }
