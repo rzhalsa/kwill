@@ -18,14 +18,18 @@
                                     :key="i"
                                     :label="score.toString()"
                                     :value="i"
-                                    color="primary"
+                                    color="secondary"
                                     :disabled="store.character_state.selections.includes(i) && store.character_state.selections[slotIndex] !== i"
                                 ></v-radio>
                             </v-radio-group>
                         </div>
                     </div>
                     <!-- Button to reset ability score radio buttons -->
-                    <v-btn class="ml-3" color="primary" @click="resetSelections">Reset</v-btn>
+                    <v-tooltip text="Reset your selected Ability Scores">
+                        <template v-slot:activator="{ props }">
+                            <v-btn class="ml-3" color="secondary" v-bind="props" @click="resetSelections">Reset</v-btn>
+                        </template>
+                    </v-tooltip>
                 </v-col>
                 <v-col class="mt-5 ml-4 mr-3">
                     <v-row>
@@ -38,7 +42,7 @@
                             <v-row class="mt-2 mb-6">
                                 <v-tooltip text="Use the following six scores for your abilities: 15, 14, 13, 12, 10, 8.">
                                     <template v-slot:activator="{ props }">
-                                        <v-btn size="small" color="primary" v-bind="props" @click="determineAbilityScores('standard_array')">Standard Array</v-btn>
+                                        <v-btn size="small" color="secondary" v-bind="props" @click="determineAbilityScores('standard_array')">Standard Array</v-btn>
                                     </template>
                                 </v-tooltip>
                             </v-row>
@@ -54,7 +58,7 @@
                             <v-row>
                                 <v-tooltip text="You have 27 points to spend on ability scores as you wish.">
                                     <template v-slot:activator="{ props }">
-                                        <v-btn size="small" color="primary" v-bind="props" @click="determineAbilityScores('point_buy')">Point Buy</v-btn>
+                                        <v-btn size="small" color="secondary" v-bind="props" @click="determineAbilityScores('point_buy')">Point Buy</v-btn>
                                     </template>
                                 </v-tooltip>
                             </v-row>
@@ -88,7 +92,7 @@
 </template>
 
 <script setup>
-    import { ref, computed, onBeforeUnmount, defineExpose } from 'vue'
+    import { ref, computed, onBeforeUnmount } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import { required } from '../helpers/requiredField';
     defineExpose({ validate })

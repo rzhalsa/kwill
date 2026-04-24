@@ -22,28 +22,49 @@
                     <v-row>
                         <v-col>
                             <!-- Personality -->
-                            <v-textarea rows="3" :rules="[required]" v-model="store.character_state['text.personality']" label="Personality" clearable></v-textarea>
+                            <v-tooltip text="Your character's personality">
+                                <template v-slot:activator="{ props }">
+                                    <v-textarea rows="3" :rules="[required]" v-bind="props" v-model="store.character_state['text.personality']" label="Personality" no-resize clearable></v-textarea>
+                                </template>
+                            </v-tooltip>
                         </v-col>
                         <v-col>
                             <!-- Bonds -->
-                            <v-textarea rows="3" :rules="[required]" v-model="store.character_state['text.bonds']" label="Bonds" clearable></v-textarea>
+                            <v-tooltip text="Strong connections your character has to people, places, or things">
+                                <template v-slot:activator="{ props }">
+                                    <v-textarea rows="3" :rules="[required]" v-bind="props" v-model="store.character_state['text.bonds']" label="Bonds" no-resize clearable></v-textarea>
+                                </template>
+                            </v-tooltip>
+                            
                         </v-col>
                     </v-row>
                     <v-row>
                         <v-col>
                             <!-- Ideals -->
-                            <v-textarea rows="3" :rules="[required]" v-model="store.character_state['text.ideals']" label="Ideals" clearable></v-textarea>
+                            <v-tooltip text="Your character's core values and beliefs">
+                                <template v-slot:activator="{ props }">
+                                    <v-textarea rows="3" :rules="[required]" v-bind="props" v-model="store.character_state['text.ideals']" label="Ideals" no-resize clearable></v-textarea>
+                                </template>
+                            </v-tooltip>           
                         </v-col>
                         <v-col>
                             <!-- Flaws -->
-                            <v-textarea rows="3" :rules="[required]" v-model="store.character_state['text.flaws']" label="Flaws" clearable></v-textarea>
+                            <v-tooltip text="Weaknesses or negative traits your character has">
+                                <template v-slot:activator="{ props }">
+                                    <v-textarea rows="3" :rules="[required]" v-bind="props" v-model="store.character_state['text.flaws']" label="Flaws" no-resize clearable></v-textarea>
+                                </template>
+                            </v-tooltip> 
+                            
                         </v-col>
-                    
                     </v-row>
                 </v-col>
                 <v-col>
-                        <!-- Backstory -->
-                        <v-textarea class="mr-6" :rules="[required]" rows="8" v-model="store.character_state.backstory" label="Backstory" clearable></v-textarea>
+                    <!-- Backstory -->
+                    <v-tooltip text="Your character's backstory before this adventure">
+                        <template v-slot:activator="{ props }">
+                            <v-textarea class="mr-6" :rules="[required]" rows="8" v-bind="props" v-model="store.character_state.backstory" label="Backstory" no-resize clearable></v-textarea>
+                        </template>
+                    </v-tooltip>    
                 </v-col>
             </v-row>
         </v-form>   
@@ -51,9 +72,9 @@
 </template>
 
 <script setup>
-    import { ref, defineExpose, onMounted } from 'vue'
+    import { ref, onMounted } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
-    import { required } from '../helpers/requiredField';
+    import { required } from '../helpers/requiredField'
     defineExpose({ validate })
     const store = useCharacterCreationStore()   // pinia store for character creation
     const form = ref(null)                      // for input validation
@@ -67,16 +88,7 @@
     async function validate() {
         return form.value?.validate()
     }
-
-    onMounted(() => {
-        console.log(store.character_state['text.features'])
-    })
 </script>
 
 <style>
-    .login-input {
-        color: black;
-        background-color: white;
-        width: 20vw;
-    }
 </style>

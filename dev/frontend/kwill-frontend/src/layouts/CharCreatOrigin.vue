@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, onBeforeUnmount, defineExpose } from 'vue'
+    import { ref, onMounted, onBeforeUnmount } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import axios from 'axios'
     import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'

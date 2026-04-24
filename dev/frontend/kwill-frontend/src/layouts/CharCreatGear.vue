@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, defineExpose } from 'vue'
+    import { ref, onMounted } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'
     import { required } from '../helpers/requiredField';

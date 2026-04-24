@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, onBeforeUnmount, defineExpose, computed } from 'vue'
+    import { ref, onMounted, onBeforeUnmount } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import { required } from '../helpers/requiredField';
     defineExpose({ validate })

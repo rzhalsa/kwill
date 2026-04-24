@@ -43,7 +43,7 @@
                         </ul>
                     </v-row>
                     <v-row>
-                        <v-textarea class="mr-10" :rules="[required]" v-model="store.character_state.appearance" label="Describe your Appearance" clearable></v-textarea>
+                        <v-textarea class="mr-10" :rules="[required]" v-model="store.character_state.appearance" label="Describe your Appearance" no-resize clearable></v-textarea>
                     </v-row>
                 </v-col>
             </v-row>
@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-    import { ref, defineExpose } from 'vue'
+    import { ref } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import { required } from '../helpers/requiredField'
     defineExpose({ validate })

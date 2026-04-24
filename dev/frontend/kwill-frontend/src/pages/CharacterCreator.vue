@@ -1,5 +1,5 @@
-<template class="gradient-card">
-    <v-card class="gradient-topcard">
+<template>
+    <v-card class="gradient-cc-background">
         <div class="center-page">
             <h1>Create a Character</h1>
             <v-card rounded="lg" class="gradient-character-creator">
@@ -139,7 +139,7 @@
 
     h1 {
         font-size: clamp(1rem, calc(2.5vw + 1rem), 6rem);
-        text-decoration: underline;
+        text-shadow: 1px 1px 2px black;
     }
 
     .hidden {
@@ -153,5 +153,6 @@
         max-width: 1200px;
         min-height: 500px;
         max-height: 1000px;
+        outline: solid black 1px;
     }
 </style>

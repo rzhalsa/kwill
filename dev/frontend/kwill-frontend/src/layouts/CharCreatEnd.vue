@@ -17,7 +17,7 @@
         </v-row>
         <v-row>
             <v-col class="d-flex justify-center">
-                <v-btn size="x-large" color="primary" @click="create">Create Character</v-btn>
+                <v-btn size="x-large" color="secondary" @click="create">Create Character</v-btn>
             </v-col>
         </v-row>
     </v-card>
