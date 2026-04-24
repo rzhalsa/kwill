@@ -1222,23 +1222,26 @@ function applyPanelOverrides() {
                 // Set mode: name = expr
                 isSet = true;
                 formula = rest.slice(1).trim();
+                
+                // Evaluate set operation now
+                const operation = parseFormulaToOperation(formula);
+                const computedValue = evaluateOperation(operation, characterData);
+                
+                if (!overrideList[targetId]) overrideList[targetId] = [];
+                overrideList[targetId].push({
+                    type: 'set',
+                    value: Number(computedValue) || 0,
+                    modifierExpr: null
+                });
             } else if (rest) {
-                // Modify mode: name [operators] - store for later PEMDAS processing
-                formula = targetKey + ' ' + rest;
-            } else {
-                return;
+                // Modify mode: just store, don't evaluate yet
+                if (!overrideList[targetId]) overrideList[targetId] = [];
+                overrideList[targetId].push({
+                    type: 'add',
+                    value: 0,  // Will be calculated in second pass
+                    modifierExpr: rest
+                });
             }
-
-            // Use the existing formula evaluator to handle the expression
-            const operation = parseFormulaToOperation(formula);
-            const computedValue = evaluateOperation(operation, characterData);
-
-            if (!overrideList[targetId]) overrideList[targetId] = [];
-            overrideList[targetId].push({
-                type: isSet ? 'set' : 'add',
-                value: Number(computedValue) || 0,
-                modifierExpr: !isSet ? rest : null  // Store original modifier expression
-            });
         });
     });
 
@@ -1257,18 +1260,45 @@ function applyPanelOverrides() {
         if (addOps.length > 0) {
             const targetKey = targetId.replace(/_value$/, '');
 
-            // For modifiers, we need to use the current DOM value (which now includes the set result)
-            // Create a temporary context with the new base value
+            // For modifiers, determine base value by priority:
+            // 1. Highest set value (if sets exist)
+            // 2. Base JSON value (if no sets)
+            // 3. Zero (if field doesn't exist in JSON)
+            let baseValue = finalValue;  // This is highest set or 0
+            
+            if (setOps.length === 0) {
+                // No set operations, try to get base JSON value
+                const parts = targetKey.split('_');
+                let jsonVal = characterData;
+                for (const part of parts) {
+                    if (jsonVal && typeof jsonVal === 'object') {
+                        jsonVal = jsonVal[part];
+                    } else {
+                        jsonVal = undefined;
+                        break;
+                    }
+                }
+                if (jsonVal !== undefined && jsonVal !== null && typeof jsonVal !== 'object') {
+                    baseValue = Number(jsonVal) || 0;
+                }
+            }
+            
+            // Create a temporary context with the determined base value
             const tempContext = JSON.parse(JSON.stringify(characterData));
             const parts = targetKey.split('_');
-            let obj = tempContext;
-            for (let i = 0; i < parts.length - 1; i++) {
-                if (!obj[parts[i]]) obj[parts[i]] = {};
-                obj = obj[parts[i]];
+            
+            if (parts.length === 1) {
+                // Simple field name without underscores
+                tempContext[targetKey] = baseValue;
+            } else {
+                // Nested field with underscores
+                let obj = tempContext;
+                for (let i = 0; i < parts.length - 1; i++) {
+                    if (!obj[parts[i]]) obj[parts[i]] = {};
+                    obj = obj[parts[i]];
+                }
+                obj[parts[parts.length - 1]] = baseValue;
             }
-            // Use panel resolveVar() to get the live sheet value of the target field
-            obj[parts[parts.length - 1]] = resolveVar(targetKey, null);
-
 
             // Parse each modifier expression by PEMDAS rules
             const parsed = addOps.map(op => parseModifierByPEMDAS(op.modifierExpr));
@@ -1277,20 +1307,26 @@ function applyPanelOverrides() {
             const multDivOps = parsed.filter(p => p.multDivPart);
             const addSubOps = parsed.filter(p => p.addSubPart);
 
-            // Build combined formula: mult/div first, then add/sub
+            // Build ONE combined formula: all mult/div first, then all add/sub
             let combinedFormula = targetKey;
-
+            
+            // Add all mult/div parts
             multDivOps.forEach(op => {
                 combinedFormula += ' ' + op.multDivPart;
             });
-
+            
+            // Add all add/sub parts
             addSubOps.forEach(op => {
                 combinedFormula += ' ' + op.operator + ' (' + op.addSubPart + ')';
             });
 
+            console.log('Combined formula:', combinedFormula, 'tempContext value:', tempContext[targetKey]);
+
             // Evaluate the combined modifier expression using the temp context with the set result
             const modifierOp = parseFormulaToOperation(combinedFormula);
+            console.log('Operation object:', modifierOp);
             const modifierResult = evaluateOperation(modifierOp, tempContext);
+            console.log('Modifier result:', modifierResult);
             finalValue = Number(modifierResult) || 0;
         }
 
