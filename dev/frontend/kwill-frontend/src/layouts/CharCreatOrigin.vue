@@ -3,7 +3,7 @@
         <v-form ref="form" @submit.prevent>
             <v-row>
                 <v-card-title class="mt-3 ml-3 cc-title d-flex align-center justify-space-between">
-                    Step 2/8: Character Origin
+                    Step 2/9: Character Origin
                     <v-icon class="ml-4" icon="mdi-alien-outline"></v-icon>
                 </v-card-title>
                 <v-divider horizontal></v-divider>
@@ -110,7 +110,7 @@
      */
     onMounted(async () => {
         const race_data = await fetchApiData('api/srd/races')
-        setCharCreateArrayData(races, race_data)
+        setCharCreateArrayData(races, race_data, true)
         const background_data = await fetchBackgroundData()
         setBackgrounds(background_data)
     })

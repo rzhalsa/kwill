@@ -3,7 +3,7 @@
         <v-form ref="form" @submit.prevent>
             <v-row>
                 <v-card-title class="mt-3 ml-3 cc-title d-flex align-center justify-space-between">
-                    Step 6/8: Feats
+                    Step 7/9: Feats
                     <v-icon class="ml-4" icon="mdi-weight-lifter"></v-icon>
                 </v-card-title>
                 <v-divider horizontal class="mb-3"></v-divider>

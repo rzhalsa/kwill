@@ -3,7 +3,7 @@
         <v-form ref="form" @submit.prevent>
             <v-row>
                 <v-card-title class="mt-3 ml-3 cc-title d-flex align-center justify-space-between">
-                    Step 4/8: Skills
+                    Step 4/9: Skills
                     <v-icon class="ml-4" icon="mdi-karate"></v-icon>
                 </v-card-title>
                 <v-divider horizontal></v-divider>

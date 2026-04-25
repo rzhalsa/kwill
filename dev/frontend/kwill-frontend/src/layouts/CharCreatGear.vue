@@ -3,7 +3,7 @@
         <v-form ref="form" @submit.prevent>
             <v-row>
                 <v-card-title class="mt-3 ml-3 cc-title d-flex align-center justify-space-between">
-                    Step 5/8: Gear
+                    Step 6/9: Gear
                     <v-icon class="ml-4" icon="mdi-sword"></v-icon>
                 </v-card-title>
                 <v-divider horizontal class="mb-3"></v-divider>
