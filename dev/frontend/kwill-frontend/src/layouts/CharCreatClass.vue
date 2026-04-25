@@ -18,7 +18,9 @@
                     <v-select
                         :rules="[required]"
                         v-model="store.character_state.classes.firstclass.name"
+                        @update:model-value="store.resetSkills"
                         :items="classes"
+                        item-title="name"
                         label="Class"
                         class="ml-4 mr-12"
                         required
@@ -73,7 +75,7 @@
      */
     onMounted(async () => {
         const character_data = await fetchApiData('api/srd/classes')
-        setCharCreateArrayData(classes, character_data, true)
+        setCharCreateArrayData(classes, character_data)
     })
 </script>
 

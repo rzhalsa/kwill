@@ -16,6 +16,7 @@
                         v-for="(item, index) in store.character_state.gear_amt"
                         v-model="store.character_state.equipment[index]"
                         :items="gear"
+                        item-title="name"
                         :rules="[required]"
                         label="Gear"
                         class="ma-4"

@@ -13,6 +13,7 @@
                         :rules="[required]"
                         v-model="store.character_state.race.name"
                         :items="races"
+                        item-title="name"
                         label="Race"
                         class="ml-6 mb-6 mr-6"
                     ></v-select>
@@ -110,7 +111,7 @@
      */
     onMounted(async () => {
         const race_data = await fetchApiData('api/srd/races')
-        setCharCreateArrayData(races, race_data, true)
+        setCharCreateArrayData(races, race_data)
         const background_data = await fetchBackgroundData()
         setBackgrounds(background_data)
     })

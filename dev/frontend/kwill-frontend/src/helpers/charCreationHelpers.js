@@ -28,16 +28,11 @@ export async function fetchApiData(path) {
  * Populates arr with the fetched data from the api
  * @param arr the v-model array to populate
  * @param data the fetched data
- * @param only_name bool flag on whether to just copy the name or entire json data
  */
-export function setCharCreateArrayData(arr, data, only_name) {
+export function setCharCreateArrayData(arr, data) {
     for(let i = 0; i < data.length; i++) {
         if(!arr.value.includes(data[i].name)) { // prevent duplicates
-            if(only_name) {
-                arr.value.push(data[i].name)
-            } else {
-                arr.value.push(data[i])
-            }
+            arr.value.push(data[i])
         }
     }
 }

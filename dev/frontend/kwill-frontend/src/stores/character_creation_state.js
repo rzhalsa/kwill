@@ -140,6 +140,31 @@ export const useCharacterCreationStore = defineStore('character_creation', {
                 }
             },
             'selected_skills': [],
+            'selected_level': '',
+            'spellcasting': { class: "" },
+            'spells': {
+                cantrip1: "",
+                cantrip2: "",
+                cantrip3: "",
+                cantrip4: "",
+                cantrip5: "",
+                cantrip6: "",
+                cantrip7: "",
+                cantrip8: "",
+                cantrip9: "",
+                cantrip10: "",
+                cantrip11: "",
+                cantrip12: "",
+                first: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "" },
+                second: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "" },
+                third: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, prepared10: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "", spell10: "" },
+                fourth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, prepared10: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "", spell10: "" },
+                fifth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
+                sixth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
+                seventh: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
+                eighth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
+                ninth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" }
+            },
             'feat_amt': 0,
             'equipment': [],
             'gear_amt': 0,
@@ -334,6 +359,34 @@ export const useCharacterCreationStore = defineStore('character_creation', {
                                 }
                             }
                         break
+                    case 'spellcasting':
+                        this.character_state[key] = { class: "" }
+                        break
+                    case 'spells':
+                        this.character_state[key] = {
+                            cantrip1: "",
+                            cantrip2: "",
+                            cantrip3: "",
+                            cantrip4: "",
+                            cantrip5: "",
+                            cantrip6: "",
+                            cantrip7: "",
+                            cantrip8: "",
+                            cantrip9: "",
+                            cantrip10: "",
+                            cantrip11: "",
+                            cantrip12: "",
+                            first: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "" },
+                            second: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "" },
+                            third: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, prepared10: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "", spell10: "" },
+                            fourth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, prepared10: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "", spell10: "" },
+                            fifth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
+                            sixth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
+                            seventh: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
+                            eighth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
+                            ninth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" }
+                        }
+                        break
                     default:
                         this.character_state[key] = ''
                         break
@@ -341,6 +394,88 @@ export const useCharacterCreationStore = defineStore('character_creation', {
             }
             this.is_dirty = false
             this.allow_leave = false
+        },
+        /**
+         * Separate function for resetting skill proficiencies when the user
+         * changes their selected class
+         */
+        resetSkills() {
+            this.character_state.selected_skills = []
+            this.character_state.skills = {
+                "object_id": "skills",
+                "athletics": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "acrobatics": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "sleightofhand": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "stealth": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "arcana": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "history": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "investigation": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "nature": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "religion": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "animalhandling": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "insight": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "medicine": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "perception": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "survival": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "deception": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "intimidation": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "performance": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "persuasion": {
+                    "proficiency": false,
+                    "modifier": ""
+                }
+            }
         }
     }
 })

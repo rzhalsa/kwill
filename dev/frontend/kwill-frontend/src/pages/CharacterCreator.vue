@@ -13,7 +13,7 @@
                 </v-row>
                 <v-row class="d-flex justify-end mr-2 mb-2">
                     <!-- Move forward button -->
-                    <v-btn :class="{ hidden: order_count === 8 }" icon="mdi-arrow-right" @click="moveForward"></v-btn>
+                    <v-btn :class="{ hidden: order_count === 9 }" icon="mdi-arrow-right" @click="moveForward"></v-btn>
                 </v-row>
             </v-card>
         </div>

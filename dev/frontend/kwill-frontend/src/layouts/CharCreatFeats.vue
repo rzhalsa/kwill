@@ -18,6 +18,7 @@
                         :key="index"
                         v-model="store.character_state['text.features'][index]"
                         :items="feats"
+                        item-title="name"
                         :rules="[required]"
                         label="Feats"
                         class="ma-4"
