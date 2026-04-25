@@ -54,6 +54,9 @@ namespace Kwill.Api
 
             int maxHp = CalculateMaxHp(result, abilityModifiers, srdData);
             int ac = CalculateArmorClass(result, abilityModifiers, srdData);
+            string speed = CalculateSpeed(result, srdData);
+            string hitDiceTotal = CalculateHitDiceTotal(result, srdData);
+
 
             var savingThrows = CalculateSavingThrows(result, abilityModifiers, proficiencyBonus);
             var skills = CalculateSkills(result, abilityModifiers, proficiencyBonus);
@@ -62,7 +65,8 @@ namespace Kwill.Api
             FillSavingThrows(result, savingThrows);
             FillSkills(result, skills);
             FillHitPoints(result, maxHp);
-            FillTopLevelStats(result, level, proficiencyBonus, ac, abilityModifiers);
+            FillHitDice(result, hitDiceTotal);
+            FillTopLevelStats(result, level, proficiencyBonus, ac, speed, abilityModifiers);
 
             return result;
         }
@@ -363,6 +367,84 @@ namespace Kwill.Api
             return bestAc;
         }
 
+        private static string CalculateSpeed(BsonDocument character, Dictionary<string, List<BsonDocument>> srdData)
+        {
+            if (!character.Contains("race") || !character["race"].IsBsonDocument)
+                return "";
+
+            var raceDoc = character["race"].AsBsonDocument;
+            string raceName = raceDoc.GetValue("name", "").AsString;
+
+            if (string.IsNullOrWhiteSpace(raceName))
+                return "";
+
+            if (!srdData.ContainsKey("srd_races"))
+                return "";
+
+            string normalizedRaceIndex = NormalizeSrdIndex(raceName);
+
+            var raceData = srdData["srd_races"]
+                .FirstOrDefault(r =>
+                    (r.Contains("index") && NormalizeSrdIndex(r["index"].AsString) == normalizedRaceIndex) ||
+                    (r.Contains("name") && NormalizeSrdIndex(r["name"].AsString) == normalizedRaceIndex));
+
+            if (raceData == null)
+                return "";
+
+            if (raceData.Contains("speed"))
+            {
+                int speed = ParseInt(raceData["speed"], 0);
+                if (speed > 0)
+                    return speed.ToString();
+            }
+
+            if (raceData.Contains("speed") && raceData["speed"].IsString)
+                return raceData["speed"].AsString;
+
+            return "";
+        }
+
+        private static string CalculateHitDiceTotal(BsonDocument character, Dictionary<string, List<BsonDocument>> srdData)
+        {
+            if (!character.Contains("classes") || !character["classes"].IsBsonDocument)
+                return "";
+
+            var classesDoc = character["classes"].AsBsonDocument;
+            if (classesDoc.ElementCount == 0)
+                return "";
+
+            var groupedDice = new Dictionary<int, int>();
+
+            foreach (var classEntry in classesDoc.Elements)
+            {
+                if (!classEntry.Value.IsBsonDocument)
+                    continue;
+
+                var classDoc = classEntry.Value.AsBsonDocument;
+                string className = classDoc.GetValue("name", "").AsString;
+                int level = ParseInt(classDoc.GetValue("level", 0), 0);
+
+                if (string.IsNullOrWhiteSpace(className) || level <= 0)
+                    continue;
+
+                int hitDie = GetClassHitDie(className, srdData);
+
+                if (!groupedDice.ContainsKey(hitDie))
+                    groupedDice[hitDie] = 0;
+
+                groupedDice[hitDie] += level;
+            }
+
+            if (groupedDice.Count == 0)
+                return "";
+
+            var parts = groupedDice
+                .OrderByDescending(kvp => kvp.Key)
+                .Select(kvp => $"{kvp.Value}d{kvp.Key}");
+
+            return string.Join(" + ", parts);
+        }
+
         private static BsonDocument? FindEquipmentInSrd(string equipmentName, Dictionary<string, List<BsonDocument>> srdData)
         {
             if (!srdData.ContainsKey("srd_equipment"))
@@ -440,11 +522,13 @@ namespace Kwill.Api
             return false;
         }
 
-        private static void FillTopLevelStats(BsonDocument character, int level, int proficiencyBonus, int ac, BsonDocument abilityModifiers)
+        private static void FillTopLevelStats(BsonDocument character, int level, int proficiencyBonus, int ac, string speed, BsonDocument abilityModifiers)
         {
             character["level"] = level;
             character["proficiency_bonus"] = proficiencyBonus;
             character["ac"] = ac;
+            character["speed"] = speed;
+
 
             int dexMod = abilityModifiers.GetValue("dexterity", 0).ToInt32();
             character["initiative"] = FormatSigned(dexMod);
@@ -465,6 +549,30 @@ namespace Kwill.Api
                 var statDoc = abilityDoc[ability].AsBsonDocument;
                 int mod = abilityModifiers.GetValue(ability, 0).ToInt32();
                 statDoc["modifier"] = mod;
+            }
+        }
+
+        private static void FillHitDice(BsonDocument character, string hitDiceTotal)
+        {
+            if (!character.Contains("hitDice") || !character["hitDice"].IsBsonDocument)
+            {
+                character["hitDice"] = new BsonDocument
+        {
+            { "total", hitDiceTotal },
+            { "current", hitDiceTotal }
+        };
+                return;
+            }
+
+            var hitDiceDoc = character["hitDice"].AsBsonDocument;
+
+            hitDiceDoc["total"] = hitDiceTotal;
+
+            if (!hitDiceDoc.Contains("current") ||
+                hitDiceDoc["current"].IsBsonNull ||
+                string.IsNullOrWhiteSpace(hitDiceDoc["current"].ToString()))
+            {
+                hitDiceDoc["current"] = hitDiceTotal;
             }
         }
 
