@@ -4,6 +4,8 @@
 .menu-item * {
   font-family: 'PT Serif' !important;
 }
+
+/* Navbar */
 .v-theme--kwillTheme .gradient-navbar {
   background: linear-gradient(to right, #f97272, rgb(218, 70, 70)) !important;
 }
@@ -11,50 +13,63 @@
   background: linear-gradient(to right, #370808, #422828) !important;
 }
 
+/* Main background top section */
 .v-theme--kwillTheme .gradient-topcard {
-background: linear-gradient(to bottom, #ffd1d1 0%, #ebcaca 50%, #faeded 100%) !important;
+  background: linear-gradient(to bottom, #ffd1d1b6 0%, #ebcacac4 50%, #faeded 100%) !important;
 }
 .v-theme--kwillThemeDark .gradient-topcard {
-background: linear-gradient(to bottom, #2b1111, #342a2a ) !important;
+  background: linear-gradient(to bottom, #2b1111, #342a2a ) !important;
 }
 
+/* Main background middle section */
 .v-theme--kwillTheme .gradient-card {
-background: linear-gradient(to bottom, #faeded 0%, #f7f0f0 50%, #ffffff 100%) !important;
+  background: linear-gradient(to bottom, #faeded 0%, #f7f0f0 50%, #ffffff 100%) !important;
 }
 .v-theme--kwillThemeDark .gradient-card {
-background: linear-gradient(to bottom, #342a2a 0%, #2c2929 50%, #272727 100%) !important;
+  background: linear-gradient(to bottom, #342a2a 0%, #2c2929 50%, #272727 100%) !important;
 }
 
+/* Main background bottom section */
 .v-theme--kwillTheme .gradient-card-bottom {
-background: linear-gradient(to bottom, #ffffff 0%, #f7f0f0 50%, #ffd1d1 100%) !important;
+  background: linear-gradient(to bottom, #ffffff 0%, #f7f0f0 50%, #ffd1d18d 100%) !important;
 }
 .v-theme--kwillThemeDark .gradient-card-bottom {
-background: linear-gradient(to bottom, #272727 0%, #211d1d 50%, #2b1111 100%) !important;
+  background: linear-gradient(to bottom, #272727 0%, #211d1d 50%, #2b1111 100%) !important;
 }
 
+/* Login card */
 .v-theme--kwillTheme .gradient-login {
-background: linear-gradient(to bottom, #383333 0%, #3c2e2e 50%, #1f1414 100%) !important;
+  background: linear-gradient(to bottom, #383333 0%, #3c2e2e 50%, #1f1414 100%) !important;
 }
 .v-theme--kwillThemeDark .gradient-login {
-background: linear-gradient(to bottom, #3b3b3b 0%, #373333 50%, #2b2a2a 100%) !important;
+  background: linear-gradient(to bottom, #3b3b3b 0%, #373333 50%, #2b2a2a 100%) !important;
 }
 
+/* Character Creation background */
+.v-theme--kwillTheme .gradient-cc-background {
+  background: linear-gradient(to bottom, #ebe4e4da, rgb(221, 208, 208)) !important;  
+}
+.v-theme--kwillThemeDark .gradient-cc-background {
+  background: linear-gradient(to bottom, #292222da, rgb(29, 25, 25)) !important;    
+}
+
+/* Character Creation card */
 .v-theme--kwillTheme .gradient-character-creator {
-background: linear-gradient(to bottom, #706a6a, rgb(177, 175, 175)) !important;  
+  background: linear-gradient(to bottom, #d77373da, #d87373da) !important;  
 }
-
 .v-theme--kwillThemeDark .gradient-character-creator {
-background: linear-gradient(to bottom, rgb(67, 62, 62), #2d2c2c) !important;
+  background: linear-gradient(to bottom, rgb(111, 52, 52), #672323) !important;
 }
 
+/* Character Creation leave warning dialog box */
 .v-theme--kwillTheme .gradient-cc-dialog {
-background: linear-gradient(to bottom, rgb(202, 51, 51), rgb(222, 177, 177)) !important;
+  background: linear-gradient(to bottom, rgb(202, 51, 51), rgb(222, 177, 177)) !important;
 }
-
 .v-theme--kwillThemeDark .gradient-cc-dialog {
-background: linear-gradient(to bottom, rgb(163, 95, 95), rgb(77, 17, 17)) !important;
+  background: linear-gradient(to bottom, rgb(163, 95, 95), rgb(77, 17, 17)) !important;
 }
 
+/* Character creation title styling */
 .cc-title {
   font-size: clamp(0.5rem, calc(1.3vw + 0.3rem), 5rem);
   font-weight: bold;
