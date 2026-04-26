@@ -14,7 +14,7 @@ public class CharacterController : ControllerBase
     private readonly CharacterService _characterService;
 
     public CharacterController(CharacterService characterService) => _characterService = characterService;
-    
+
 
     // POST /api/character - Create new character
     [HttpPost]
@@ -53,12 +53,12 @@ public class CharacterController : ControllerBase
         catch (Exception ex)
         {
             return StatusCode(500, new { error = ex.Message });
-        }   
+        }
     }
 
     // GET /api/character/{characterId} - Get character by ID
     [HttpGet("{characterId}")]
-    public async Task<IActionResult> Get(string characterId)
+    public async Task<IActionResult> Get(Guid characterId)
     {
         try
         {
@@ -68,7 +68,7 @@ public class CharacterController : ControllerBase
             {
                 return NotFound(new { message = "Character not found" });
             }
-            
+
             return Content(
                 character.ToJson(new JsonWriterSettings
                 {
@@ -85,7 +85,7 @@ public class CharacterController : ControllerBase
 
     // GET /api/character/user/{userId} - Get all characters for a user
     [HttpGet("user/{userId}")]
-    public async Task<IActionResult> GetUserCharacters(string userId)
+    public async Task<IActionResult> GetUserCharacters(Guid userId)
     {
         try
         {
@@ -94,7 +94,7 @@ public class CharacterController : ControllerBase
 
             var settings = new JsonWriterSettings { OutputMode = JsonOutputMode.RelaxedExtendedJson };
             var json = "[" + string.Join(",", characters.Select(c => c.ToJson(settings))) + "]";
-            
+
             return Content(json, "application/json");
         }
         catch (Exception ex)
@@ -103,30 +103,30 @@ public class CharacterController : ControllerBase
         }
     }
 
-    // GET /api/character/user/{userId} - Get all characters for a user
+    // GET /api/character/summaries/{userId} - Get character summaries for a user
     [HttpGet("summaries/{userId}")]
-        public async Task<IActionResult> GetCharacterSummaries(string userId)
+    public async Task<IActionResult> GetCharacterSummaries(Guid userId)
+    {
+        try
         {
-            try
-            {
-                var summaries = await _characterService.GetCharacterSummariesByUserIdAsync(userId);
-                
-                if (summaries.Count == 0)
-                {
-                    return Ok(new { characters = new List<object>() });
-                }
+            var summaries = await _characterService.GetCharacterSummariesByUserIdAsync(userId);
 
-                return Ok(new { characters = summaries });
-            }
-            catch (Exception ex)
+            if (summaries.Count == 0)
             {
-                return StatusCode(500, new { error = ex.Message });
+                return Ok(new { characters = new List<object>() });
             }
+
+            return Ok(new { characters = summaries });
         }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = ex.Message });
+        }
+    }
 
     // PUT /api/character/{characterId} - Update character
     [HttpPut("{characterId}")]
-    public async Task<IActionResult> Update(string characterId, [FromBody] JsonElement body)
+    public async Task<IActionResult> Update(Guid characterId, [FromBody] JsonElement body)
     {
         try
         {
@@ -135,7 +135,7 @@ public class CharacterController : ControllerBase
             if (!doc.Contains("userid"))
                 return BadRequest(new { message = "userid is required" });
 
-            var userId = doc["userid"].AsString;
+            var userId = doc["userid"].AsGuid;
 
             var result = await _characterService.UpdateAsync(userId, characterId, doc);
 
@@ -175,7 +175,7 @@ public class CharacterController : ControllerBase
 
     // DELETE /api/character/{characterId} - Delete character
     [HttpDelete("{characterId}")]
-    public async Task<IActionResult> Delete(string characterId, [FromQuery] string userId)
+    public async Task<IActionResult> Delete(Guid characterId, [FromQuery] Guid userId)
     {
         try
         {
