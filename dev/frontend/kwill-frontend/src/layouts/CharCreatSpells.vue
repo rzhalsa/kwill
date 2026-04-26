@@ -13,18 +13,28 @@
             </v-row>
             <v-row>
                 <v-col cols="3" class="ml-4 mr-16">
+                    <!-- Selected spell leve dropdown -->
                     <v-select
                         v-model="store.character_state.selected_level"
-                        :items="Object.keys(levels)"
+                        :items="Object.values(levels)"
+                        :item-title="Object.keys(levels)"
                         label="Level"
                     ></v-select>
                 </v-col>
                 <v-col>
-                    <v-select
-                        :items="spells.filter(n => n.level === levels[store.character_state.selected_level])"
-                        item-title="name"
-                        label="Level"
-                    ></v-select>
+                    <v-btn color="primary" @click="addSpell" class="ml-10 mr-10">Add Spell</v-btn>
+                    <v-btn color="secondary" @click="removeSpell">Remove Spell</v-btn>
+                    <div class="spell-area mt-6 mr-6">
+                        <v-select
+                            v-for="(item, index) in store.character_state.spell_amt[store.character_state.selected_level]"
+                            :key="index"
+                            v-model="spellModel(store.character_state.selected_level, index).value"
+                            :items="spells.filter(n => n.level === store.character_state.selected_level)"
+                            item-title="name"
+                            label="Spell"
+                            return-object
+                        ></v-select>
+                    </div>    
                 </v-col>
             </v-row>
         </v-form>
@@ -32,7 +42,7 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue'
+    import { ref, onMounted, onBeforeMount, computed } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'
     import { required } from '../helpers/requiredField';
@@ -67,6 +77,38 @@
     }
 
     /**
+     * 
+     * @param level 
+     * @param index 
+     */
+    function spellModel(level, index) {
+        return computed({
+            get: () => store.character_state.spells[level][index],
+            set: value => {
+                store.character_state.spells[level][index] = {
+                    ...value,
+                    prepared: false,
+                }
+            }
+        })
+    }
+
+    /**
+     * Adds an additional gear slot
+     */
+    function addSpell() {
+        store.character_state.spell_amt[store.character_state.selected_level]++
+    }
+
+    /**
+     * Removes a gear slot
+     */
+    function removeSpell() {
+        if(store.character_state.spell_amt[store.character_state.selected_level] > 0)
+            store.character_state.spell_amt[store.character_state.selected_level]--
+    }
+
+    /**
      * Validates that the user has entered all required information on this page
      */
     async function validate() {
@@ -82,6 +124,10 @@
         setCharCreateArrayData(spells, spell_data)
         trimSpells()
     })
+
+    onBeforeMount(() => {
+        console.log(store.character_state.spells)
+    })
 </script>
 
 <style>
@@ -91,5 +137,12 @@
 
     .v-select .v-field-label, .v-select .v-field__input, .v-text-field .v-field__input {
         font-size: clamp(1rem, calc(1vw + 0.1rem), 3rem);
+    }
+
+    .spell-area {
+        height: 300px;  
+        overflow: auto;     
+        border: 1px solid #ddd;
+        padding: 8px;
     }
 </style>

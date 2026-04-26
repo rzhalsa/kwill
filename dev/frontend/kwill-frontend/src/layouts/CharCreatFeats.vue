@@ -14,14 +14,14 @@
                     <div class="feat-area mt-5">
                         <!-- Bug!!! make v-for loop from 0 to store-->
                         <v-select
-                        v-for="(item, index) in store.character_state.feat_amt"
-                        :key="index"
-                        v-model="store.character_state['text.features'][index]"
-                        :items="feats"
-                        item-title="name"
-                        :rules="[required]"
-                        label="Feats"
-                        class="ma-4"
+                            v-for="(item, index) in store.character_state.feat_amt"
+                            :key="index"
+                            v-model="store.character_state['text.features'][index]"
+                            :items="feats"
+                            item-title="name"
+                            :rules="[required]"
+                            label="Feats"
+                            class="ma-4"
                         ></v-select>
                     </div>
                 </v-col>

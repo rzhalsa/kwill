@@ -140,31 +140,21 @@ export const useCharacterCreationStore = defineStore('character_creation', {
                 }
             },
             'selected_skills': [],
-            'selected_level': '',
+            'selected_level': 0,
             'spellcasting': { class: "" },
-            'spells': {
-                cantrip1: "",
-                cantrip2: "",
-                cantrip3: "",
-                cantrip4: "",
-                cantrip5: "",
-                cantrip6: "",
-                cantrip7: "",
-                cantrip8: "",
-                cantrip9: "",
-                cantrip10: "",
-                cantrip11: "",
-                cantrip12: "",
-                first: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "" },
-                second: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "" },
-                third: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, prepared10: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "", spell10: "" },
-                fourth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, prepared10: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "", spell10: "" },
-                fifth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
-                sixth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
-                seventh: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
-                eighth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
-                ninth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" }
+            'spells' : {
+                0: [],
+                1: [],
+                2: [],
+                3: [],
+                4: [],
+                5: [],
+                6: [],
+                7: [],
+                8: [],
+                9: [],
             },
+            'spell_amt': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             'feat_amt': 0,
             'equipment': [],
             'gear_amt': 0,
@@ -218,6 +208,7 @@ export const useCharacterCreationStore = defineStore('character_creation', {
                 switch(key) {
                     case 'feat_amt':
                     case 'gear_amt':
+                    case 'selected_level':
                         this.character_state[key] = 0
                         break
                     case 'points_remaining':
@@ -364,28 +355,20 @@ export const useCharacterCreationStore = defineStore('character_creation', {
                         break
                     case 'spells':
                         this.character_state[key] = {
-                            cantrip1: "",
-                            cantrip2: "",
-                            cantrip3: "",
-                            cantrip4: "",
-                            cantrip5: "",
-                            cantrip6: "",
-                            cantrip7: "",
-                            cantrip8: "",
-                            cantrip9: "",
-                            cantrip10: "",
-                            cantrip11: "",
-                            cantrip12: "",
-                            first: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "" },
-                            second: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "" },
-                            third: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, prepared10: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "", spell10: "" },
-                            fourth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, prepared7: false, prepared8: false, prepared9: false, prepared10: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "", spell7: "", spell8: "", spell9: "", spell10: "" },
-                            fifth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
-                            sixth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
-                            seventh: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
-                            eighth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" },
-                            ninth: { prepared1: false, prepared2: false, prepared3: false, prepared4: false, prepared5: false, prepared6: false, spell1: "", spell2: "", spell3: "", spell4: "", spell5: "", spell6: "" }
+                            0: [],
+                            1: [],
+                            2: [],
+                            3: [],
+                            4: [],
+                            5: [],
+                            6: [],
+                            7: [],
+                            8: [],
+                            9: [],
                         }
+                        break
+                    case 'spell_amt':
+                        this.character_state[key] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                         break
                     default:
                         this.character_state[key] = ''
