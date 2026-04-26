@@ -3,7 +3,7 @@
         <v-form ref="form" @submit.prevent>
             <v-row>
                 <v-card-title class="mt-3 ml-3 cc-title d-flex align-center justify-space-between">
-                    Step 6/8: Feats
+                    Step 7/9: Feats
                     <v-icon class="ml-4" icon="mdi-weight-lifter"></v-icon>
                 </v-card-title>
                 <v-divider horizontal class="mb-3"></v-divider>
@@ -14,13 +14,14 @@
                     <div class="feat-area mt-5">
                         <!-- Bug!!! make v-for loop from 0 to store-->
                         <v-select
-                        v-for="(item, index) in store.character_state.feat_amt"
-                        :key="index"
-                        v-model="store.character_state['text.features'][index]"
-                        :items="feats"
-                        :rules="[required]"
-                        label="Feats"
-                        class="ma-4"
+                            v-for="(item, index) in store.character_state.feat_amt"
+                            :key="index"
+                            v-model="store.character_state['text.features'][index]"
+                            :items="feats"
+                            item-title="name"
+                            :rules="[required]"
+                            label="Feats"
+                            class="ma-4"
                         ></v-select>
                     </div>
                 </v-col>

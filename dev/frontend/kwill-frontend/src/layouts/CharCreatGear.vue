@@ -3,7 +3,7 @@
         <v-form ref="form" @submit.prevent>
             <v-row>
                 <v-card-title class="mt-3 ml-3 cc-title d-flex align-center justify-space-between">
-                    Step 5/8: Gear
+                    Step 6/9: Gear
                     <v-icon class="ml-4" icon="mdi-sword"></v-icon>
                 </v-card-title>
                 <v-divider horizontal class="mb-3"></v-divider>
@@ -13,12 +13,13 @@
                     <!-- Gear -->
                     <div class="gear-area mt-5">
                         <v-select
-                        v-for="(item, index) in store.character_state.gear_amt"
-                        v-model="store.character_state.equipment[index]"
-                        :items="gear"
-                        :rules="[required]"
-                        label="Gear"
-                        class="ma-4"
+                            v-for="(item, index) in store.character_state.gear_amt"
+                            v-model="store.character_state.equipment[index]"
+                            :items="gear"
+                            item-title="name"
+                            :rules="[required]"
+                            label="Gear"
+                            class="ma-4"
                         ></v-select>
                     </div>
                 </v-col>

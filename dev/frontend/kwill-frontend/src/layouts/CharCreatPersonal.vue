@@ -3,7 +3,7 @@
         <v-form ref="form" @submit.prevent>
             <v-row>
                 <v-card-title class="mt-3 ml-3 cc-title d-flex align-center justify-space-between">
-                    Step 8/8: Personal Information
+                    Step 9/9: Personal Information
                     <v-icon class="ml-4" icon="mdi-human-greeting"></v-icon>
                 </v-card-title>
                 <v-divider horizontal class="mb-6"></v-divider>

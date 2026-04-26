@@ -325,24 +325,27 @@
                         style="height: 220px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px;">
                         <span style="text-align: center;" data-label>Cantrips</span>
                         <div class="row" style="gap: 10px;">
+                            <!-- Cantrips -->
                             <div class="col">
-                                <input v-for="i in 6" :key="i" v-model="character.spells[`cantrip${i}`]" type="text"
+                                <input v-for="i in character.spells[0].length" :key="i" v-model="character.spells[0][i - 1].name" type="text"
                                     class="line-input">
                             </div>
+                            <!--
                             <div class="col">
-                                <input v-for="i in 6" :key="i" v-model="character.spells[`cantrip${i + 6}`]" type="text"
+                                <input v-for="i in 6" :key="i" v-model="character.spells[0][i + 6]" type="text"
                                     class="line-input">
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <div
                         style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
                         <span style="text-align: center;" data-label>1st Level</span>
                         <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                            <div v-for="i in 10" :key="i"
+                            <!-- Level 1 -->
+                            <div v-for="i in character.spells[1].length" :key="i"
                                 style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
-                                <input type="checkbox" v-model="character.spells.first[`prepared${i}`]">
-                                <input type="text" class="line-input" v-model="character.spells.first[`spell${i}`]">
+                                <input type="checkbox" v-model="character.spells[1][i - 1].prepared">
+                                <input type="text" class="line-input" v-model="character.spells[1][i - 1].name">
                             </div>
                         </div>
                     </div>
@@ -350,10 +353,11 @@
                         style="height: 275px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
                         <span style="text-align: center;" data-label>2nd Level</span>
                         <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                            <div v-for="i in 9" :key="i"
+                            <!-- Level 2 -->
+                            <div v-for="i in character.spells[2].length" :key="i"
                                 style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
-                                <input type="checkbox" v-model="character.spells.second[`prepared${i}`]">
-                                <input type="text" class="line-input" v-model="character.spells.second[`spell${i}`]">
+                                <input type="checkbox" v-model="character.spells[2][i - 1].prepared">
+                                <input type="text" class="line-input" v-model="character.spells[2][i - 1].name">
                             </div>
                         </div>
                     </div>
@@ -364,10 +368,11 @@
                         style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
                         <span style="text-align: center;" data-label>3rd Level</span>
                         <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                            <div v-for="i in 10" :key="i"
+                            <!-- Level 3 -->
+                            <div v-for="(i) in character.spells[3].length" :key="i"
                                 style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
-                                <input type="checkbox" v-model="character.spells.third[`prepared${i}`]">
-                                <input type="text" class="line-input" v-model="character.spells.third[`spell${i}`]">
+                                <input type="checkbox" v-model="character.spells[3][i - 1].prepared">
+                                <input type="text" class="line-input" v-model="character.spells[3][i - 1].name">
                             </div>
                         </div>
                     </div>
@@ -375,10 +380,11 @@
                         style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
                         <span style="text-align: center;" data-label>4th Level</span>
                         <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                            <div v-for="i in 10" :key="i"
+                            <!-- Level 4 -->
+                            <div v-for="i in character.spells[4].length" :key="i"
                                 style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
-                                <input type="checkbox" v-model="character.spells.fourth[`prepared${i}`]">
-                                <input type="text" class="line-input" v-model="character.spells.fourth[`spell${i}`]">
+                                <input type="checkbox" v-model="character.spells[4][i - 1].prepared">
+                                <input type="text" class="line-input" v-model="character.spells[4][i - 1].name">
                             </div>
                         </div>
                     </div>
@@ -386,10 +392,11 @@
                         style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
                         <span style="text-align: center;" data-label>5th Level</span>
                         <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                            <div v-for="i in 6" :key="i"
+                            <!-- Level 5 -->
+                            <div v-for="i in character.spells[5].length" :key="i"
                                 style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
-                                <input type="checkbox" v-model="character.spells.fifth[`prepared${i}`]">
-                                <input type="text" class="line-input" v-model="character.spells.fifth[`spell${i}`]">
+                                <input type="checkbox" v-model="character.spells[5][i - 1].prepared">
+                                <input type="text" class="line-input" v-model="character.spells[5][i - 1].name">
                             </div>
                         </div>
                     </div>
@@ -400,10 +407,11 @@
                         style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
                         <span style="text-align: center;" data-label>6th Level</span>
                         <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                            <div v-for="i in 6" :key="i"
+                            <!-- Level 6 -->
+                            <div v-for="i in character.spells[6].length" :key="i"
                                 style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
-                                <input type="checkbox" v-model="character.spells.sixth[`prepared${i}`]">
-                                <input type="text" class="line-input" v-model="character.spells.sixth[`spell${i}`]">
+                                <input type="checkbox" v-model="character.spells[6][i - 1].prepared">
+                                <input type="text" class="line-input" v-model="character.spells[6][i - 1].name">
                             </div>
                         </div>
                     </div>
@@ -411,10 +419,11 @@
                         style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
                         <span style="text-align: center;" data-label>7th Level</span>
                         <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                            <div v-for="i in 6" :key="i"
+                            <!-- Level 7 -->
+                            <div v-for="i in character.spells[7].length" :key="i"
                                 style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
-                                <input type="checkbox" v-model="character.spells.seventh[`prepared${i}`]">
-                                <input type="text" class="line-input" v-model="character.spells.seventh[`spell${i}`]">
+                                <input type="checkbox" v-model="character.spells[7][i - 1].prepared">
+                                <input type="text" class="line-input" v-model="character.spells[7][i - 1].name">
                             </div>
                         </div>
                     </div>
@@ -422,10 +431,11 @@
                         style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
                         <span style="text-align: center;" data-label>8th Level</span>
                         <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                            <div v-for="i in 6" :key="i"
+                            <!-- Level 8 -->
+                            <div v-for="i in character.spells[8].length" :key="i"
                                 style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
-                                <input type="checkbox" v-model="character.spells.eighth[`prepared${i}`]">
-                                <input type="text" class="line-input" v-model="character.spells.eighth[`spell${i}`]">
+                                <input type="checkbox" v-model="character.spells[8][i - 1].prepared">
+                                <input type="text" class="line-input" v-model="character.spells[8][i - 1].name">
                             </div>
                         </div>
                     </div>
@@ -433,10 +443,11 @@
                         style="height: 200px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
                         <span style="text-align: center;" data-label>9th Level</span>
                         <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                            <div v-for="i in 6" :key="i"
+                            <!-- Level 9 -->
+                            <div v-for="i in character.spells[9].length" :key="i"
                                 style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
-                                <input type="checkbox" v-model="character.spells.ninth[`prepared${i}`]">
-                                <input type="text" class="line-input" v-model="character.spells.ninth[`spell${i}`]">
+                                <input type="checkbox" v-model="character.spells[9][i - 1].prepared">
+                                <input type="text" class="line-input" v-model="character.spells[9][i - 1].name">
                             </div>
                         </div>
                     </div>
@@ -446,14 +457,16 @@
     </div>
 </template>
 <script setup>
-    import {ref, reactive, readonly, computed, watch} from 'vue';
-    import { createCharacter, updateCharacter } from '../models/characterModel';
+    import {ref, reactive, readonly, computed, watch, nextTick} from 'vue';
+    import { createCharacter, updateCharacter, copyJsonToCharacter } from '../models/characterModel';
     import { debounce } from 'lodash'
     const character = createCharacter();
     const amourBonus = ref(0);
     const changeCount = ref(0);
-    const characterId= ref(1);
-    const userId = ref(1);
+    const userId = ref("user001");
+    const characterId = ref("character004");
+    const suppressSave = ref(false);
+
      // ability mapping
     const skillAbilityMap = {
         acrobatics: 'dexterity',
@@ -509,32 +522,37 @@
         return list;
     });
 
-
-function getAbiltyMod(score) {
-    return Math.floor((score - 10) / 2);
-}
-//Groups skills and connects skills to abilities
-const groupedSkills = computed(() => {
-    const groups = {};
-    for (const key in character.skills) {
-        if (key === "object_id") continue;
-        const abilityType = skillAbilityMap[key];
-        if (!groups[abilityType]) {
-            groups[abilityType] = [];
-        }
-        //Calculates skill mod
-        const modifier = getAbiltyMod(character.ability[abilityType].score);
-        character.skills[key].modifier = modifier + (character.skills[key].proficiency ? proficiencyBonus.value : 0);
-
-        //Populates List
-        groups[abilityType].push({
-            name: key,
-        });
+    /**
+     * Gets the ability modifier for score
+     * 
+     * @param score the score to get the ability modifier of
+     */
+    function getAbiltyMod(score) {
+        return Math.floor((score - 10) / 2);
     }
-    return groups;
-});
 
-// proficiency boncus calculation
+    //Groups skills and connects skills to abilities
+    const groupedSkills = computed(() => {
+        const groups = {};
+        for (const key in character.skills) {
+            if (key === "object_id") continue;
+            const abilityType = skillAbilityMap[key];
+            if (!groups[abilityType]) {
+                groups[abilityType] = [];
+            }
+            //Calculates skill mod
+            const modifier = getAbiltyMod(character.ability[abilityType].score);
+            character.skills[key].modifier = modifier + (character.skills[key].proficiency ? proficiencyBonus.value : 0);
+
+            //Populates List
+            groups[abilityType].push({
+                name: key,
+            });
+        }
+        return groups;
+    });
+
+// proficiency bonus calculation
 const proficiencyBonus = computed(() => {
     const level = parseInt(character.classes.firstclass.level) || 1;
     if (level >= 17) { return 6; }
@@ -544,19 +562,20 @@ const proficiencyBonus = computed(() => {
     return 2;
 });
 
-
-import { copyJsonToCharacter } from '../models/characterModel';
-
 function populateSheet(data) {
+    suppressSave.value = true;
     if (typeof data === 'string') {
         data = JSON.parse(data);
     }
-    
     copyJsonToCharacter(character, data);
+    console.log(character);
+    nextTick(()=>{
+        suppressSave.value = false;
+    });
 }
 
 function getCharacterData() {
-    return JSON.parse(JSON.stringify(character));
+    return character;
 }
 
 defineExpose({
@@ -566,14 +585,16 @@ defineExpose({
 
 //Check that prevents API spams with a half second interval incase someone spams three changes quickly
 const debounceUpdate = debounce((newVal)=>{
-    updateCharacter(characterId,structuredClone(newVal),userId);
+    const plainCharacter = JSON.parse(JSON.stringify(newVal));
+    updateCharacter(characterId.value ,plainCharacter ,userId.value);
     changeCount.value=0;
 }, 500);
 
 //watches character model and waits for three changes to be made before calling debounce
 watch(character,(newVal)=>{
+    if(suppressSave.value) return;
     changeCount.value++;
-    if(changeCount >= 3){
+    if(changeCount.value >= 3){
         debounceUpdate(newVal);
     }
 })

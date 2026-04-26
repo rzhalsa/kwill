@@ -13,7 +13,7 @@
                 </v-row>
                 <v-row class="d-flex justify-end mr-2 mb-2">
                     <!-- Move forward button -->
-                    <v-btn :class="{ hidden: order_count === 8 }" icon="mdi-arrow-right" @click="moveForward"></v-btn>
+                    <v-btn :class="{ hidden: order_count === 9 }" icon="mdi-arrow-right" @click="moveForward"></v-btn>
                 </v-row>
             </v-card>
         </div>
@@ -39,6 +39,7 @@
     import CharCreatOrigin from '../layouts/CharCreatOrigin.vue';                   // character race, background, languages, and alignment
     import CharCreatAbilityScores from '../layouts/CharCreatAbilityScores.vue';     // character stats
     import CharCreatSkills from '../layouts/CharCreatSkills.vue';                   // skills and which one the character has proficiency in
+    import CharCreatSpells from '../layouts/CharCreatSpells.vue';                   // spells the character has
     import CharCreatGear from '../layouts/CharCreatGear.vue';                       // gear the character has
     import CharCreatFeats from '../layouts/CharCreatFeats.vue';                     // character feats
     import CharCreatAppearance from '../layouts/CharCreatAppearance.vue';           // character appearance
@@ -57,17 +58,19 @@
         [0, CharCreatOrigin],
         [1, CharCreatAbilityScores],
         [2, CharCreatSkills],
-        [3, CharCreatGear],
-        [4, CharCreatFeats],
-        [5, CharCreatAppearance],
-        [6, CharCreatPersonal],
-        [7, CharCreatEnd]
+        [3, CharCreatSpells],
+        [4, CharCreatGear],
+        [5, CharCreatFeats],
+        [6, CharCreatAppearance],
+        [7, CharCreatPersonal],
+        [8, CharCreatEnd]
     ])
     const rev_order = new Map([
-        [8, CharCreatPersonal],
-        [7, CharCreatAppearance],
-        [6, CharCreatFeats],
-        [5, CharCreatGear],
+        [9, CharCreatPersonal],
+        [8, CharCreatAppearance],
+        [7, CharCreatFeats],
+        [6, CharCreatGear],
+        [5, CharCreatSpells],
         [4, CharCreatSkills],
         [3, CharCreatAbilityScores],
         [2, CharCreatOrigin],

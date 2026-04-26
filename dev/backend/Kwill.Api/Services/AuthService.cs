@@ -17,12 +17,14 @@ namespace Kwill.Api.Services
         private readonly IConfiguration _configuration;
         private readonly PasswordHasher<User> _passwordHasher;
         private readonly KwillDB.KwillDB _mongoDb;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public AuthService(AppDbContext db, IConfiguration configuration, KwillDB.KwillDB mongoDb)
+        public AuthService(AppDbContext db, IConfiguration configuration, KwillDB.KwillDB mongoDb, IHttpClientFactory httpClientFactory)
         {
             _db = db;
             _configuration = configuration;
             _mongoDb = mongoDb;
+            _httpClientFactory = httpClientFactory;
             _passwordHasher = new PasswordHasher<User>();
         }
 
@@ -49,6 +51,16 @@ namespace Kwill.Api.Services
                     Success = false,
                     Message = "Password must be at least 8 characters long."
                 };
+            }
+
+            // Validate captcha
+             if (!await VerifyCaptchaAsync(request.CaptchaToken))
+             {
+                 return new AuthResponse
+                 {
+                     Success = false,
+                     Message = "Captcha verification failed."
+                 };
             }
 
             bool emailExists = await _db.Users.AnyAsync(u => u.Email == request.Email);
@@ -78,22 +90,21 @@ namespace Kwill.Api.Services
             };
 
             user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
-
+            
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
 
             var existingMongoUser = await _mongoDb.Users
-                .Find(Builders<BsonDocument>.Filter.Eq("user_id", user.UserId))
-                .FirstOrDefaultAsync();
+                 .Find(Builders<BsonDocument>.Filter.Eq("userid", new BsonBinaryData(user.UserId, GuidRepresentation.Standard)))
+                 .FirstOrDefaultAsync();
             try
             {
                 if (existingMongoUser == null)
                 {
-
-                var mongoUser = new BsonDocument
+                    var mongoUser = new BsonDocument
                 {
                     { "object_id", "user" },
-                    { "user_id", user.UserId }
+                    { "userid", new BsonBinaryData(user.UserId, GuidRepresentation.Standard) }
                 };
 
                 await _mongoDb.Users.InsertOneAsync(mongoUser);
@@ -163,7 +174,7 @@ namespace Kwill.Api.Services
             };
         }
 
-        public async Task<User?> GetUserByIdAsync(int userId)
+        public async Task<User?> GetUserByIdAsync(Guid userId)
         {
             return await _db.Users.FirstOrDefaultAsync(u => u.UserId == userId);
         }
@@ -201,6 +212,33 @@ namespace Kwill.Api.Services
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
             return (tokenString, expiresAtUtc);
+        }
+
+        private async Task<bool> VerifyCaptchaAsync(string token)
+        {
+            if (string.IsNullOrEmpty(token)) return false;
+
+            var secret = _configuration["Turnstile:Secret"];
+            if (string.IsNullOrEmpty(secret)) return false; // Or throw
+
+            using var client = _httpClientFactory.CreateClient();
+            var content = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("secret", secret),
+                new KeyValuePair<string, string>("response", token)
+            });
+
+            var response = await client.PostAsync("https://challenges.cloudflare.com/turnstile/v0/siteverify", content);
+            if (!response.IsSuccessStatusCode) return false;
+
+            var result = await response.Content.ReadFromJsonAsync<TurnstileResponse>();
+            return result?.Success == true;
+        }
+
+        private class TurnstileResponse
+        {
+            public bool Success { get; set; }
+            public string[] ErrorCodes { get; set; } = Array.Empty<string>();
         }
     }
 }

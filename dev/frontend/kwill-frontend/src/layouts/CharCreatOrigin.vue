@@ -3,7 +3,7 @@
         <v-form ref="form" @submit.prevent>
             <v-row>
                 <v-card-title class="mt-3 ml-3 cc-title d-flex align-center justify-space-between">
-                    Step 2/8: Character Origin
+                    Step 2/9: Character Origin
                     <v-icon class="ml-4" icon="mdi-alien-outline"></v-icon>
                 </v-card-title>
                 <v-divider horizontal></v-divider>
@@ -13,6 +13,7 @@
                         :rules="[required]"
                         v-model="store.character_state.race.name"
                         :items="races"
+                        item-title="name"
                         label="Race"
                         class="ml-6 mb-6 mr-6"
                     ></v-select>

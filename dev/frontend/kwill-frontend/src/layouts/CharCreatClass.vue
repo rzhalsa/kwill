@@ -3,7 +3,7 @@
         <v-form ref="form" @submit.prevent>
             <v-row>
                 <v-card-title class="mt-3 ml-3 cc-title d-flex align-center justify-space-between">
-                    Step 1/8: Class and Names
+                    Step 1/9: Class and Names
                     <v-icon class="ml-4" icon="mdi-feather"></v-icon>
                 </v-card-title>
                 <v-divider horizontal></v-divider>
@@ -18,7 +18,9 @@
                     <v-select
                         :rules="[required]"
                         v-model="store.character_state.classes.firstclass.name"
+                        @update:model-value="store.resetSkills"
                         :items="classes"
+                        item-title="name"
                         label="Class"
                         class="ml-4 mr-12"
                         required

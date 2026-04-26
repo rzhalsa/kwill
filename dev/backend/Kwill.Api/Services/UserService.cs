@@ -12,7 +12,7 @@ namespace Kwill.Api.Services
 
         public async Task<BsonDocument?> GetByUserIdAsync(string userId)
         {
-            var filter = Builders<BsonDocument>.Filter.Eq("user_id", userId);
+            var filter = Builders<BsonDocument>.Filter.Eq("userid", userId);
             return await _db.Users.Find(filter).FirstOrDefaultAsync();
         }
 
@@ -26,7 +26,7 @@ namespace Kwill.Api.Services
 
                 var userDoc = new BsonDocument
                 {
-                    { "user_id", userId },
+                    { "userid", userId },
                     { "email", email },
                     { "created_at", DateTime.UtcNow },
                     { "characters", new BsonArray() }
@@ -45,7 +45,7 @@ namespace Kwill.Api.Services
         {
             try
             {
-                var filter = Builders<BsonDocument>.Filter.Eq("user_id", userId);
+                var filter = Builders<BsonDocument>.Filter.Eq("userid", userId);
                 var user = await _db.Users.Find(filter).FirstOrDefaultAsync();
 
                 if (user == null)
@@ -65,7 +65,7 @@ namespace Kwill.Api.Services
         {
             try
             {
-                var filter = Builders<BsonDocument>.Filter.Eq("user_id", userId);
+                var filter = Builders<BsonDocument>.Filter.Eq("userid", userId);
                 var user = await _db.Users.Find(filter).FirstOrDefaultAsync();
 
                 if (user == null)

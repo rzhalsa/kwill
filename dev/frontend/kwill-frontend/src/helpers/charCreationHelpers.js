@@ -32,7 +32,7 @@ export async function fetchApiData(path) {
 export function setCharCreateArrayData(arr, data) {
     for(let i = 0; i < data.length; i++) {
         if(!arr.value.includes(data[i].name)) { // prevent duplicates
-            arr.value.push(data[i].name)
+            arr.value.push(data[i])
         }
     }
 }

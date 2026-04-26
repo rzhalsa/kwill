@@ -1,10 +1,15 @@
+using Kwill.data;
 using Kwill.Api;
 using System.Text;
 using Kwill.Api.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Microsoft.IdentityModel.Tokens;
 
+
+// look in properties/launchSettings.json for ports.
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
@@ -15,18 +20,21 @@ builder.Services.AddCors(options =>
                         .AllowAnyMethod());
 });
 
+// Add services to the container.
+
 builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<KwillDB.KwillDB>();
+builder.Services.AddSingleton<KwillDB.KwillDB>(); // ASP.NET creates the instance of the singleton class.
 builder.Services.AddScoped<SrdService>();
 builder.Services.AddScoped<CharacterService>();
-builder.Services.AddScoped<UserService>();  // YOUR addition
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddHttpClient();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // JWT config
 var jwtSection = builder.Configuration.GetSection("Jwt");
@@ -64,6 +72,7 @@ using (var scope = app.Services.CreateScope())
     await MongoIndexes.EnsureAsync(db);
 }
 
+
 app.UseCors("AllowAll");
 
 if (app.Environment.IsDevelopment())
@@ -73,6 +82,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseAuthorization();
+
 app.MapControllers();
+
 app.Run();

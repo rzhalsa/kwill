@@ -39,25 +39,23 @@ public class SrdController : ControllerBase
     }
 
     // Get spells with optional filters
-    // GET /api/srd/spells?class=wizard (all wizard spells, any level)
-    // GET /api/srd/spells?level=3 (all 3rd level spells, any class)
-    // GET /api/srd/spells?class=wizard&level=3 (3rd level wizard spells)
     // Frontend decides what to show based on character level
-    [HttpGet("spells")]
+    
+    [HttpGet("spells")]  //Creates endpoint /api/srd/spells
     public async Task<IActionResult> GetSpells(
-        [FromQuery] string? @class = null,
+        [FromQuery] string? @class = null,    //optional parameters
         [FromQuery] int? level = null)
     {
         try
         {
-            var results = await _srdService.GetSpellsAsync(@class, level);
+            var results = await _srdService.GetSpellsAsync(@class, level);  // service layer handles DB
             var settings = new JsonWriterSettings { OutputMode = JsonOutputMode.RelaxedExtendedJson };
             var json = "[" + string.Join(",", results.Select(d => d.ToJson(settings))) + "]";
-            return Content(json, "application/json");
+            return Content(json, "application/json");    //return JSON array
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { error = ex.Message });
+            return StatusCode(500, new { error = ex.Message });  //Error handling
         }
     }
 

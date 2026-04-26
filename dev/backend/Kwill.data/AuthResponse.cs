@@ -12,8 +12,7 @@ namespace Kwill.Api.Models.Auth
         public string Message { get; set; } = string.Empty;
         public string? Token { get; set; }
         public DateTime? ExpiresAtUtc { get; set; }
-
-        public int? UserId { get; set; }
+        public Guid UserId { get; set; }  // Changed from int? to Guid
         public string? Username { get; set; }
         public string? Email { get; set; }
     }

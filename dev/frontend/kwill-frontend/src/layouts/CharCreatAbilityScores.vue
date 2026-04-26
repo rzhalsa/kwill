@@ -3,7 +3,7 @@
         <v-form ref="form" @submit.prevent>
             <v-row>
                 <v-card-title class="mt-3 ml-3 cc-title d-flex align-center justify-space-between">
-                    Step 3/8: Ability Scores
+                    Step 3/9: Ability Scores
                     <v-icon class="ml-4" icon="mdi-counter"></v-icon>
                 </v-card-title>
                 <v-divider horizontal></v-divider>
