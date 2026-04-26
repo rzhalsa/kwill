@@ -1,4 +1,7 @@
 <template>
+    <v-snackbar location="top" color="secondary" v-model="loginFail" timeout="1500">
+        <div class="d-flex justify-center text-h6">{{errorMessage}}</div>
+    </v-snackbar>
     <div class="center-login">
         <v-card rounded="lg" class="gradient-login">
             <!-- Login Menu -->
@@ -11,22 +14,24 @@
                 </v-col>
                 <!-- Login fields -->
                 <v-col style="width: 20vw">
-                    <v-col>
-                        <!--Email Field -->
-                        <p class="mt-16 mx-12 text-body-1">
-                            <input type="text" required placeholder="Email" v-model="email" class="login-input px-2 py-2" style="border-radius: 12px;">
-                        </p>
-                        <!-- Password Field -->
-                        <p class="my-5 mx-12 text-body-1">
-                            <input type="password" required placeholder="Password" v-model="password" class="login-input px-2 py-2" style="border-radius: 12px;">
-                        </p>
-                    </v-col>    
-                    <v-row class="ma-1" justify="end">
-                        <!-- Create Account Button -->
-                        <v-btn variant="text" class="my-4 text-white text-button" to="/createaccount">Create account</v-btn>
-                        <!-- Login Button-->
-                        <v-btn large @click="login" color="secondary" class="ma-4 text-button">Sign in</v-btn>
-                    </v-row>
+                    <v-form v-model="form" @submit.prevent="loginAccount">
+                        <v-col>
+                            <!--Email Field -->
+                            <p class="mt-16 mx-12 text-body-1">
+                                <v-text-field class="login-input px-2 py-2" style="border-radius: 12px;" :rules="[required, validEmail]" v-model="email" label="Email*:" variant="outlined"></v-text-field>
+                            </p>
+                            <!-- Password Field -->
+                            <p class="my-5 mx-12 text-body-1">
+                                <v-text-field class="login-input px-2 py-2" style="border-radius: 12px;" :rules="[required]" v-model="password" label="Password*:" variant="outlined" type="password"></v-text-field>
+                            </p>
+                        </v-col>    
+                        <v-row class="ma-1" justify="end">
+                            <!-- Create Account Button -->
+                            <v-btn variant="text" class="my-4 text-white text-button" to="/createaccount">Create account</v-btn>
+                            <!-- Login Button-->
+                            <v-btn large type="submit" :disabled="!form" color="secondary" class="ma-4 text-button">Sign in</v-btn>
+                        </v-row>
+                    </v-form>
                 </v-col>
             </v-row>
         </v-card>
@@ -40,11 +45,16 @@
     import { onBeforeUnmount } from 'vue';
     import { useNavbarStore } from '../stores/navbar_state';
     import { useRouter } from 'vue-router'
+    import { useAuthStore } from '../stores/user_login_state';
     const user = ref(JSON.parse(localStorage.getItem('user')))
     const email = ref('')
     const password = ref('')
     const store = useNavbarStore()
     const router = useRouter()
+    const form = ref(false);
+    const loginFail = ref(false);
+    const errorMessage = ref('');
+    const authStore = useAuthStore();
 
     // Call toggleNavBar() in the navbar pinia store 
     const toggleNavbar = () => {
@@ -52,33 +62,39 @@
     }
 
     /**
-     * Activates upon the login button being clicked. Currently will log the user in if the default email
-     * and password match. Otherwise shows an alert dialog box informing the user they entered invalid
-     * credentials.
+     * Rule set that confirms each field has a value
+     * @param value input value in verify password field
      */
-    const login = () => {
-        // Check if the entered email and password are valid. This will be changed to a database query match
-        // later on
-        if(email.value == "admin@kwill.com" && password.value == "12345") {
-            createTempUser()
-            router.replace('/')
-        } else {
-            alert('Invalid credentials')
-        }
+    function required (value){
+        return !!value || 'Field is required';
     }
 
     /**
-     * Creates a temporary logged in user for testing the login page. This will obviously be changed as we 
-     * move to a legitimate authentication structure via a database.
+     * uses regex to check format of email inputted, does not check if email is valid or fake. That process will need to be done on the backend.
      */
-    const createTempUser = () => {
-        const userId = crypto.randomUUID()
-        const user = {
-            username: 'temp_user',
-            email: email.value,
-            id: userId
+    function validEmail(value){
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(value) || "Invalid email format";
+    }
+
+    async function loginAccount(){
+        try {
+            const Email = email.value.toLowerCase();
+            const Password = password.value;
+            const payload = {Email, Password};
+            const response = await api.post("/api/auth/login", payload);
+            if(response.data.success){
+                const token = response.data.token;
+                localStorage.setItem("token", token);
+                authStore.setToken(token);
+                router.replace('/');
+            }
+        } catch (error) {
+            console.error("Failed to Login: ", error);
+            const message = error.response?.data?.message;
+            errorMessage.value = message ?? "Login failed";
+            loginFail.value = true;
         }
-        localStorage.setItem('user', JSON.stringify(user))
     }
 
     
