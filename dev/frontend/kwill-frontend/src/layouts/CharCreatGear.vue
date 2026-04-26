@@ -1,54 +1,41 @@
 <template>
-    <v-card>
-        <v-row>
-            <v-card-title class="mt-3 ml-3 cc-title">Step 5/8: Gear</v-card-title>
-            <v-divider horizontal class="mt-2 mb-3"></v-divider>
-            <v-col>
-                <v-btn color="primary" @click="addFeatSlot" class="ml-10 mr-10">Add Gear</v-btn>
-                <v-btn color="secondary" @click="removeFeatSlot">Remove Gear</v-btn>
-                <!-- Gear -->
-                <div class="gear-area mt-5">
-                    <v-select
-                    v-for="(item, index) in store.character_state.gear_amt"
-                    v-model="store.character_state.equipment[index]"
-                    :items="gear"
-                    label="Gear"
-                    class="ma-4"
-                    >
-                    </v-select>
-                </div>
-            </v-col>
-        </v-row>
+    <v-card elevation="8">
+        <v-form ref="form" @submit.prevent>
+            <v-row>
+                <v-card-title class="mt-3 ml-3 cc-title d-flex align-center justify-space-between">
+                    Step 5/8: Gear
+                    <v-icon class="ml-4" icon="mdi-sword"></v-icon>
+                </v-card-title>
+                <v-divider horizontal class="mb-3"></v-divider>
+                <v-col>
+                    <v-btn color="primary" @click="addFeatSlot" class="ml-10 mr-10">Add Gear</v-btn>
+                    <v-btn color="secondary" @click="removeFeatSlot">Remove Gear</v-btn>
+                    <!-- Gear -->
+                    <div class="gear-area mt-5">
+                        <v-select
+                        v-for="(item, index) in store.character_state.gear_amt"
+                        v-model="store.character_state.equipment[index]"
+                        :items="gear"
+                        :rules="[required]"
+                        label="Gear"
+                        class="ma-4"
+                        ></v-select>
+                    </div>
+                </v-col>
+            </v-row>
+        </v-form>
     </v-card>
 </template>
 
 <script setup>
-    import { ref, onMounted, defineExpose } from 'vue'
+    import { ref, onMounted } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'
-    defineExpose({ canSwap })
-    const store = useCharacterCreationStore()                           // pinia store for character creation
-    const gear = ref([])                                                // array of all gear
-
-    /**
-     * Whether this layout can be swapped forward or not in CharacterCreator.vue
-     * 
-     * A layout can be swapped once all required fields have been filled out
-     */
-    async function canSwap() {
-        const keys = [
-            store.character_state.equipment
-        ]
-
-        // Loop for each key in keys to check if they have a value
-        for(const key of keys) {
-            if(!key) { 
-                alert("Please enter all values")
-                return false
-            }
-        }
-        return true
-    }
+    import { required } from '../helpers/requiredField';
+    defineExpose({ validate })
+    const store = useCharacterCreationStore()   // pinia store for character creation
+    const form = ref(null)                      // for input validation
+    const gear = ref([])                        // array of all gear
 
     /**
      * Adds an additional gear slot
@@ -63,6 +50,13 @@
     function removeFeatSlot() {
         if(store.character_state.gear_amt > 0)
             store.character_state.gear_amt--
+    }
+
+    /**
+     * Validates that the user has entered all required information on this page
+     */
+    async function validate() {
+        return form.value?.validate()
     }
 
     /**
