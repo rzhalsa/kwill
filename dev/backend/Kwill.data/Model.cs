@@ -21,9 +21,6 @@ namespace KwillDB
         [BsonId]
         public ObjectId Id { get; set; }
 
-        [BsonElement("userId")]
-        public Guid UserId { get; set; }  // Changed from string to Guid
-
         [BsonElement("characterId")]
         public Guid CharacterId { get; set; }  // Changed from string to Guid
 
