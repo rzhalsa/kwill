@@ -137,21 +137,20 @@
     }
 
     .logo-img {
-        height: clamp(5rem, calc(5vw + 2.3rem), 15rem); 
-        width: clamp(6rem, calc(6vw + 2.3rem) 20rem);
+        height: clamp(5rem, calc(5vw + 2.3rem), 10rem); 
     }
 
     .login-input {
         color: black;
         background-color: white;
         width: 12vw;
-        font-size: clamp(1rem, calc(1vw + 0.1rem), 3rem);
+        font-size: clamp(1rem, calc(1vw + 0.1rem), 2.5rem);
         border-radius: 12px;
     }
 
     .login-page-size {
         width: 35dvw;
         min-width: 400px;
-        max-width: 700px;
+        max-width: 800px;
     }
 </style>

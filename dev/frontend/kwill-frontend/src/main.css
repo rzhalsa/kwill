@@ -13,28 +13,20 @@
   background: linear-gradient(to right, #370808, #422828) !important;
 }
 
-/* Main background top section */
-.v-theme--kwillTheme .gradient-topcard {
-  background: linear-gradient(to bottom, #ffd1d1b6 0%, #ebcacac4 50%, #faeded 100%) !important;
+/* Home page background */
+.v-theme--kwillTheme .gradient-home {
+  background: linear-gradient(to bottom, #ffb5b5d2 0%, #ebcacac4 20%, #faeded 33%, #f7f0f0 50%, #ffffff 67%, #ebcecec7 85%, #ffd1d1e4 100%) !important;
 }
-.v-theme--kwillThemeDark .gradient-topcard {
-  background: linear-gradient(to bottom, #2b1111, #342a2a ) !important;
-}
-
-/* Main background middle section */
-.v-theme--kwillTheme .gradient-card {
-  background: linear-gradient(to bottom, #faeded 0%, #f7f0f0 50%, #ffffff 100%) !important;
-}
-.v-theme--kwillThemeDark .gradient-card {
-  background: linear-gradient(to bottom, #342a2a 0%, #2c2929 50%, #272727 100%) !important;
+.v-theme--kwillThemeDark .gradient-home {
+  background: linear-gradient(to bottom, #2b1111 0%, #342a2a 20%, #2c2929 50%, #272727 67%, #211d1d 85%, #2b1111 100%) !important;
 }
 
-/* Main background bottom section */
-.v-theme--kwillTheme .gradient-card-bottom {
-  background: linear-gradient(to bottom, #ffffff 0%, #f7f0f0 50%, #ffd1d18d 100%) !important;
+/* Home page dashboard cards */
+.v-theme--kwillTheme .gradient-db-card {
+  background: linear-gradient(to bottom, #f5b0b0, #fb8787) !important;
 }
-.v-theme--kwillThemeDark .gradient-card-bottom {
-  background: linear-gradient(to bottom, #272727 0%, #211d1d 50%, #2b1111 100%) !important;
+.v-theme--kwillThemeDark .gradient-db-card {
+  background: linear-gradient(to bottom, #461c1c, #3e2020) !important;
 }
 
 /* Login card */

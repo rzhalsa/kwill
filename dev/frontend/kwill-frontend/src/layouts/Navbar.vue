@@ -1,5 +1,6 @@
 <template>
     <v-app-bar app class="gradient-navbar">
+        <!-- Logo -->
         <v-toolbar-title style="font-weight: 700;" v-if="theme.global.name.value==='kwillTheme'">
             <router-link to="/" style="text-decoration: none; color: inherit;">
             <img src="../assets/icon.png" style="height:100px; width: 100px;" />
