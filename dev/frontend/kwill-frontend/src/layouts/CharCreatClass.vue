@@ -1,43 +1,57 @@
 <template>
-    <v-card>
-        <v-row>
-            <v-card-title class="mt-3 ml-3 cc-title">Step 1/8: Class and Names</v-card-title>
-            <v-divider horizontal class="mt-2"></v-divider>
-            <v-col class="mr-4">
-                <v-row class="mt-2 ml-4 mr-14 mb-3">
-                    <v-text-field v-model="store.character_state.name" rounded="pill" label="Character Name" variant="outlined" density="compact"></v-text-field>
-                </v-row>
-                <v-row class="mt-2 ml-4 mr-14 mb-3">
-                    <v-text-field v-model="store.character_state.player" rounded="pill" label="Player Name" variant="outlined" density="compact"></v-text-field>
-                </v-row>
-                <!-- Class dropdown -->
-                <v-select
-                    v-model="store.character_state.classes.firstclass.name"
-                    :items="classes"
-                    label="Class"
-                    class="ml-4 mr-12"
-                ></v-select>
-                <!-- Class level -->
-                 <v-select
-                    v-model="store.character_state.classes.firstclass.level"
-                    :items="levels"
-                    label="Level"
-                    class="ml-4 mr-12"            
-                 ></v-select>
-            </v-col>
-            <v-col class="mt-2 ml-4">
-                <ul>
-                    <li class="mb-13" v-for="point in bullet_points" :key="point">{{ point.text }}</li>
-                </ul>
-            </v-col>
-        </v-row>
+    <v-card elevation="8">
+        <v-form ref="form" @submit.prevent>
+            <v-row>
+                <v-card-title class="mt-3 ml-3 cc-title d-flex align-center justify-space-between">
+                    Step 1/9: Class and Names
+                    <v-icon class="ml-4" icon="mdi-feather"></v-icon>
+                </v-card-title>
+                <v-divider horizontal></v-divider>
+                <v-col class="mr-4">
+                    <v-row class="mt-2 ml-4 mr-14 mb-3">
+                        <v-text-field :rules="[required]" v-model="store.character_state.name" rounded="pill" label="Character Name" variant="outlined" density="compact" required></v-text-field>
+                    </v-row>
+                    <v-row class="mt-2 ml-4 mr-14 mb-3">
+                        <v-text-field :rules="[required]" v-model="store.character_state.player" rounded="pill" label="Player Name" variant="outlined" density="compact" required></v-text-field>
+                    </v-row>
+                    <!-- Class dropdown -->
+                    <v-select
+                        :rules="[required]"
+                        v-model="store.character_state.classes.firstclass.name"
+                        @update:model-value="store.resetSkills"
+                        :items="classes"
+                        item-title="name"
+                        label="Class"
+                        class="ml-4 mr-12"
+                        required
+                    ></v-select>
+                    <!-- Class level -->
+                    <v-select
+                        :rules="[required]"
+                        v-model="store.character_state.classes.firstclass.level"
+                        :items="levels"
+                        label="Level"
+                        class="ml-4 mr-12"            
+                        required
+                    ></v-select>
+                </v-col>
+                <v-col class="mt-2 ml-4">
+                    <ul>
+                        <li class="mb-13" v-for="point in bullet_points" :key="point">{{ point.text }}</li>
+                    </ul>
+                </v-col>
+            </v-row>
+        </v-form>
     </v-card>
 </template>
 
 <script setup>
-    import { ref, onMounted, onBeforeUnmount } from 'vue'
+    import { ref, onMounted } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'
+    import { required } from '../helpers/requiredField';
+    defineExpose({ validate })
+    const form = ref(null)                                           // for input validation
     const store = useCharacterCreationStore()                        // pinia store for character creation
     const classes = ref([])                                          // array of all classes
     const levels = ref(Array.from({length: 20}, (_, i) => 1 + i))    // valid levels are 1 to 20
@@ -47,6 +61,13 @@
         {text: "Choose your character's class"},
         {text: "Select your character's level"}
     ]
+
+    /**
+     * Validates that the user has entered all required information on this page
+     */
+    async function validate() {
+        return form.value?.validate()
+    }
     
     /**
      * Fetch character data and populates the classes var with fetched data

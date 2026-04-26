@@ -1,37 +1,46 @@
 <template>
-    <v-card>
-        <v-row>
-            <v-card-title class="mt-3 ml-3 cc-title">Step 2/8: Character Origin</v-card-title>
-            <v-divider horizontal class="mt-2 mb-4"></v-divider>
-            <v-col>  
-                <!-- Race dropdown -->
-                <v-select
-                    v-model="store.character_state.race.name"
-                    :items="races"
-                    label="Race"
-                    class="ml-6 mb-6 mr-6"
-                ></v-select>
-                <!-- Alignment dropdown -->
-                <v-select
-                    v-model="store.character_state.alignment"
-                    :items="alignments"
-                    label="Alignment"
-                    class="ma-6"
-                ></v-select>
-                <!-- Background dropdown -->
-                <v-select
-                    v-model="store.character_state.background.name"
-                    :items="backgrounds"
-                    label="Background"
-                    class="ma-6"
-                ></v-select>
-            </v-col>
-            <v-col class="ml-4">
-                <ul>
-                    <li class="mb-16" v-for="point in bullet_points" :key="point">{{ point.text }}</li>
-                </ul>
-            </v-col>
-        </v-row>
+    <v-card elevation="8">
+        <v-form ref="form" @submit.prevent>
+            <v-row>
+                <v-card-title class="mt-3 ml-3 cc-title d-flex align-center justify-space-between">
+                    Step 2/9: Character Origin
+                    <v-icon class="ml-4" icon="mdi-alien-outline"></v-icon>
+                </v-card-title>
+                <v-divider horizontal></v-divider>
+                <v-col>  
+                    <!-- Race dropdown -->
+                    <v-select
+                        :rules="[required]"
+                        v-model="store.character_state.race.name"
+                        :items="races"
+                        item-title="name"
+                        label="Race"
+                        class="ml-6 mb-6 mr-6"
+                    ></v-select>
+                    <!-- Alignment dropdown -->
+                     <v-select
+                        :rules="[required]"
+                        v-model="store.character_state.alignment"
+                        :items="alignments"
+                        label="Alignment"
+                        class="ml-6 mb-6 mr-6"
+                    ></v-select>
+                    <!-- Background dropdown -->
+                    <v-select
+                        :rules="[required]"
+                        v-model="store.character_state.background.name"
+                        :items="backgrounds"
+                        label="Background"
+                        class="ma-6"
+                    ></v-select>
+                </v-col>
+                <v-col class="ml-4">
+                    <ul>
+                        <li class="mb-16" v-for="point in bullet_points" :key="point">{{ point.text }}</li>
+                    </ul>
+                </v-col>
+            </v-row>
+        </v-form>
     </v-card>
 </template>
 
@@ -40,9 +49,13 @@
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import axios from 'axios'
     import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'
-    const store = useCharacterCreationStore()                                  // pinia store for character creation
-    const races = ref([])                                                      // array of all races
-    const alignments = ref([                                                   // array of all alignments
+    import { required } from '../helpers/requiredField'
+    defineExpose({ validate })
+    const store = useCharacterCreationStore()     // pinia store for character creation
+    const form = ref(null)                        // for input validation
+    const races = ref([])                         // array of all races
+    const backgrounds = ref([])                   // array of all backgrounds
+    const alignments = ref([                      // array of all alignments
         "Lawful Good",
         "Neutral Good",
         "Chaotic Good",
@@ -58,7 +71,7 @@
         {text: "Enter your character's moral alignment"},
         {text: "Choose your character's background"},
     ]      
-    const backgrounds = ref([])                                                // array of all backgrounds
+    
 
     /**
      * Populate the backgrounds array with the fetched background data for use in the v-select menu
@@ -83,6 +96,13 @@
         } catch (error) {
             console.error("Failed to fetch background data: ", error)
         }
+    }
+
+    /**
+     * Validates that the user has entered all required information on this page
+     */
+    async function validate() {
+        return form.value?.validate()
     }
 
     /**

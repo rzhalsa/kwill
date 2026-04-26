@@ -22,7 +22,7 @@ export const useCharacterCreationStore = defineStore('character_creation', {
                     'level': ""
                 }
             },
-            'alignment': null,
+            'alignment': '',
             'background': { 
                 'object_id': "background",
                 'name': "" 
@@ -140,6 +140,21 @@ export const useCharacterCreationStore = defineStore('character_creation', {
                 }
             },
             'selected_skills': [],
+            'selected_level': 0,
+            'spellcasting': { class: "" },
+            'spells' : {
+                0: [],
+                1: [],
+                2: [],
+                3: [],
+                4: [],
+                5: [],
+                6: [],
+                7: [],
+                8: [],
+                9: [],
+            },
+            'spell_amt': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             'feat_amt': 0,
             'equipment': [],
             'gear_amt': 0,
@@ -193,6 +208,7 @@ export const useCharacterCreationStore = defineStore('character_creation', {
                 switch(key) {
                     case 'feat_amt':
                     case 'gear_amt':
+                    case 'selected_level':
                         this.character_state[key] = 0
                         break
                     case 'points_remaining':
@@ -334,13 +350,115 @@ export const useCharacterCreationStore = defineStore('character_creation', {
                                 }
                             }
                         break
+                    case 'spellcasting':
+                        this.character_state[key] = { class: "" }
+                        break
+                    case 'spells':
+                        this.character_state[key] = {
+                            0: [],
+                            1: [],
+                            2: [],
+                            3: [],
+                            4: [],
+                            5: [],
+                            6: [],
+                            7: [],
+                            8: [],
+                            9: [],
+                        }
+                        break
+                    case 'spell_amt':
+                        this.character_state[key] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                        break
                     default:
-                        this.character_state[key] = null
+                        this.character_state[key] = ''
                         break
                 }
             }
             this.is_dirty = false
             this.allow_leave = false
+        },
+        /**
+         * Separate function for resetting skill proficiencies when the user
+         * changes their selected class
+         */
+        resetSkills() {
+            this.character_state.selected_skills = []
+            this.character_state.skills = {
+                "object_id": "skills",
+                "athletics": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "acrobatics": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "sleightofhand": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "stealth": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "arcana": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "history": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "investigation": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "nature": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "religion": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "animalhandling": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "insight": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "medicine": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "perception": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "survival": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "deception": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "intimidation": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "performance": {
+                    "proficiency": false,
+                    "modifier": ""
+                },
+                "persuasion": {
+                    "proficiency": false,
+                    "modifier": ""
+                }
+            }
         }
     }
 })

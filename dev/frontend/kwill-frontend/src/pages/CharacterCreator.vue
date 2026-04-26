@@ -1,5 +1,5 @@
-<template class="gradient-card">
-    <v-card class="gradient-topcard">
+<template>
+    <v-card class="gradient-cc-background">
         <div class="center-page">
             <h1>Create a Character</h1>
             <v-card rounded="lg" class="gradient-character-creator">
@@ -9,11 +9,11 @@
                 </v-row>
                 <!-- Current layout for character creation -->
                 <v-row class="ma-8">
-                    <component v-if="ready" class="page-size" :is="currentLayout" />
+                    <component v-if="ready" ref="child" class="page-size" :is="currentLayout" />
                 </v-row>
                 <v-row class="d-flex justify-end mr-2 mb-2">
                     <!-- Move forward button -->
-                    <v-btn :class="{ hidden: order_count === 8 }" icon="mdi-arrow-right" @click="moveForward"></v-btn>
+                    <v-btn :class="{ hidden: order_count === 9 }" icon="mdi-arrow-right" @click="moveForward"></v-btn>
                 </v-row>
             </v-card>
         </div>
@@ -39,6 +39,7 @@
     import CharCreatOrigin from '../layouts/CharCreatOrigin.vue';                   // character race, background, languages, and alignment
     import CharCreatAbilityScores from '../layouts/CharCreatAbilityScores.vue';     // character stats
     import CharCreatSkills from '../layouts/CharCreatSkills.vue';                   // skills and which one the character has proficiency in
+    import CharCreatSpells from '../layouts/CharCreatSpells.vue';                   // spells the character has
     import CharCreatGear from '../layouts/CharCreatGear.vue';                       // gear the character has
     import CharCreatFeats from '../layouts/CharCreatFeats.vue';                     // character feats
     import CharCreatAppearance from '../layouts/CharCreatAppearance.vue';           // character appearance
@@ -49,6 +50,7 @@
     const ready = ref(false)                                                        // flag for showing the layout once ready
     const show_dialog = ref(false)                                                  // flag for showing the dialog box
     const pending_nav = ref(null)
+    const child = ref(null)
 
     // Maps and count var to track layout order
     const order_count = ref(0)
@@ -56,17 +58,19 @@
         [0, CharCreatOrigin],
         [1, CharCreatAbilityScores],
         [2, CharCreatSkills],
-        [3, CharCreatGear],
-        [4, CharCreatFeats],
-        [5, CharCreatAppearance],
-        [6, CharCreatPersonal],
-        [7, CharCreatEnd]
+        [3, CharCreatSpells],
+        [4, CharCreatGear],
+        [5, CharCreatFeats],
+        [6, CharCreatAppearance],
+        [7, CharCreatPersonal],
+        [8, CharCreatEnd]
     ])
     const rev_order = new Map([
-        [8, CharCreatPersonal],
-        [7, CharCreatAppearance],
-        [6, CharCreatFeats],
-        [5, CharCreatGear],
+        [9, CharCreatPersonal],
+        [8, CharCreatAppearance],
+        [7, CharCreatFeats],
+        [6, CharCreatGear],
+        [5, CharCreatSpells],
         [4, CharCreatSkills],
         [3, CharCreatAbilityScores],
         [2, CharCreatOrigin],
@@ -74,24 +78,28 @@
     ])
 
     /**
-     * Move forward a page
+     * Move forward a step in the character creation process.
+     * Only move forward if the user has entered all required information
+     * on the current step.
      */
-    function moveForward() {
+    async function moveForward() {
         if(order.has(order_count.value)) {
-            currentLayout.value = order.get(order_count.value)
-            order_count.value++
-            //console.log(order_count)
+            // Only move forward if the user has entered all required info on the current step
+            const can = await child.value.validate()
+            if(can.valid) {
+                currentLayout.value = order.get(order_count.value)
+                order_count.value++
+            }   
         }
     }
 
     /**
-     * Move backwards a page
+     * Move backwards a step in the character creation process.
      */
     function moveBackwards() {
         if(rev_order.has(order_count.value)) {
             currentLayout.value = rev_order.get(order_count.value)
             order_count.value--
-            //console.log(order_count)
         }
     }
 
@@ -108,7 +116,6 @@
     })
 
     function confirmLeave() {
-        
         pending_nav.value()
         pending_nav.value = null
         show_dialog.value = false
@@ -135,7 +142,7 @@
 
     h1 {
         font-size: clamp(1rem, calc(2.5vw + 1rem), 6rem);
-        text-decoration: underline;
+        text-shadow: 1px 1px 2px black;
     }
 
     .hidden {
@@ -149,5 +156,6 @@
         max-width: 1200px;
         min-height: 500px;
         max-height: 1000px;
+        outline: solid black 1px;
     }
 </style>
