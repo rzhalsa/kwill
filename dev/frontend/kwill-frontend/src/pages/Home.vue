@@ -73,6 +73,21 @@
 </template>
 
 <script setup>
+  import { onMounted } from 'vue';
+  import api from '../services/api';
+  import { useAuthStore } from '../stores/user_login_state';
+
+  const authStore = useAuthStore();
+
+  onMounted(async () => {
+      try {
+          if (!authStore.token) return;
+          const res = await api.get("/api/auth/me");
+          authStore.setUser(res.data);
+      } catch (err) {
+          console.log("Not authenticated", err);
+      }
+  });
 
 </script>
 <style>

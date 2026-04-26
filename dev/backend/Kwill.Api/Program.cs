@@ -31,9 +31,10 @@ builder.Services.AddSingleton<KwillDB.KwillDB>(); // ASP.NET creates the instanc
 builder.Services.AddScoped<SrdService>();
 builder.Services.AddScoped<CharacterService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddHttpClient();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // JWT config
 var jwtSection = builder.Configuration.GetSection("Jwt");
@@ -71,6 +72,7 @@ using (var scope = app.Services.CreateScope())
     await MongoIndexes.EnsureAsync(db);
 }
 
+
 app.UseCors("AllowAll");
 
 if (app.Environment.IsDevelopment())
@@ -86,4 +88,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
