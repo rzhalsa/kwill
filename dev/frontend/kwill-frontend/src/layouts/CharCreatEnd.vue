@@ -34,7 +34,7 @@
 
     function create() {
         const filled_character = toJson(character, store.getCharacterState)
-        createNewCharacter(filled_character, 'user001', 'character004')
+        createNewCharacter(filled_character, 'user001', 'character009')
         store.allow_leave = true
         router.replace('/characters')
     }

@@ -31,6 +31,7 @@
                             v-model="spellModel(store.character_state.selected_level, index).value"
                             :items="spells.filter(n => n.level === store.character_state.selected_level)"
                             item-title="name"
+                            :rules="[required]"
                             label="Spell"
                             return-object
                         ></v-select>
@@ -77,9 +78,11 @@
     }
 
     /**
+     * Appends 'prepared: false' to the spell at store.character_state.spells[level][index]
+     * This function is currently used as the v-model for the spells v-select
      * 
-     * @param level 
-     * @param index 
+     * @param level the level index in store.character_state.spells
+     * @param index the index in the array at store.character_state.spells[level]
      */
     function spellModel(level, index) {
         return computed({
@@ -94,14 +97,14 @@
     }
 
     /**
-     * Adds an additional gear slot
+     * Adds an additional spell at the currently selected level
      */
     function addSpell() {
         store.character_state.spell_amt[store.character_state.selected_level]++
     }
 
     /**
-     * Removes a gear slot
+     * Removes a spell at the currently selected level 
      */
     function removeSpell() {
         if(store.character_state.spell_amt[store.character_state.selected_level] > 0)
