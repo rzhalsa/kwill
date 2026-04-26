@@ -54,13 +54,13 @@ namespace Kwill.Api.Services
             }
 
             // Validate captcha
-            if (!await VerifyCaptchaAsync(request.CaptchaToken))
-            {
-                return new AuthResponse
-                {
-                    Success = false,
-                    Message = "Captcha verification failed."
-                };
+             if (!await VerifyCaptchaAsync(request.CaptchaToken))
+             {
+                 return new AuthResponse
+                 {
+                     Success = false,
+                     Message = "Captcha verification failed."
+                 };
             }
 
             bool emailExists = await _db.Users.AnyAsync(u => u.Email == request.Email);
@@ -93,17 +93,18 @@ namespace Kwill.Api.Services
             
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
+
+            var existingMongoUser = await _mongoDb.Users
+                 .Find(Builders<BsonDocument>.Filter.Eq("userid", new BsonBinaryData(user.UserId, GuidRepresentation.Standard)))
+                 .FirstOrDefaultAsync();
             try
             {
-                var existingMongoUser = await _mongoDb.Users
-                .Find(Builders<BsonDocument>.Filter.Eq("userid", user.UserId.ToString()))
-                .FirstOrDefaultAsync();
                 if (existingMongoUser == null)
                 {
                     var mongoUser = new BsonDocument
                 {
                     { "object_id", "user" },
-                    { "userid", user.UserId.ToString() }
+                    { "userid", new BsonBinaryData(user.UserId, GuidRepresentation.Standard) }
                 };
 
                 await _mongoDb.Users.InsertOneAsync(mongoUser);
@@ -241,4 +242,3 @@ namespace Kwill.Api.Services
         }
     }
 }
-

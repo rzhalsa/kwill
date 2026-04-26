@@ -72,6 +72,7 @@ using (var scope = app.Services.CreateScope())
     await MongoIndexes.EnsureAsync(db);
 }
 
+
 app.UseCors("AllowAll");
 
 if (app.Environment.IsDevelopment())
@@ -87,4 +88,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-

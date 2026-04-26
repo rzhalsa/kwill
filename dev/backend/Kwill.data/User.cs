@@ -11,7 +11,7 @@ namespace Kwill.data
      */
     public class User
     {
-        public System.Guid UserId { get; set; }
+        public Guid UserId { get; set; }  // Changed from string to Guid
         public string Username { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
