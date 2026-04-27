@@ -75,10 +75,8 @@
     // List of items to show on the Menu drop down
     const items = [
         {title: 'Characters', route:'/characters'},
-        {title: 'Community',route:'/characters'},
-        {title: 'Account',route:'/characters'},
         {title: 'Guides',route:'/characters'},
-        {title: 'About',route:'/info'},
+        {title: 'Account',route:'/characters'},
     ]
     // List of items to show on the account drop down
     const account_items = [
