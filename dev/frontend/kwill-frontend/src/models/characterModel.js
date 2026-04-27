@@ -139,7 +139,20 @@ export function createCharacter() {
             8: [],
             9: [],
         },
-    });
+        panels:{
+            features:[],
+            spells_cantrips: [],
+            spells_first: [],
+            spells_second: [],
+            spells_third: [],
+            spells_fourth: [],
+            spells_fifth: [],
+            spells_sixth: [],
+            spells_seventh: [],
+            spells_eighth: [],
+            spells_ninth: []
+        }
+        });
 }
 
 /**

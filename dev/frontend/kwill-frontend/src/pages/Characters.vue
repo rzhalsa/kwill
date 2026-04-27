@@ -8,12 +8,13 @@
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
-                    <v-list v-for="(character, index) in characterList">
+                    <v-list>
                         <v-list-item
+                            v-for="(character, index) in characterList"
+                            :key="index"
                             v-if="loaded"
                             lines="two"
-                            :key="index"
-                            :title="character.name"
+                            :title="character.name || 'Unnamed Character'"
                             :value="character"
                             @click="sheetRef.populateSheet(character);"
                         ></v-list-item>
@@ -112,8 +113,8 @@ import characterSheet from '../layouts/Sheet.vue';
 import { ref, onMounted, computed } from 'vue';
 import api from '../services/api';
 
-const userID = ref("user001");
-const characterID = ref("character004");
+const userID = ref("3528bb42-f66c-48be-a4ef-d47880741f9c");
+const characterID = ref("c1d2e3f4-a5b6-7890-1234-567890abcdef");
 const sheetRef = ref();
 const charData = ref();
 const includeCharData = ref(false);
@@ -164,8 +165,9 @@ async function fetchCharName() {
 }
 
 onMounted(() => {
-    fetchCharData();
     fetchCharName();
+    fetchCharData();
+    
 });
 
 function handleFileDrop(event) {

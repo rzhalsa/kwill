@@ -218,8 +218,11 @@
                         style="height: 75px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
                     <textarea v-model="character.text.flaws" placeholder="Flaws"
                         style="height: 75px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
-                    <textarea v-model="character.text.features" placeholder="Features"
-                        style="height: 407px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
+                    <div id="features_panel" style="height: 407px; width: 200px; border: 2px solid #000; overflow-y: auto;
+                        display: flex; flex-direction: column; gap: 6px; padding: 6px; padding-top: 5px;
+                        box-sizing: border-box; background: #fff; position: relative;">
+                        <FeaturePanels :character="character" @add-feature="handleAddFeature" @remove-feature="handleRemoveFeature" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -323,133 +326,104 @@
                 <div class="col">
                     <div
                         style="height: 220px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px;">
-                        <span style="text-align: center;" data-label>Cantrips</span>
+                        <SpellPanels :character="character" :title="'Cantrips'" :index="0" @add-spell="handleAddCantrip" @remove-spell="handleRemoveCantrip" />
+                        <!--<span style="text-align: center;" data-label>Cantrips</span>
                         <div class="row" style="gap: 10px;">
-                            <!-- Cantrips -->
+                             Cantrips 
                             <div class="col">
                                 <input v-for="i in character.spells[0].length" :key="i" v-model="character.spells[0][i - 1].name" type="text"
                                     class="line-input">
                             </div>
-                            <!--
+                            
                             <div class="col">
                                 <input v-for="i in 6" :key="i" v-model="character.spells[0][i + 6]" type="text"
                                     class="line-input">
-                            </div> -->
-                        </div>
+                            </div>
+                        </div>-->
                     </div>
-                    <div
-                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <span style="text-align: center;" data-label>1st Level</span>
+                    <div style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                        <!--<span style="text-align: center;" data-label>1st Level</span>
                         <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                            <!-- Level 1 -->
+                             Level 1 
                             <div v-for="i in character.spells[1].length" :key="i"
                                 style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
                                 <input type="checkbox" v-model="character.spells[1][i - 1].prepared">
                                 <input type="text" class="line-input" v-model="character.spells[1][i - 1].name">
                             </div>
-                        </div>
+                        </div>-->
+                        <SpellPanels :character="character" :title="'1st Level'" :index="1" @add-spell="handleAdd1stLevelSpell" @remove-spell="handleRemove1stLevelSpell" />
                     </div>
-                    <div
-                        style="height: 275px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <span style="text-align: center;" data-label>2nd Level</span>
+                    <div style="height: 275px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                        <!--<span style="text-align: center;" data-label>2nd Level</span>
                         <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                            <!-- Level 2 -->
+                             Level 2
                             <div v-for="i in character.spells[2].length" :key="i"
                                 style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
                                 <input type="checkbox" v-model="character.spells[2][i - 1].prepared">
                                 <input type="text" class="line-input" v-model="character.spells[2][i - 1].name">
                             </div>
-                        </div>
+                        </div>-->
+                        <SpellPanels :character="character" :title="'2nd Level'" :index="2" @add-spell="handleAdd2ndLevelSpell" @remove-spell="handleRemove2ndLevelSpell" />
                     </div>
                 </div>
 
                 <div class="col">
-                    <div
-                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <span style="text-align: center;" data-label>3rd Level</span>
+                    <div style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                        <!--<span style="text-align: center;" data-label>3rd Level</span>
                         <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                            <!-- Level 3 -->
+                             Level 3 
                             <div v-for="(i) in character.spells[3].length" :key="i"
                                 style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
                                 <input type="checkbox" v-model="character.spells[3][i - 1].prepared">
                                 <input type="text" class="line-input" v-model="character.spells[3][i - 1].name">
                             </div>
-                        </div>
+                        </div>-->
+                        <SpellPanels :character="character" :title="'3rd Level'" :index="3" @add-spell="handleAdd3rdLevelSpell" @remove-spell="handleRemove3rdLevelSpell" />
                     </div>
                     <div
                         style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <span style="text-align: center;" data-label>4th Level</span>
+                        <!--<span style="text-align: center;" data-label>4th Level</span>
                         <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                            <!-- Level 4 -->
+                             Level 4
                             <div v-for="i in character.spells[4].length" :key="i"
                                 style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
                                 <input type="checkbox" v-model="character.spells[4][i - 1].prepared">
                                 <input type="text" class="line-input" v-model="character.spells[4][i - 1].name">
                             </div>
-                        </div>
+                        </div>-->
+                        <SpellPanels :character="character" :title="'4th Level'" :index="4" @add-spell="handleAdd4thLevelSpell" @remove-spell="handleRemove4thLevelSpell" />
                     </div>
                     <div
                         style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <span style="text-align: center;" data-label>5th Level</span>
+                        <!--<span style="text-align: center;" data-label>5th Level</span>
                         <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                            <!-- Level 5 -->
+                                Level 5
                             <div v-for="i in character.spells[5].length" :key="i"
                                 style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
                                 <input type="checkbox" v-model="character.spells[5][i - 1].prepared">
                                 <input type="text" class="line-input" v-model="character.spells[5][i - 1].name">
                             </div>
-                        </div>
+                        </div>-->
+                        <SpellPanels :character="character" :title="'5th Level'" :index="5" @add-spell="handleAdd5thLevelSpell" @remove-spell="handleRemove5thLevelSpell" />
                     </div>
                 </div>
 
                 <div class="col">
                     <div
                         style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <span style="text-align: center;" data-label>6th Level</span>
-                        <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                            <!-- Level 6 -->
-                            <div v-for="i in character.spells[6].length" :key="i"
-                                style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
-                                <input type="checkbox" v-model="character.spells[6][i - 1].prepared">
-                                <input type="text" class="line-input" v-model="character.spells[6][i - 1].name">
-                            </div>
-                        </div>
+                        <SpellPanels :character="character" :title="'6th Level'" :index="6" @add-spell="handleAdd6thLevelSpell" @remove-spell="handleRemove6thLevelSpell" />
                     </div>
                     <div
                         style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <span style="text-align: center;" data-label>7th Level</span>
-                        <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                            <!-- Level 7 -->
-                            <div v-for="i in character.spells[7].length" :key="i"
-                                style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
-                                <input type="checkbox" v-model="character.spells[7][i - 1].prepared">
-                                <input type="text" class="line-input" v-model="character.spells[7][i - 1].name">
-                            </div>
-                        </div>
+                        <SpellPanels :character="character" :title="'7th Level'" :index="7" @add-spell="handleAdd7thLevelSpell" @remove-spell="handleRemove7thLevelSpell" />
                     </div>
                     <div
                         style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <span style="text-align: center;" data-label>8th Level</span>
-                        <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                            <!-- Level 8 -->
-                            <div v-for="i in character.spells[8].length" :key="i"
-                                style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
-                                <input type="checkbox" v-model="character.spells[8][i - 1].prepared">
-                                <input type="text" class="line-input" v-model="character.spells[8][i - 1].name">
-                            </div>
-                        </div>
+                        <SpellPanels :character="character" :title="'8th Level'" :index="8" @add-spell="handleAdd8thLevelSpell" @remove-spell="handleRemove8thLevelSpell" />
                     </div>
                     <div
                         style="height: 200px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <span style="text-align: center;" data-label>9th Level</span>
-                        <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                            <!-- Level 9 -->
-                            <div v-for="i in character.spells[9].length" :key="i"
-                                style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
-                                <input type="checkbox" v-model="character.spells[9][i - 1].prepared">
-                                <input type="text" class="line-input" v-model="character.spells[9][i - 1].name">
-                            </div>
-                        </div>
+                        <SpellPanels :character="character" :title="'9th Level'" :index="9" @add-spell="handleAdd9thLevelSpell" @remove-spell="handleRemove9thLevelSpell" />
                     </div>
                 </div>
             </div>
@@ -460,6 +434,8 @@
     import {ref, reactive, readonly, computed, watch, nextTick} from 'vue';
     import { createCharacter, updateCharacter, copyJsonToCharacter } from '../models/characterModel';
     import { debounce } from 'lodash'
+    import FeaturePanels from '../panels/FeaturePanels.vue';
+    import SpellPanels from '../panels/SpellsPanels.vue';
     const character = createCharacter();
     const amourBonus = ref(0);
     const changeCount = ref(0);
@@ -598,5 +574,72 @@ watch(character,(newVal)=>{
         debounceUpdate(newVal);
     }
 })
+
+function handleAddFeature(newFeature) {
+    character.panels.features.push(newFeature);
+}
+function handleRemoveFeature(index){
+    character.panels.features.splice(index, 1);
+}
+function handleAddCantrip(newCantrip) {
+    character.spells[0].push(newCantrip);
+}
+function handleRemoveCantrip(index) {
+    character.spells[0].splice(index, 1);
+}
+function handleAdd1stLevelSpell(newSpell) {
+    character.spells[1].push(newSpell);
+}
+function handleRemove1stLevelSpell(index) {
+    character.spells[1].splice(index, 1);
+}
+function handleAdd2ndLevelSpell(newSpell) {
+    character.spells[2].push(newSpell);
+}
+function handleRemove2ndLevelSpell(index) {
+    character.spells[2].splice(index, 1);
+}
+function handleAdd3rdLevelSpell(newSpell) {
+    character.spells[3].push(newSpell);
+}
+function handleRemove3rdLevelSpell(index) {
+    character.spells[3].splice(index, 1);
+}
+function handleAdd4thLevelSpell(newSpell) {
+    character.spells[4].push(newSpell);
+}
+function handleRemove4thLevelSpell(index) {
+    character.spells[4].splice(index, 1);
+}
+function handleAdd5thLevelSpell(newSpell) {
+    character.spells[5].push(newSpell);
+}
+function handleRemove5thLevelSpell(index) {
+    character.spells[5].splice(index, 1);
+}
+function handleAdd6thLevelSpell(newSpell) {
+    character.spells[6].push(newSpell);
+}
+function handleRemove6thLevelSpell(index) {
+    character.spells[6].splice(index, 1);
+}
+function handleAdd7thLevelSpell(newSpell) {
+    character.spells[7].push(newSpell);
+}
+function handleRemove7thLevelSpell(index) {
+    character.spells[7].splice(index, 1);
+}
+function handleAdd8thLevelSpell(newSpell) {
+    character.spells[8].push(newSpell);
+}
+function handleRemove8thLevelSpell(index) {
+    character.spells[8].splice(index, 1);
+}
+function handleAdd9thLevelSpell(newSpell) {
+    character.spells[9].push(newSpell);
+}
+function handleRemove9thLevelSpell(index) {
+    character.spells[9].splice(index, 1);
+}
 </script>
 <style src="../character.css" scoped></style>
