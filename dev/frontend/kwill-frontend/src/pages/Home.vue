@@ -1,94 +1,127 @@
 <template>
-  <v-row>
-    <v-col >
-      <v-card class="gradient-topcard" style="padding-left: 20%; padding-top: 5%;">
-        <v-card-title class="font-weight-bold ma-4 text-h3">Welcome to Kwill!</v-card-title>
-        <v-card-subtitle class="ma-4 text-h5">A Smart Portable D&D Character Sheet</v-card-subtitle>
-        <v-card-item class="">
-            <v-col>
-              <v-btn color="secondary" class="mr-2" >Get Started</v-btn>
-              <v-btn color="secondary" to="/createaccount" >Sign Up</v-btn>
-            </v-col>
-            <v-col>
-              <v-btn color="secondary" class="mr-2" variant="outlined" >Why Kwill?</v-btn>
-            </v-col>
-        </v-card-item>
-      </v-card>
-    </v-col>
-  </v-row>
-  <v-row>
-    <v-col>
-      <v-card class="gradient-card mt-n6" style="padding-top: 5%; padding-bottom: 10%;">
-        <v-card-title class="ma-4 text-h4" style="padding-left: 45%;">Dashboard</v-card-title>
-        <v-divider style="margin-left: 3%; margin-right: 3%;"></v-divider>
-        <v-card-item  style="margin-top: 5%;">
-          <v-row class="justify-center">
-            <v-col cols="2">
-              <router-link to="/characters" style="text-decoration: none; color: inherit;">
-                <v-card>
-                  <v-card-title class="text-center">Characters</v-card-title>
-                  <v-card-item class="justify-center"><img src="../assets/community.png" style="height:100px; width: 100px;" /></v-card-item>
-                </v-card>
-              </router-link>
-            </v-col>
-            <v-col cols="2">
-              <router-link to="/characters" style="text-decoration: none; color: inherit;">
-                <v-card>
-                  <v-card-title class="text-center">Guide</v-card-title>
-                  <v-card-item class="justify-center"><img src="../assets/community.png" style="height:100px; width: 100px;" /></v-card-item>
-                </v-card>
-              </router-link>
-            </v-col>
-            <v-col cols="2">
-              <v-card>
-                <v-card-title class="text-center">Account</v-card-title>
-                <v-card-item class="justify-center"><img src="../assets/community.png" style="height:100px; width: 100px;" /></v-card-item>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-card-item>
-      </v-card>
-    </v-col>
-  </v-row>
-  <v-row>
-    <v-col>
-      <v-card class="gradient-card-bottom mt-n6" style="padding-bottom: 10%;">
-        <v-card-title class="ma-4 text-h4" style="padding-left: 45%;">About</v-card-title>
-        <v-divider style="margin-left: 3%; margin-right: 3%;"></v-divider>
-        <v-card-text style="padding-top: 2%;" class="text-center text-accent text-h5" >
-            <div class="mb-2">Kwill is a webapp which can generate, store, and update user-created smart D&D character sheets.</div>
-            <div class="mb-2">Once released, Kwill will support the following features:</div>
-            <div class="mb-2">Generating user-specified smart D&D character sheets automatically. </div>
-            <div class="mb-2">Smart character sheets will support features such as:</div>
-            <div class="mb-2">Fields being automatically populated with calculated values.</div>
-            <div class="mb-2">Tooltips on mouse hover for features and spells.</div>
-            <div class="mb-2">Built-in tools to aid in tasks such as skill checks, attacks, rests, or level ups.</div>
-            <div class="mb-2">Allowing users to view all their created character sheets on their account dashboard.</div>
-            <div class="mb-2">Allowing users to export a character sheet locally to their own machine.</div>
-            <div class="mb-2">Allowing users to import a locally stored character sheet to the webapp.</div>
-        </v-card-text>
-      </v-card>
-    </v-col>
-  </v-row>
+  	<v-card class="gradient-home" height="100%">
+		<v-col class="ma-16 d-flex flex-column align-center">
+			<!-- Title -->
+			<img class="mb-3 logo-img-home" src="../assets/icon-small-margin.png" v-if="theme.global.name.value==='kwillTheme'"/>
+			<img class="mb-3 logo-img-home" src="../assets/icon2-small-margin.png" v-else/>
+			<v-card elevation="4">
+				<v-row>
+					<v-col cols="8">
+						<v-row>
+							<v-col>
+								<!-- Welcome section -->
+								<v-card elevation="6" class="gradient-db-card" style="margin-left: 5%; margin-top:5%; outline: solid black 3px;">
+									<v-card-title class="text-center text-h4">Welcome!</v-card-title>
+									<v-divider opacity=".7" thickness="3" gradient style="margin-left: 7%; margin-right: 7%;"></v-divider>
+									<v-card-item>
+										<v-card-text style="padding-top: 2%;" class="text-center text-h5" >
+											<div class="mb-6 card-text">Welcome to Kwill! Kwill is a webapp which can generate, store, and <br> update user-created smart <i>Dungeons and Dragons</i> character sheets. You <br> can also download your characters locally.</div>
+											<div class="mb-6 card-text">Additional smart functionality includes automated field calculations,<br> real-time spell tooltips, and much more!</div>
+											<div class="mb-6 card-text">New? Create a free account <b><router-link to="/createaccount">here</router-link></b> to save your characters.</div>
+										</v-card-text>
+									</v-card-item>
+								</v-card>
+							</v-col>	
+						</v-row>	
+						<v-row>
+							<v-col>
+								<v-card elevation="6" class="gradient-db-card" style="margin-bottom: 5%; margin-left: 5%; outline: solid black 3px;">
+									<v-card-title class="text-center text-h4">Why Kwill?</v-card-title>
+									<v-divider opacity=".7" thickness="3" gradient style="margin-left: 7%; margin-right: 7%;"></v-divider>
+									<v-card-item>
+										<v-card-text style="padding-top: 2%;" class="text-center text-h5" >
+											<div class="mb-6 card-text">Dungeons and Dragons is a fantasy roleplaying game where you create characters and go on adventures with others.</div>
+											<div class="mb-6 card-text">As players ourselves, we want creating a character to be as hassle-free<br> as possible. For this reason we built Kwill.</div>
+											<div class="mb-6 card-text">The added smart-functionality on both our online sheet, as well as the smart<br> version of the local sheet solve many common friction points while playing D&D.<br> No more frantically looking up spells before your turn!</div>
+										</v-card-text>
+									</v-card-item>
+								</v-card>
+							</v-col>
+						</v-row>
+					</v-col>
+					<v-col cols="4">
+						<!-- Quick access section -->
+						<v-card elevation="6" class="gradient-db-card" style="margin-right: 10%; margin-top:10%; outline: solid black 3px;">
+							<v-card-title class="text-center text-h4">Quick Access</v-card-title>
+							<v-divider opacity=".7" thickness="3" gradient style="margin-left: 7%; margin-right: 7%;"></v-divider>
+							<v-card-item>
+								<v-row class="justify-center ma-2">
+									<router-link to="/characters" style="text-decoration: none; color: inherit;">
+										<v-card>
+										<v-card-title class="text-center">Characters</v-card-title>
+										<v-card-item class="justify-center"><img src="../assets/community.png" style="height:120px; width: 120px;" /></v-card-item>
+										</v-card>
+									</router-link>
+								</v-row>
+								<v-row class="justify-center ma-2">
+									<router-link to="/characters" style="text-decoration: none; color: inherit;">
+										<v-card>
+										<v-card-title class="text-center">Guide</v-card-title>
+										<v-card-item class="justify-center"><img src="../assets/community.png" style="height:120px; width: 120px;" /></v-card-item>
+										</v-card>
+									</router-link>
+								</v-row>
+								<v-row class="justify-center ma-2">
+									<v-card>
+										<v-card-title class="text-center">Account</v-card-title>
+										<v-card-item class="justify-center"><img src="../assets/community.png" style="height:120px; width: 120px;" /></v-card-item>
+									</v-card>
+								</v-row>
+							</v-card-item>
+						</v-card>
+					</v-col>
+				</v-row>
+			</v-card>
+		</v-col>
+		<v-col>
+			<v-divider opacity=".7" thickness="3" gradient></v-divider>
+			<div class="text-center ma-4">
+				<p class="license-text">Released under the MIT License.</p>
+				<p class="license-text">Copyright (c) 2026-present Ryan McHenry</p>
+				<p class="license-text">Copyright (c) 2026-present Kyle Slusser</p>
+				<p class="license-text">Copyright (c) 2026-present Evan Farling</p>
+				<p class="license-text">Copyright (c) 2026-present Samuel Collins</p>
+				<p class="license-text mb-2">Copyright (c) 2026-present Kristopher Duffy</p>
+			</div>	
+		</v-col>
+  	</v-card>
 </template>
 
 <script setup>
-  import { onMounted } from 'vue';
-  import api from '../services/api';
-  import { useAuthStore } from '../stores/user_login_state';
+    import { ref } from 'vue';
+	import { RouterLink } from 'vue-router';
+	import { useTheme } from 'vuetify'	
+  	import { onMounted } from 'vue';
+  	import api from '../services/api';
+  	import { useAuthStore } from '../stores/user_login_state';
+	const theme = useTheme()
+  	const authStore = useAuthStore();
 
-  const authStore = useAuthStore();
-
-  onMounted(async () => {
-      try {
-          if (!authStore.token) return;
-          const res = await api.get("/api/auth/me");
-          authStore.setUser(res.data);
-      } catch (err) {
-          console.log("Not authenticated", err);
-      }
-  });
-
+	onMounted(async () => {
+		try {
+			if (!authStore.token) return;
+			const res = await api.get("/api/auth/me");
+			authStore.setUser(res.data);
+		} catch (err) {
+			console.log("Not authenticated", err);
+		}
+	})
 </script>
+
 <style>
+  .center-homepage {
+        place-items: center;
+    }
+
+	.logo-img-home {
+        height: clamp(5rem, calc(5vw + 4rem), 15rem); 
+    }
+
+    .card-text {
+        font-size: clamp(1rem, calc(1vw + 0.1rem), 2.5rem);
+    }
+
+	.license-text {
+		font-size: clamp(0.8rem, calc(0.75vw + 0.3rem), 1.4rem);
+	}
 </style>
