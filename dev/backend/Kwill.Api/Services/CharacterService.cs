@@ -25,52 +25,102 @@ namespace Kwill.Api.Services
         //Gets all characters from given UserId
         public async Task<List<BsonDocument>> GetByUserIdAsync(Guid userId)
         {
-            var filter = Builders<BsonDocument>.Filter.Eq("userid", new BsonBinaryData(userId, GuidRepresentation.Standard));
+            // NEW: Look up user's characterIds array
+            var userFilter = Builders<BsonDocument>.Filter.Eq("userid", new BsonBinaryData(userId, GuidRepresentation.Standard));
+            var user = await _db.Users.Find(userFilter).FirstOrDefaultAsync();
+
+            if (user == null || !user.Contains("characterIds"))
+                return new List<BsonDocument>();
+
+            var characterIds = user["characterIds"].AsBsonArray;
+            if (characterIds.Count == 0)
+                return new List<BsonDocument>();
+
+            // Fetch characters whose characterId is in the user's characterIds array
+            var filter = Builders<BsonDocument>.Filter.In("characterid", characterIds);
             var docs = await _db.CharacterSheets.Find(filter).ToListAsync();
 
             return docs;
         }
 
         //Creates an entry in the mongoDb using the provided BsonDocument.
-    public async Task<(bool Success, BsonDocument? Doc, List<string>? Errors, string? ErrorMessage)> CreateAsync(BsonDocument doc)
-    {
-        try
+        public async Task<(bool Success, BsonDocument? Doc, List<string>? Errors, string? ErrorMessage)> CreateAsync(BsonDocument doc)
         {
-        // Convert userid and characterid from string to Binary GUID if they exist
-        if (doc.Contains("userid") && doc["userid"].IsString)
-        {
-            var userIdString = doc["userid"].AsString;
-            if (Guid.TryParse(userIdString, out Guid userId))
+            try
             {
-                doc["userid"] = new BsonBinaryData(userId, GuidRepresentation.Standard);
+                Guid userId = Guid.Empty;
+                Guid characterId = Guid.Empty;
+
+                // Extract and convert userid from string to Binary GUID
+                if (doc.Contains("userid") && doc["userid"].IsString)
+                {
+                    var userIdString = doc["userid"].AsString;
+                    if (Guid.TryParse(userIdString, out userId))
+                    {
+                        // Don't store userid in character document anymore
+                        doc.Remove("userid");
+                    }
+                    else
+                    {
+                        return (false, null, null, "Invalid userid format");
+                    }
+                }
+                else if (doc.Contains("userid") && doc["userid"].IsBsonBinaryData)
+                {
+                    userId = doc["userid"].AsGuid;
+                    doc.Remove("userid");
+                }
+                else
+                {
+                    return (false, null, null, "userid is required");
+                }
+
+                // Convert characterid from string to Binary GUID if needed
+                if (doc.Contains("characterid") && doc["characterid"].IsString)
+                {
+                    var characterIdString = doc["characterid"].AsString;
+                    if (Guid.TryParse(characterIdString, out characterId))
+                    {
+                        doc["characterid"] = new BsonBinaryData(characterId, GuidRepresentation.Standard);
+                    }
+                    else
+                    {
+                        return (false, null, null, "Invalid characterid format");
+                    }
+                }
+                else if (doc.Contains("characterid") && doc["characterid"].IsBsonBinaryData)
+                {
+                    characterId = doc["characterid"].AsGuid;
+                }
+                else
+                {
+                    return (false, null, null, "characterid is required");
+                }
+
+                var srdData = await LoadSrdDataAsync();
+                var validation = CharacterSheetValidator.ValidateCharacterSheet(doc, srdData);
+                if (!validation.IsValid)
+                {
+                    Console.WriteLine($"Validation failed: {string.Join(", ", validation.Errors)}");
+                    return (false, null, validation.Errors, null);
+                }
+
+                // Insert character document (without userid field)
+                await _db.CharacterSheets.InsertOneAsync(doc);
+
+                // Add characterId to user's characterIds array
+                var userFilter = Builders<BsonDocument>.Filter.Eq("userid", new BsonBinaryData(userId, GuidRepresentation.Standard));
+                var update = Builders<BsonDocument>.Update.Push("characterIds", new BsonBinaryData(characterId, GuidRepresentation.Standard));
+                await _db.Users.UpdateOneAsync(userFilter, update);
+
+                return (true, doc, null, null);
             }
-        }
-
-        if (doc.Contains("characterid") && doc["characterid"].IsString)
-        {
-            var characterIdString = doc["characterid"].AsString;
-            if (Guid.TryParse(characterIdString, out Guid characterId))
-            {
-                doc["characterid"] = new BsonBinaryData(characterId, GuidRepresentation.Standard);
-            }
-        }
-
-        var srdData = await LoadSrdDataAsync();
-        var validation = CharacterSheetValidator.ValidateCharacterSheet(doc, srdData);
-       if (!validation.IsValid)
-       {
-            Console.WriteLine($"Validation failed: {string.Join(", ", validation.Errors)}");
-            return (false, null, validation.Errors, null);
-       }
-
-        await _db.CharacterSheets.InsertOneAsync(doc);
-        return (true, doc, null, null);
-        }
             catch (Exception ex)
-        {
-            return (false, null, null, ex.Message);
-    }
-}
+            {
+                return (false, null, null, ex.Message);
+            }
+        }
+
         //Updates the specified entry in the mongoDb
         public async Task<(bool Success, BsonDocument? Doc, List<string>? Errors, string? ErrorMessage, bool NotFound, bool Forbidden)> UpdateAsync(
             Guid userId,
@@ -85,12 +135,17 @@ namespace Kwill.Api.Services
                 if (existing == null)
                     return (false, null, null, null, true, false);
 
-                // Compare userId as Guid
-                if (!existing.Contains("userid"))
+                // NEW: Check ownership by looking at user's characterIds array
+                var userFilter = Builders<BsonDocument>.Filter.Eq("userid", new BsonBinaryData(userId, GuidRepresentation.Standard));
+                var user = await _db.Users.Find(userFilter).FirstOrDefaultAsync();
+
+                if (user == null || !user.Contains("characterIds"))
                     return (false, null, null, null, false, true);
 
-                var existingUserId = existing["userid"].AsGuid;
-                if (existingUserId != userId)
+                var characterIds = user["characterIds"].AsBsonArray;
+                var characterIdBinary = new BsonBinaryData(characterId, GuidRepresentation.Standard);
+                
+                if (!characterIds.Contains(characterIdBinary))
                     return (false, null, null, null, false, true);
 
                 var srdData = await LoadSrdDataAsync();
@@ -119,15 +174,26 @@ namespace Kwill.Api.Services
                 if (existing == null)
                     return (false, true, false, null);
 
-                // Compare userId as Guid
-                if (!existing.Contains("userid"))
+                // NEW: Check ownership by looking at user's characterIds array
+                var userFilter = Builders<BsonDocument>.Filter.Eq("userid", new BsonBinaryData(userId, GuidRepresentation.Standard));
+                var user = await _db.Users.Find(userFilter).FirstOrDefaultAsync();
+
+                if (user == null || !user.Contains("characterIds"))
                     return (false, false, true, null);
 
-                var existingUserId = existing["userid"].AsGuid;
-                if (existingUserId != userId)
+                var characterIds = user["characterIds"].AsBsonArray;
+                var characterIdBinary = new BsonBinaryData(characterId, GuidRepresentation.Standard);
+                
+                if (!characterIds.Contains(characterIdBinary))
                     return (false, false, true, null);
 
+                // Delete the character
                 await _db.CharacterSheets.DeleteOneAsync(filter);
+
+                // Remove characterId from user's characterIds array
+                var update = Builders<BsonDocument>.Update.Pull("characterIds", characterIdBinary);
+                await _db.Users.UpdateOneAsync(userFilter, update);
+
                 return (true, false, false, null);
             }
             catch (Exception ex)
@@ -137,40 +203,51 @@ namespace Kwill.Api.Services
         }
 
        //Gets character summaries (ID + name) for a user - for character list display
-    public async Task<List<object>> GetCharacterSummariesByUserIdAsync(Guid userId)
-    {
-        var filter = Builders<BsonDocument>.Filter.Eq("userid", new BsonBinaryData(userId, GuidRepresentation.Standard));
-        var docs = await _db.CharacterSheets.Find(filter).ToListAsync();
-
-        var summaries = new List<object>();
-
-        foreach (var doc in docs)
+        public async Task<List<object>> GetCharacterSummariesByUserIdAsync(Guid userId)
         {
-            var characterId = doc.Contains("characterid") ? doc["characterid"].AsGuid : Guid.Empty;
+            // NEW: Look up user's characterIds array
+            var userFilter = Builders<BsonDocument>.Filter.Eq("userid", new BsonBinaryData(userId, GuidRepresentation.Standard));
+            var user = await _db.Users.Find(userFilter).FirstOrDefaultAsync();
 
-            // Try to get name from root level first, then from data object
-            var characterName = "Unnamed Character";
-            if (doc.Contains("name"))
+            if (user == null || !user.Contains("characterIds"))
+                return new List<object>();
+
+            var characterIds = user["characterIds"].AsBsonArray;
+            if (characterIds.Count == 0)
+                return new List<object>();
+
+            // Fetch characters whose characterId is in the user's characterIds array
+            var filter = Builders<BsonDocument>.Filter.In("characterid", characterIds);
+            var docs = await _db.CharacterSheets.Find(filter).ToListAsync();
+
+            var summaries = new List<object>();
+
+            foreach (var doc in docs)
             {
-                characterName = doc["name"].AsString;
-            }
-            else if (doc.Contains("data") && doc["data"].AsBsonDocument.Contains("name"))
-            {
-                characterName = doc["data"]["name"].AsString;
+                var characterId = doc.Contains("characterid") ? doc["characterid"].AsGuid : Guid.Empty;
+
+                // Try to get name from root level first, then from data object
+                var characterName = "Unnamed Character";
+                if (doc.Contains("name"))
+                {
+                    characterName = doc["name"].AsString;
+                }
+                else if (doc.Contains("data") && doc["data"].AsBsonDocument.Contains("name"))
+                {
+                    characterName = doc["data"]["name"].AsString;
+                }
+
+                summaries.Add(new
+                {
+                    characterId = characterId,
+                    name = characterName
+                });
             }
 
-            summaries.Add(new
-            {
-                characterId = characterId,
-                name = characterName
-            });
+            return summaries;
         }
 
-        return summaries;
-    }
-
         // Helper method to load SRD data for validation
-
         private async Task<Dictionary<string, List<BsonDocument>>> LoadSrdDataAsync()
         {
             var srdData = new Dictionary<string, List<BsonDocument>>();

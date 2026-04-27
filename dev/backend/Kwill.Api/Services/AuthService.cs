@@ -101,10 +101,12 @@ namespace Kwill.Api.Services
             {
                 if (existingMongoUser == null)
                 {
-                    var mongoUser = new BsonDocument
-                {
-                    { "object_id", "user" },
-                    { "userid", new BsonBinaryData(user.UserId, GuidRepresentation.Standard) }
+
+                var mongoUser = new BsonDocument
+                {       
+                     { "object_id", "user" },
+                     { "userid", new BsonBinaryData(user.UserId, GuidRepresentation.Standard) },
+                     { "characterIds", new BsonArray() }  //Empty array for character IDs
                 };
 
                 await _mongoDb.Users.InsertOneAsync(mongoUser);
