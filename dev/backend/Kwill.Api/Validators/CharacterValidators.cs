@@ -67,7 +67,7 @@ namespace Kwill.Validation
 
             var requiredFields = new[]
             {
-                "object_id", "userid", "characterid", "name", "classes", "race", "ability"
+                "object_id", "characterid", "name", "classes", "race", "ability"
             };
 
             foreach (var field in requiredFields)
