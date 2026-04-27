@@ -67,11 +67,14 @@
     </v-app-bar>
 </template>
 <script setup>
-    import {ref} from 'vue';
+    import {ref, computed} from 'vue';
     import { useTheme } from 'vuetify'
     import router from '../router';
+    import { useAuthStore } from '../stores/user_login_state';
     const theme = useTheme()
+    const authStore = useAuthStore();
     const title = ref('Kwill');
+    const user = computed(() => authStore.user);
     // List of items to show on the Menu drop down
     const items = [
         {title: 'Characters', route:'/characters'},
@@ -82,12 +85,10 @@
     const account_items = [
         {title: 'Log out', icon:'mdi-logout', exec: logout}
     ]
-    const user = ref(JSON.parse(localStorage.getItem('user')))
 
     // Logs the user out
     function logout() {
-        localStorage.removeItem('user')
-        user.value = null
+        authStore.logout();
     }
 
     // Toggles between light and dark vuetify themes
