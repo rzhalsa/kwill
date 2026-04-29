@@ -1,0 +1,292 @@
+{
+  "spells": [
+    {
+      "name": "Bless",
+      "level": "1",
+      "school": "Enchantment",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Command",
+      "level": "1",
+      "school": "Enchantment",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Cure Wounds",
+      "level": "1",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Detect Evil and Good",
+      "level": "1",
+      "school": "Divination",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Detect Magic",
+      "level": "1",
+      "school": "Divination",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Detect Poison and Disease",
+      "level": "1",
+      "school": "Divination",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Divine Favor",
+      "level": "1",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Divine Smite",
+      "level": "1",
+      "school": "Evocation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Heroism",
+      "level": "1",
+      "school": "Enchantment",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Protection from Evil and Good",
+      "level": "1",
+      "school": "Abjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Purify Food and Drink",
+      "level": "1",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": true,
+      "material": false
+    },
+    {
+      "name": "Searing Smite",
+      "level": "1",
+      "school": "Evocation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Shield of Faith",
+      "level": "1",
+      "school": "Abjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Aid",
+      "level": "2",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Find Steed",
+      "level": "2",
+      "school": "Conjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Gentle Repose",
+      "level": "2",
+      "school": "Necromancy",
+      "concentration": false,
+      "ritual": true,
+      "material": false
+    },
+    {
+      "name": "Lesser Restoration",
+      "level": "2",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Locate Object",
+      "level": "2",
+      "school": "Divination",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Magic Weapon",
+      "level": "2",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Prayer of Healing",
+      "level": "2",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Protection from Poison",
+      "level": "2",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Shining Smite",
+      "level": "2",
+      "school": "Transmutation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Warding Bond",
+      "level": "2",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": true
+    },
+    {
+      "name": "Zone of Truth",
+      "level": "2",
+      "school": "Enchantment",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Create Food and Water",
+      "level": "3",
+      "school": "Conjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Daylight",
+      "level": "3",
+      "school": "Evocation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Dispel Magic",
+      "level": "3",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Magic Circle",
+      "level": "3",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": true
+    },
+    {
+      "name": "Remove Curse",
+      "level": "3",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Revivify",
+      "level": "3",
+      "school": "Necromancy",
+      "concentration": false,
+      "ritual": false,
+      "material": true
+    },
+    {
+      "name": "Aura of Life",
+      "level": "4",
+      "school": "Abjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Banishment",
+      "level": "4",
+      "school": "Abjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Death Ward",
+      "level": "4",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Locate Creature",
+      "level": "4",
+      "school": "Divination",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Dispel Evil and Good",
+      "level": "5",
+      "school": "Abjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Geas",
+      "level": "5",
+      "school": "Enchantment",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "Key": "backgrounds",
+  "backgrounds": [
+    {
+      "name": "Acolyte",
+      "ability_scores": "Intelligence, Wisdom, Charisma",
+      "feat": "Magic Initiate (Cleric) (see \"Feats\")",
+      "skill_proficiencies": "Insight and Religion",
+      "tool_proficiency": "Calligrapher's Supplies",
+      "equipment": "Choose A or B: (A) Calligrapher's Supplies, Book (prayers), Holy Symbol, Parchment (10 sheets), Robe, 8 GP; or (B) 50 GP"
+    },
+    {
+      "name": "Criminal",
+      "ability_scores": "Dexterity, Constitution, Intelligence",
+      "feat": "Alert (see \"Feats\")",
+      "skill_proficiencies": "Sleight of Hand and Stealth",
+      "tool_proficiency": "Thieves' Tools",
+      "equipment": "Choose A or B: (A) 2 Daggers, Thieves' Tools, Crowbar, 2 Pouches, Traveler's Clothes, 16 GP; or (B) 50 GP"
+    },
+    {
+      "name": "Sage",
+      "ability_scores": "Constitution, Intelligence, Wisdom",
+      "feat": "Magic Initiate (Wizard) (see \"Feats\")",
+      "skill_proficiencies": "Arcana and History",
+      "tool_proficiency": "Calligrapher's Supplies",
+      "equipment": "Choose A or B: (A) Quarterstaff, Calligrapher's Supplies, Book (history), Parchment (8 sheets), Robe, 8 GP; or (B) 50 GP"
+    },
+    {
+      "name": "Soldier",
+      "ability_scores": "Strength, Dexterity, Constitution",
+      "feat": "Savage Attacker (see \"Feats\")",
+      "skill_proficiencies": "Athletics and Intimidation",
+      "tool_proficiency": "Choose one kind of Gaming Set (see",
+      "equipment": "Choose A or B: (A) Spear, Shortbow, 20 Arrows, Gaming Set (same as above), Healer's Kit, Quiver, Traveler's Clothes, 14 GP; or (B) 50 GP"
+    }
+  ]
+}

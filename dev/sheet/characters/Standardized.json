@@ -14,7 +14,8 @@
   "alignment": "Lawful Neutral",
   "background": {
     "object_id": "background",
-    "name": "Guildmaster"
+    "name": "Guildmaster",
+    "description": ""
   },
   "player": "Ryan",
   "exp": "",
