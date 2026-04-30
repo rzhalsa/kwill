@@ -8,7 +8,7 @@
      3. @media print — zoom: 1 resets for printing
    ============================================================ */
 
-body {
+.body {
     background: #e0e0e0;
     display: flex;               /* ADDED - was missing in original */
     flex-direction: column;
