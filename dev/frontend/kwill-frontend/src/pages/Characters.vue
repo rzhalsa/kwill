@@ -4,7 +4,7 @@
             <v-card class="mt-4 ml-4 rounded-lg">
                 <v-card-title class="d-flex justify-space-between align-center">
                     <span>Characters</span>
-                    <v-btn title="New Character" icon="mdi-plus" color="primary" to="charactercreator"></v-btn>
+                    <v-btn title="New Character" icon="mdi-plus" color="primary" to="charactercreator" v-tooltip="'New Character'"></v-btn>
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
@@ -19,10 +19,11 @@
                             :active="character.characterId === characterStore.selectedCharacterId"
                             @click="fetchCharData(character.characterId)"
                         >
-                            <template v-slot:append>
+                            <template v-slot:append >
                                 <v-btn
                                     color="grey-lighten"
                                     icon="mdi-delete-circle"
+                                    v-tooltip="'Delete character'"
                                     variant="text"
                                     @click="characterToDelete = character.characterId; showDeleteDialog = true;"
                                 ></v-btn>
@@ -186,13 +187,11 @@ function sendCharData() {
  * @param characterID 
  */
 async function fetchCharData(characterID) {
-    if (characterStore.selectedCharacterId === characterID) {
-        return
-    }
     characterStore.selectedCharacterId = characterID;
     try {
         const response = await api.get(`/api/character/${characterID}`)
         const data = response.data;
+        console.log("here3");
         console.log(data);
         charData.value = data;
         loaded.value = true;
@@ -214,7 +213,10 @@ async function fetchCharsName() {
         characterStore.characterList = data.characters;
         loaded.value = true;
         firstCharacter.value = characterStore.characterList[0]?.characterId || null;
+        console.log("here");
         if(firstCharacter.value != null){
+            console.log("here2");
+            console.log(firstCharacter.value);
             showSheet.value = true;
             fetchCharData(firstCharacter.value);
         }else{

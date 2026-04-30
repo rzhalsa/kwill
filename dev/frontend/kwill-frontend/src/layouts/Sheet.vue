@@ -326,7 +326,7 @@
                 <div class="col">
                     <div
                         style="height: 220px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px;">
-                        <SpellPanels :character="character" :title="'Cantrips'" :index="0" @add-spell="handleAddCantrip" @remove-spell="handleRemoveCantrip" />
+                        <SpellPanels :character="character" :title="'Cantrips'" :level="0" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
                         <!--<span style="text-align: center;" data-label>Cantrips</span>
                         <div class="row" style="gap: 10px;">
                              Cantrips 
@@ -351,7 +351,7 @@
                                 <input type="text" class="line-input" v-model="character.spells[1][i - 1].name">
                             </div>
                         </div>-->
-                        <SpellPanels :character="character" :title="'1st Level'" :index="1" @add-spell="handleAdd1stLevelSpell" @remove-spell="handleRemove1stLevelSpell" />
+                        <SpellPanels :character="character" :title="'1st Level'" :level="1" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
                     </div>
                     <div style="height: 275px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
                         <!--<span style="text-align: center;" data-label>2nd Level</span>
@@ -363,7 +363,7 @@
                                 <input type="text" class="line-input" v-model="character.spells[2][i - 1].name">
                             </div>
                         </div>-->
-                        <SpellPanels :character="character" :title="'2nd Level'" :index="2" @add-spell="handleAdd2ndLevelSpell" @remove-spell="handleRemove2ndLevelSpell" />
+                        <SpellPanels :character="character" :title="'2nd Level'" :level="2" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
                     </div>
                 </div>
 
@@ -378,7 +378,7 @@
                                 <input type="text" class="line-input" v-model="character.spells[3][i - 1].name">
                             </div>
                         </div>-->
-                        <SpellPanels :character="character" :title="'3rd Level'" :index="3" @add-spell="handleAdd3rdLevelSpell" @remove-spell="handleRemove3rdLevelSpell" />
+                        <SpellPanels :character="character" :title="'3rd Level'" :level="3" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
                     </div>
                     <div
                         style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
@@ -391,7 +391,7 @@
                                 <input type="text" class="line-input" v-model="character.spells[4][i - 1].name">
                             </div>
                         </div>-->
-                        <SpellPanels :character="character" :title="'4th Level'" :index="4" @add-spell="handleAdd4thLevelSpell" @remove-spell="handleRemove4thLevelSpell" />
+                        <SpellPanels :character="character" :title="'4th Level'" :level="4" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
                     </div>
                     <div
                         style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
@@ -404,26 +404,26 @@
                                 <input type="text" class="line-input" v-model="character.spells[5][i - 1].name">
                             </div>
                         </div>-->
-                        <SpellPanels :character="character" :title="'5th Level'" :index="5" @add-spell="handleAdd5thLevelSpell" @remove-spell="handleRemove5thLevelSpell" />
+                        <SpellPanels :character="character" :title="'5th Level'" :level="5" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
                     </div>
                 </div>
 
                 <div class="col">
                     <div
                         style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <SpellPanels :character="character" :title="'6th Level'" :index="6" @add-spell="handleAdd6thLevelSpell" @remove-spell="handleRemove6thLevelSpell" />
+                        <SpellPanels :character="character" :title="'6th Level'" :level="6" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
                     </div>
                     <div
                         style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <SpellPanels :character="character" :title="'7th Level'" :index="7" @add-spell="handleAdd7thLevelSpell" @remove-spell="handleRemove7thLevelSpell" />
+                        <SpellPanels :character="character" :title="'7th Level'" :level="7" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
                     </div>
                     <div
                         style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <SpellPanels :character="character" :title="'8th Level'" :index="8" @add-spell="handleAdd8thLevelSpell" @remove-spell="handleRemove8thLevelSpell" />
+                        <SpellPanels :character="character" :title="'8th Level'" :level="8" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
                     </div>
                     <div
                         style="height: 200px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <SpellPanels :character="character" :title="'9th Level'" :index="9" @add-spell="handleAdd9thLevelSpell" @remove-spell="handleRemove9thLevelSpell" />
+                        <SpellPanels :character="character" :title="'9th Level'" :level="9" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
                     </div>
                 </div>
             </div>
@@ -566,16 +566,12 @@ defineExpose({
 const debounceUpdate = debounce((newVal)=>{
     const plainCharacter = JSON.parse(JSON.stringify(newVal));
     updateCharacter(characterStore.selectedCharacterId ,plainCharacter ,userId.value);
-    changeCount.value=0;
-}, 500);
+}, 1000);
 
 //watches character model and waits for three changes to be made before calling debounce
 watch(character,(newVal)=>{
     if(suppressSave.value) return;
-    changeCount.value++;
-    if(changeCount.value >= 3){
-        debounceUpdate(newVal);
-    }
+    debounceUpdate(newVal);
 })
 
 function handleAddFeature(newFeature) {
@@ -584,65 +580,15 @@ function handleAddFeature(newFeature) {
 function handleRemoveFeature(index){
     character.panels.features.splice(index, 1);
 }
-function handleAddCantrip(newCantrip) {
-    character.spells[0].push(newCantrip);
+function handleAddSpell(level, newSpell) {
+    if (!character.spells[level]) {
+        character.spells[level] = [];
+    }
+
+    character.spells[level].push(newSpell);
 }
-function handleRemoveCantrip(index) {
-    character.spells[0].splice(index, 1);
-}
-function handleAdd1stLevelSpell(newSpell) {
-    character.spells[1].push(newSpell);
-}
-function handleRemove1stLevelSpell(index) {
-    character.spells[1].splice(index, 1);
-}
-function handleAdd2ndLevelSpell(newSpell) {
-    character.spells[2].push(newSpell);
-}
-function handleRemove2ndLevelSpell(index) {
-    character.spells[2].splice(index, 1);
-}
-function handleAdd3rdLevelSpell(newSpell) {
-    character.spells[3].push(newSpell);
-}
-function handleRemove3rdLevelSpell(index) {
-    character.spells[3].splice(index, 1);
-}
-function handleAdd4thLevelSpell(newSpell) {
-    character.spells[4].push(newSpell);
-}
-function handleRemove4thLevelSpell(index) {
-    character.spells[4].splice(index, 1);
-}
-function handleAdd5thLevelSpell(newSpell) {
-    character.spells[5].push(newSpell);
-}
-function handleRemove5thLevelSpell(index) {
-    character.spells[5].splice(index, 1);
-}
-function handleAdd6thLevelSpell(newSpell) {
-    character.spells[6].push(newSpell);
-}
-function handleRemove6thLevelSpell(index) {
-    character.spells[6].splice(index, 1);
-}
-function handleAdd7thLevelSpell(newSpell) {
-    character.spells[7].push(newSpell);
-}
-function handleRemove7thLevelSpell(index) {
-    character.spells[7].splice(index, 1);
-}
-function handleAdd8thLevelSpell(newSpell) {
-    character.spells[8].push(newSpell);
-}
-function handleRemove8thLevelSpell(index) {
-    character.spells[8].splice(index, 1);
-}
-function handleAdd9thLevelSpell(newSpell) {
-    character.spells[9].push(newSpell);
-}
-function handleRemove9thLevelSpell(index) {
-    character.spells[9].splice(index, 1);
+function handleRemoveSpell(level, index) {
+    character.spells[level].splice(index, 1);
 }
 </script>
 <style src="../character.css" scoped></style>

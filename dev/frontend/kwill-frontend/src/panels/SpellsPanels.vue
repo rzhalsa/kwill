@@ -1,11 +1,13 @@
 <template>
     <v-card variant="flat" style="overflow-y: auto;">
         <v-card-title class="d-flex justify-center text-subtitle-2">
+            <v-btn class="ml-2" color="grey-lighten" size="compact" icon="mdi-import"></v-btn>
+            <v-spacer/>
              {{ title }}
             <v-spacer />
-            <v-btn class="ml-2" color="primary" size="compact" icon="mdi-plus" @click="addSpell();"></v-btn>
+            <v-btn class="ml-2" color="primary" size="compact" icon="mdi-plus" v-tooltip="'Add Spell'" @click="addSpell(); "></v-btn>
         </v-card-title>
-        <v-card-item v-for="(spell, index) in character.spells[index]" :key="index" class="d-flex flex-column gap-2">
+        <v-card-item v-for="(spell, index) in character.spells[level]" :key="index" class="d-flex flex-column gap-2">
             <v-expansion-panels class="feature-panel" v-model="spell.expanded">
                 <v-expansion-panel>
                     <v-expansion-panel-title class="d-flex justify-between align-center">
@@ -13,6 +15,12 @@
                     </v-expansion-panel-title>
                     <v-expansion-panel-text>
                         <div class="panel-expanded" style="flex-direction:column; gap:4px;">
+                            <div  style="display:flex; align-items:center; gap:4px;">
+                                    <span
+                                        style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Name:</span>
+                                    <input type="text" id="name_value" placeholder="e.g. Fireball" v-model="spell.name"
+                                        style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                            </div>
                             <div style="display:flex; align-items:center; gap:4px;">
                                 <span style="font-size:11px; color:#555; flex-shrink:0;">School:</span>
                                 <select id="school_value" v-model="spell.school"
@@ -132,7 +140,6 @@
                                 </label>
                                 <v-btn color="error" class="ma-2" size="compact" icon="mdi-close" @click.stop="removeSpell(index)"></v-btn>
                             </div>
-                            
                         </div>
                     </v-expansion-panel-text>
                 </v-expansion-panel>
@@ -146,11 +153,11 @@ import { ref } from 'vue';
 
 const emit = defineEmits(['add-spell', 'remove-spell']);
 import '../sheets/assets/styles.css';
-defineProps({
+const props = defineProps({
     character: Object,
     spells: Array,
     title: String,
-    index: Number
+    level: Number
 })
 
 function addSpell(){
@@ -175,11 +182,11 @@ function addSpell(){
         showstats: true
 
     };
-    emit('add-spell', newSpell);
+    emit('add-spell', props.level, newSpell);
 }
 
 function removeSpell(index) {
-    emit('remove-spell', index);
+    emit('remove-spell', props.level, index);
 }
 </script>
 <style scoped>

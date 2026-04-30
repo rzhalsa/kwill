@@ -133,9 +133,17 @@ public class CharacterController : ControllerBase
             var doc = BsonDocument.Parse(body.GetRawText());
 
             if (!doc.Contains("userid"))
+            {
                 return BadRequest(new { message = "userid is required" });
+            }
 
-            var userId = doc["userid"].AsGuid;
+            // Parse userid from string to GUID
+            var userIdString = doc["userid"].AsString;
+            if (!Guid.TryParse(userIdString, out Guid userId))
+            {
+                return BadRequest(new { message = "Invalid userid format" });
+            }
+            doc.Remove("userid");
 
             var result = await _characterService.UpdateAsync(userId, characterId, doc);
 

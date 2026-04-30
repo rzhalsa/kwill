@@ -237,7 +237,7 @@ export async function updateCharacter(characterId, characterData, userId){
     try {
         const payload = {...characterData, userid: userId}
         const response = await api.put(`/api/character/${characterId}`, payload);
-        console.log("created character successfully: ",response.data );
+        console.log("updated character successfully: ",response.data );
         return response.data;
     } catch (error) {
         console.error("Failed to post API data: ", error)
