@@ -1,5 +1,6 @@
 import axios from 'axios'
 import api from '../services/api'
+import { useCharacterCreationStore } from '../stores/character_creation_state'
 
 /**
  * Saves all data passed into the data param into the character creation pinia store
@@ -48,12 +49,16 @@ export async function updateCharacter(characterId, characterData, userId){
     }
 }
 
-export async function createNewCharacter(characterData, userId, characterId){
+export async function createNewCharacter(characterData, userId){
     try {
-        const payload = {...characterData, userid: userId, characterid: characterId};
+        const payload = {...characterData, userid: userId};
         console.log(payload)
         const response = await api.post("/api/character", payload);
         console.log("created character successfully: ", response.data );
+        
+        const store = useCharacterCreationStore();
+        const res = await api.get(`/api/character/summaries/${userId}`)
+        store.characterList = res.data.characters
         return response.data;
     } catch (error) {
         console.error("Failed to post API data: ", error)

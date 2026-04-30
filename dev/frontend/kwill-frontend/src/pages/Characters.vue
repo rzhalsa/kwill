@@ -4,20 +4,30 @@
             <v-card class="mt-4 ml-4 rounded-lg">
                 <v-card-title class="d-flex justify-space-between align-center">
                     <span>Characters</span>
-                    <v-btn title="New Character" icon="mdi-plus" to="charactercreator"></v-btn>
+                    <v-btn title="New Character" icon="mdi-plus" color="primary" to="charactercreator"></v-btn>
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
                     <v-list>
                         <v-list-item
-                            v-for="(character, index) in characterList"
-                            :key="index"
+                            v-for="(character, index) in characterStore.characterList" 
+                            :key="character.characterId"
                             v-if="loaded"
                             lines="two"
                             :title="character.name || 'Unnamed Character'"
                             :value="character"
-                            @click="sheetRef.populateSheet(character);"
-                        ></v-list-item>
+                            :active="character.characterId === characterStore.selectedCharacterId"
+                            @click="fetchCharData(character.characterId)"
+                        >
+                            <template v-slot:append>
+                                <v-btn
+                                    color="grey-lighten"
+                                    icon="mdi-delete-circle"
+                                    variant="text"
+                                    @click="characterToDelete = character.characterId; showDeleteDialog = true;"
+                                ></v-btn>
+                            </template>
+                        </v-list-item>
                     </v-list>
                 </v-card-text>
             </v-card>
@@ -27,7 +37,10 @@
                 <v-card class="mt-4 mr-4 rounded-lg flex-grow-1" style="max-height: 100dvh; overflow-y: auto;">
                     <v-card-title></v-card-title>
                     <v-card-text>
-                        <characterSheet ref="sheetRef" @update:char-data="postCharData()" />
+                        <characterSheet v-if="showSheet" ref="sheetRef" @update:char-data="postCharData()" />
+                        <div v-else class="d-flex justify-center align-center" style="height: 60dvh;">
+                            <p class="text-h6">No characters found. Create a new character to get started!</p>
+                        </div>
                     </v-card-text>
                     <v-card-actions></v-card-actions>
                 </v-card>
@@ -104,17 +117,47 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+    <v-dialog v-model="showLoginDialog" width="50dvw">
+        <v-card>
+            <v-card-title>Login Required</v-card-title>
+            <v-divider></v-divider>
+            <v-card-text>
+                <p>You must be logged in to access the Characters page. Please log in or create an account to continue.</p>
+            </v-card-text>
+            <v-card-actions class="d-flex justify-end gap-2">
+                <v-btn to="/">Cancel</v-btn>
+                <v-btn color="primary" to="/login">Login</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+    <v-dialog v-model="showDeleteDialog" width="50dvw">
+        <v-card>
+            <v-card-title>Confirm Delete</v-card-title>
+            <v-divider></v-divider>
+            <v-card-text>
+                <p>Are you sure you want to delete this character? This action cannot be undone.</p>
+            </v-card-text>
+            <v-card-actions class="d-flex justify-end gap-2">
+                <v-btn variant="text" @click="showDeleteDialog = false">Cancel</v-btn>
+                <v-btn color="red" @click="deleteCharacter">Delete</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script setup>
 import JSZip from 'jszip';
 import { simpleSheetHTML, smartSheetHTML } from '../sheets';
+import { useCharacterCreationStore } from '../stores/character_creation_state'
 import characterSheet from '../layouts/Sheet.vue';
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import api from '../services/api';
-
-const userID = ref("3528bb42-f66c-48be-a4ef-d47880741f9c");
-const characterID = ref("c1d2e3f4-a5b6-7890-1234-567890abcdef");
+import { useAuthStore } from '../stores/user_login_state';
+import { first } from 'lodash';
+const authStore = useAuthStore();
+const characterStore = useCharacterCreationStore();
+const userID = computed(() => authStore.user?.userId);
+const showLoginDialog = computed(() => authStore.showLogin);
 const sheetRef = ref();
 const charData = ref();
 const includeCharData = ref(false);
@@ -125,16 +168,30 @@ const isDragging = ref(false);
 const selectedFile = ref(null);
 const fileInput = ref();
 const loaded = ref(null);
-const characterList=ref([]);
+const firstCharacter= ref(null);
+const showSheet = ref(false);
+const showDeleteDialog = ref(false);
+const characterToDelete = ref(null);
 
+/**
+ * Responsible for updating and populating values on the chracter sheet.
+ */
 function sendCharData() {
     sheetRef.value.populateSheet(charData.value);
     console.log("here");
 }
-
-async function fetchCharData() {
+/**
+ * Fetches character data for a given character ID and populates the character sheet with the retrieved data. If the selected character ID is the same as the currently displayed character, 
+ * it does nothing to avoid unnecessary API calls and re-rendering.
+ * @param characterID 
+ */
+async function fetchCharData(characterID) {
+    if (characterStore.selectedCharacterId === characterID) {
+        return
+    }
+    characterStore.selectedCharacterId = characterID;
     try {
-        const response = await api.get(`/api/character/${characterID.value}`)
+        const response = await api.get(`/api/character/${characterID}`)
         const data = response.data;
         console.log(data);
         charData.value = data;
@@ -145,29 +202,55 @@ async function fetchCharData() {
         console.error('Failed to fetch character data:', error);
     }
 }
-
-async function fetchCharName() {
+/**
+ * Fetches the names and IDs of all characters for a given user and populates the character list. It then selects the first character to display on the sheet. 
+ * If there are no characters, it sets the sheet to not show.
+ */
+async function fetchCharsName() {
     try {
-        const response = await api.get(`/api/character/user/${userID.value}`)
+        const response = await api.get(`/api/character/summaries/${userID.value}`)
         const data = response.data;
         console.log(data);
-        charData.value = data;
+        characterStore.characterList = data.characters;
         loaded.value = true;
-        for (const character of charData.value)
-        {
-            characterList.value.push(character);
+        firstCharacter.value = characterStore.characterList[0]?.characterId || null;
+        if(firstCharacter.value != null){
+            showSheet.value = true;
+            fetchCharData(firstCharacter.value);
+        }else{
+            showSheet.value = false;
         }
-        console.log('Character data retrieved:', charData.value);
-        sendCharData();
     } catch (error) {
         console.error('Failed to fetch character data:', error);
     }
 }
-
+/**
+ * Sends the currenttly selected chracter to the backend to delete the character data. It retrieves the characterId from the sheet component, 
+ * sends it to the backend, and then refreshes the character list and data to reflect any changes.
+ */
+async function deleteCharacter() {
+    try {
+        await api.delete(`/api/character/${characterToDelete.value}`,{
+            params: {
+                userId: userID.value
+            }
+        });
+        characterStore.characterList = characterStore.characterList.filter(c => c.characterId !== characterToDelete.value);
+        showDeleteDialog.value = false;
+        if (characterStore.selectedCharacterId === characterToDelete.value) {
+            characterStore.selectedCharacterId = null;
+            fetchCharsName();
+        }
+    } catch (error) {
+        console.error('Failed to delete character:', error);
+    }
+}
+/**
+ * Lifecycle hook called when the component is mounted.
+ */
 onMounted(() => {
-    fetchCharName();
-    fetchCharData();
-    
+    console.log("Mounted Characters.vue, userID:", userID.value);
+    fetchCharsName();
 });
 
 function handleFileDrop(event) {

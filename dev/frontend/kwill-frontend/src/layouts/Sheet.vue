@@ -433,16 +433,19 @@
 <script setup>
     import {ref, reactive, readonly, computed, watch, nextTick} from 'vue';
     import { createCharacter, updateCharacter, copyJsonToCharacter } from '../models/characterModel';
+    import { useCharacterCreationStore } from '../stores/character_creation_state';
     import { debounce } from 'lodash'
     import FeaturePanels from '../panels/FeaturePanels.vue';
     import SpellPanels from '../panels/SpellsPanels.vue';
+    import { useAuthStore } from '../stores/user_login_state';
+    const characterStore = useCharacterCreationStore();
+    const authStore = useAuthStore();
+    const userId = computed(() => authStore.user?.userId);
     const character = createCharacter();
     const amourBonus = ref(0);
     const changeCount = ref(0);
-    const userId = ref("user001");
-    const characterId = ref("character004");
     const suppressSave = ref(false);
-
+    
      // ability mapping
     const skillAbilityMap = {
         acrobatics: 'dexterity',
@@ -562,7 +565,7 @@ defineExpose({
 //Check that prevents API spams with a half second interval incase someone spams three changes quickly
 const debounceUpdate = debounce((newVal)=>{
     const plainCharacter = JSON.parse(JSON.stringify(newVal));
-    updateCharacter(characterId.value ,plainCharacter ,userId.value);
+    updateCharacter(characterStore.selectedCharacterId ,plainCharacter ,userId.value);
     changeCount.value=0;
 }, 500);
 

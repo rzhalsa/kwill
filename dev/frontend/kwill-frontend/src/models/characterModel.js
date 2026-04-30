@@ -225,7 +225,7 @@ export function copyJsonToCharacter(character, jsonData) {
 }
 export async function postCharacter(characterData, userId){
     try {
-        const payload = {...characterData, user_id: userId};
+        const payload = {...characterData, userid: userId};
          const response = await api.post("/api/character", payload);
         console.log("created character successfully: ",response.data );
         return response.data;
@@ -235,7 +235,7 @@ export async function postCharacter(characterData, userId){
 }
 export async function updateCharacter(characterId, characterData, userId){
     try {
-        const payload = {...characterData, user_id: userId}
+        const payload = {...characterData, userid: userId}
         const response = await api.put(`/api/character/${characterId}`, payload);
         console.log("created character successfully: ",response.data );
         return response.data;

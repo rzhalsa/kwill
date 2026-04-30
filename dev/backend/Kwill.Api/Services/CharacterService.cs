@@ -49,7 +49,6 @@ namespace Kwill.Api.Services
             try
             {
                 Guid userId = Guid.Empty;
-                Guid characterId = Guid.Empty;
 
                 // Extract and convert userid from string to Binary GUID
                 if (doc.Contains("userid") && doc["userid"].IsString)
@@ -75,27 +74,8 @@ namespace Kwill.Api.Services
                     return (false, null, null, "userid is required");
                 }
 
-                // Convert characterid from string to Binary GUID if needed
-                if (doc.Contains("characterid") && doc["characterid"].IsString)
-                {
-                    var characterIdString = doc["characterid"].AsString;
-                    if (Guid.TryParse(characterIdString, out characterId))
-                    {
-                        doc["characterid"] = new BsonBinaryData(characterId, GuidRepresentation.Standard);
-                    }
-                    else
-                    {
-                        return (false, null, null, "Invalid characterid format");
-                    }
-                }
-                else if (doc.Contains("characterid") && doc["characterid"].IsBsonBinaryData)
-                {
-                    characterId = doc["characterid"].AsGuid;
-                }
-                else
-                {
-                    return (false, null, null, "characterid is required");
-                }
+                var characterId = Guid.NewGuid();
+                doc["characterid"] = new BsonBinaryData(characterId, GuidRepresentation.Standard);
 
                 var srdData = await LoadSrdDataAsync();
                 var validation = CharacterSheetValidator.ValidateCharacterSheet(doc, srdData);
