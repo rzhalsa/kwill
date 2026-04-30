@@ -233,7 +233,7 @@
   },
   "treasure": "",
   "spellcasting": {
-    "class": ""
+    "class": "wizard"
   },
   "spell": {
     "castingAbility": "",
@@ -255,227 +255,27 @@
         "formula_active": true
       }
     ],
-    "spells": {
-      "0": [
-        {
-          "level": "0",
-          "prepared": false,
-          "name": "0 test",
-          "school": "",
-          "action": "",
-          "attacksave": "",
-          "savetype": "",
-          "damage": "",
-          "damagetype": "",
-          "range": "",
-          "duration": "",
-          "areashape": "",
-          "areasize": "",
-          "tooltip": "",
-          "description": "",
-          "formula": "",
-          "formula_active": false,
-          "showstats": true
-        }
-      ],
-      "1": [
-        {
-          "level": "1",
-          "prepared": false,
-          "name": "1 test",
-          "school": "",
-          "action": "",
-          "attacksave": "",
-          "savetype": "",
-          "damage": "",
-          "damagetype": "",
-          "range": "",
-          "duration": "",
-          "areashape": "",
-          "areasize": "",
-          "tooltip": "",
-          "description": "",
-          "formula": "",
-          "formula_active": false,
-          "showstats": true
-        }
-      ],
-      "2": [
-        {
-          "level": "2",
-          "prepared": false,
-          "name": "2 test",
-          "school": "",
-          "action": "",
-          "attacksave": "",
-          "savetype": "",
-          "damage": "",
-          "damagetype": "",
-          "range": "",
-          "duration": "",
-          "areashape": "",
-          "areasize": "",
-          "tooltip": "",
-          "description": "",
-          "formula": "",
-          "formula_active": false,
-          "showstats": true
-        }
-      ],
-      "3": [
-        {
-          "level": "3",
-          "prepared": false,
-          "name": "3 test",
-          "school": "",
-          "action": "",
-          "attacksave": "",
-          "savetype": "",
-          "damage": "",
-          "damagetype": "",
-          "range": "",
-          "duration": "",
-          "areashape": "",
-          "areasize": "",
-          "tooltip": "",
-          "description": "",
-          "formula": "speed + 10",
-          "formula_active": true,
-          "showstats": true
-        }
-      ],
-      "4": [
-        {
-          "level": "4",
-          "prepared": false,
-          "name": "4 test",
-          "school": "",
-          "action": "",
-          "attacksave": "",
-          "savetype": "",
-          "damage": "",
-          "damagetype": "",
-          "range": "",
-          "duration": "",
-          "areashape": "",
-          "areasize": "",
-          "tooltip": "",
-          "description": "",
-          "formula": "",
-          "formula_active": false,
-          "showstats": true
-        }
-      ],
-      "5": [
-        {
-          "level": "5",
-          "prepared": false,
-          "name": "5 test",
-          "school": "",
-          "action": "",
-          "attacksave": "",
-          "savetype": "",
-          "damage": "",
-          "damagetype": "",
-          "range": "",
-          "duration": "",
-          "areashape": "",
-          "areasize": "",
-          "tooltip": "",
-          "description": "",
-          "formula": "",
-          "formula_active": false,
-          "showstats": true
-        }
-      ],
-      "6": [
-        {
-          "level": "6",
-          "prepared": false,
-          "name": "6 test",
-          "school": "",
-          "action": "",
-          "attacksave": "",
-          "savetype": "",
-          "damage": "",
-          "damagetype": "",
-          "range": "",
-          "duration": "",
-          "areashape": "",
-          "areasize": "",
-          "tooltip": "",
-          "description": "",
-          "formula": "",
-          "formula_active": false,
-          "showstats": true
-        }
-      ],
-      "7": [
-        {
-          "level": "7",
-          "prepared": false,
-          "name": "7 test",
-          "school": "",
-          "action": "",
-          "attacksave": "",
-          "savetype": "",
-          "damage": "",
-          "damagetype": "",
-          "range": "",
-          "duration": "",
-          "areashape": "",
-          "areasize": "",
-          "tooltip": "",
-          "description": "",
-          "formula": "",
-          "formula_active": false,
-          "showstats": true
-        }
-      ],
-      "8": [
-        {
-          "level": "8",
-          "prepared": false,
-          "name": "8 test",
-          "school": "",
-          "action": "",
-          "attacksave": "",
-          "savetype": "",
-          "damage": "",
-          "damagetype": "",
-          "range": "",
-          "duration": "",
-          "areashape": "",
-          "areasize": "",
-          "tooltip": "",
-          "description": "",
-          "formula": "",
-          "formula_active": false,
-          "showstats": true
-        }
-      ],
-      "9": [
-        {
-          "level": "9",
-          "prepared": false,
-          "name": "9 test",
-          "school": "",
-          "action": "",
-          "attacksave": "",
-          "savetype": "",
-          "damage": "",
-          "damagetype": "",
-          "range": "",
-          "duration": "",
-          "areashape": "",
-          "areasize": "",
-          "tooltip": "",
-          "description": "",
-          "formula": "",
-          "formula_active": false,
-          "showstats": true
-        }
-      ]
-    }
+    "spells_1": [
+      {
+        "level": "1",
+        "prepared": false,
+        "name": "Feather Fall",
+        "school": "Transmutation",
+        "action": "",
+        "attacksave": "",
+        "savetype": "",
+        "damage": "",
+        "damagetype": "",
+        "range": "60 feet",
+        "duration": "1 minute",
+        "areashape": "",
+        "areasize": "",
+        "tooltip": "",
+        "description": "creature you can see within 60 feet of you falls Choose up to five falling creatures within range. A falling creature's rate of descent slows to 60 feet per round until the spell ends. If a creature lands before the spell ends, the creature takes no damage from the fall, and the spell ends for that creature.",
+        "formula": "",
+        "formula_active": false,
+        "showstats": true
+      }
+    ]
   }
 }
