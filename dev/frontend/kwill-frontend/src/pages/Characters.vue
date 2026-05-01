@@ -144,6 +144,20 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+    <v-dialog v-model="spellStore.showImport" width="50dvw">
+        <v-card>
+            <v-card-title v-if="spellStore.level == 0">Import Cantrips</v-card-title>
+            <v-card-title v-else>Import Level {{ spellStore.level }} Spells</v-card-title>
+            <v-divider></v-divider>
+            <v-card-text>
+                 import functionality coming soon!
+            </v-card-text>
+            <v-card-actions class="d-flex justify-end gap-2">
+                <v-btn variant="text" @click="spellStore.showImport = false">Close</v-btn>
+            </v-card-actions>
+        </v-card>
+
+    </v-dialog>
 </template>
 
 <script setup>
@@ -155,8 +169,11 @@ import { ref, onMounted, computed, watch } from 'vue';
 import api from '../services/api';
 import { useAuthStore } from '../stores/user_login_state';
 import { first } from 'lodash';
-const authStore = useAuthStore();
-const characterStore = useCharacterCreationStore();
+import {useSpellDialogStore} from '../stores/spells_state.js';
+
+const authStore = useAuthStore(); //Store for user authentication and login state
+const characterStore = useCharacterCreationStore(); //Store for character data and state, including selected character, character list, and character sheet updates
+const spellStore = useSpellDialogStore(); //Store for spell import dialog state, including which level of spells to import and whether the dialog is open or closed
 const userID = computed(() => authStore.user?.userId);
 const showLoginDialog = computed(() => authStore.showLogin);
 const sheetRef = ref();

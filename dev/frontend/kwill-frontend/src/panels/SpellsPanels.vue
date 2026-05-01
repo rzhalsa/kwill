@@ -1,7 +1,7 @@
 <template>
     <v-card variant="flat" style="overflow-y: auto;">
         <v-card-title class="d-flex justify-center text-subtitle-2">
-            <v-btn class="ml-2" color="grey-lighten" size="compact" icon="mdi-import"></v-btn>
+            <v-btn class="ml-2" color="grey-lighten" size="compact" icon="mdi-import" @click="spellImportHandle()"></v-btn>
             <v-spacer/>
              {{ title }}
             <v-spacer />
@@ -150,15 +150,22 @@
 </template>
 <script setup>
 import { ref } from 'vue';
-
-const emit = defineEmits(['add-spell', 'remove-spell']);
 import '../sheets/assets/styles.css';
+import {useSpellDialogStore} from '../stores/spells_state.js';
+const emit = defineEmits(['add-spell', 'remove-spell']);
+const spellStore = useSpellDialogStore();
+
 const props = defineProps({
     character: Object,
     spells: Array,
     title: String,
     level: Number
 })
+
+function spellImportHandle() {
+    spellStore.level = props.level;
+    spellStore.showImport = true;
+}
 
 function addSpell(){
     const newSpell = {
