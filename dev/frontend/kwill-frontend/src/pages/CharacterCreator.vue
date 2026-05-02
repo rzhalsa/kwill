@@ -1,7 +1,7 @@
 <template>
-    <v-card class="gradient-cc-background">
-        <div class="center-page">
-            <h1>Create a Character</h1>
+    <v-card class="gradient-cc-background" height="100%">
+        <v-col class="d-flex flex-column align-center justify-space-between">
+            <h1 class="cc-page-title">Create a Character</h1>
             <v-card rounded="lg" class="gradient-character-creator">
                 <v-row class="ml-2 mt-2">
                     <!-- Move backwards button -->
@@ -16,7 +16,7 @@
                     <v-btn :class="{ hidden: order_count === 9 }" icon="mdi-arrow-right" @click="moveForward"></v-btn>
                 </v-row>
             </v-card>
-        </div>
+        </v-col>
     </v-card>
     <!-- Dialog box that shows if the user tries to leave partway through character creation process -->
     <v-dialog persistent max-width="500" v-model="show_dialog">
@@ -135,12 +135,7 @@
 </script>
 
 <style>
-    .center-page {
-        place-items: center;
-        height: 100dvh;
-    }
-
-    h1 {
+    .cc-page-title {
         font-size: clamp(1rem, calc(2.5vw + 1rem), 6rem);
         text-shadow: 1px 1px 2px black;
     }
