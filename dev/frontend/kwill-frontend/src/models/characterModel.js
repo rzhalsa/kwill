@@ -127,30 +127,20 @@ export function createCharacter() {
         treasure: "",
         spellcasting: { class: "" },
         spell: { castingAbility: "", saveDc: "", attackBonus: "" },
-        'spells' : {
-            0: [],
-            1: [],
-            2: [],
-            3: [],
-            4: [],
-            5: [],
-            6: [],
-            7: [],
-            8: [],
-            9: [],
-        },
         panels:{
             features:[],
-            spells_cantrips: [],
-            spells_first: [],
-            spells_second: [],
-            spells_third: [],
-            spells_fourth: [],
-            spells_fifth: [],
-            spells_sixth: [],
-            spells_seventh: [],
-            spells_eighth: [],
-            spells_ninth: []
+            'spells' : {
+                0: [],
+                1: [],
+                2: [],
+                3: [],
+                4: [],
+                5: [],
+                6: [],
+                7: [],
+                8: [],
+                9: [],
+            },
         }
         });
 }

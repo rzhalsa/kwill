@@ -144,19 +144,46 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <v-dialog v-model="spellStore.showImport" width="50dvw">
+    <v-dialog v-model="spellStore.showImport"  width="50dvw">
         <v-card>
             <v-card-title v-if="spellStore.level == 0">Import Cantrips</v-card-title>
             <v-card-title v-else>Import Level {{ spellStore.level }} Spells</v-card-title>
             <v-divider></v-divider>
             <v-card-text>
-                 import functionality coming soon!
+                 <v-autocomplete
+                    v-model="selectedSpell"
+                    :items="spellStore.spells"
+                    item-title="name"
+                    return-object
+                    label="Select a spell to import"
+                    variant="outlined"
+                    clearable/>
+                    <v-btn color="primary" @click="sheetRef.handleAddSpell(spellStore.level, selectedSpell)" :disabled="!selectedSpell">Add Spell</v-btn>
             </v-card-text>
             <v-card-actions class="d-flex justify-end gap-2">
                 <v-btn variant="text" @click="spellStore.showImport = false">Close</v-btn>
             </v-card-actions>
         </v-card>
-
+    </v-dialog>
+    <v-dialog v-model="spellStore.showFeatImport" @update:modelValue="selectedFeature=null" width="50dvw">
+        <v-card>
+            <v-card-title>Import Features</v-card-title>
+            <v-divider></v-divider>
+            <v-card-text>
+                 <v-autocomplete
+                    v-model="selectedFeature"
+                    :items="spellStore.features"
+                    item-title="name"
+                    return-object
+                    label="Select a feature to import"
+                    variant="outlined"
+                    clearable/>
+                    <v-btn color="primary" @click="sheetRef.handleAddFeature(selectedFeature)" :disabled="!selectedFeature">Add Feature</v-btn>
+            </v-card-text>
+            <v-card-actions class="d-flex justify-end gap-2">
+                <v-btn variant="text" @click="spellStore.showFeatImport = false">Close</v-btn>
+            </v-card-actions>
+        </v-card>
     </v-dialog>
 </template>
 
@@ -170,7 +197,8 @@ import api from '../services/api';
 import { useAuthStore } from '../stores/user_login_state';
 import { first } from 'lodash';
 import {useSpellDialogStore} from '../stores/spells_state.js';
-
+import { createCharacter} from '../models/characterModel';
+const character = createCharacter();
 const authStore = useAuthStore(); //Store for user authentication and login state
 const characterStore = useCharacterCreationStore(); //Store for character data and state, including selected character, character list, and character sheet updates
 const spellStore = useSpellDialogStore(); //Store for spell import dialog state, including which level of spells to import and whether the dialog is open or closed
@@ -178,6 +206,7 @@ const userID = computed(() => authStore.user?.userId);
 const showLoginDialog = computed(() => authStore.showLogin);
 const sheetRef = ref();
 const charData = ref();
+const spellData = ref();
 const includeCharData = ref(false);
 const showDownloadDialog = ref(false);
 const showImportDialog = ref(false);
@@ -190,6 +219,8 @@ const firstCharacter= ref(null);
 const showSheet = ref(false);
 const showDeleteDialog = ref(false);
 const characterToDelete = ref(null);
+const selectedSpell = ref(null);
+const selectedFeature = ref(null);
 
 /**
  * Responsible for updating and populating values on the chracter sheet.
@@ -264,6 +295,8 @@ async function deleteCharacter() {
         console.error('Failed to delete character:', error);
     }
 }
+
+
 /**
  * Lifecycle hook called when the component is mounted.
  */

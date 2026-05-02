@@ -1,6 +1,9 @@
 <template>
     <v-card variant="flat" style="overflow-y: auto;">
-        <v-card-title class="d-flex justify-center text-subtitle-2">Features
+        <v-card-title class="d-flex justify-center text-subtitle-2">
+            <v-btn class="ml-2" color="grey-lighten" size="compact" icon="mdi-import" @click="spellStore.showFeatImport = true"></v-btn>
+            <v-spacer/>
+            Features
             <v-spacer />
             <v-btn class="ml-2" color="primary" size="compact" icon="mdi-plus" @click="addFeature"></v-btn>
         </v-card-title>
@@ -64,7 +67,6 @@
                                 </div>
                         <v-btn color="error" class="mt-2 mb-n3" size="compact" icon="mdi-close" @click.stop="removeFeature(index)"></v-btn>
                     </div>
-                    
                     </v-expansion-panel-text>
                 </v-expansion-panel>
             </v-expansion-panels>
@@ -73,10 +75,12 @@
     </v-card>
 </template>
 <script setup>
-import { ref } from 'vue';
-
-const emit = defineEmits(['add-feature'], ['remove-feature']);
+import { ref, watch } from 'vue';
+import {useSpellDialogStore} from '../stores/spells_state.js';
 import '../sheets/assets/styles.css';
+import api from '../services/api';
+const emit = defineEmits(['add-feature'], ['remove-feature']);
+const spellStore = useSpellDialogStore();
 defineProps({
     character: {
         type: Object
@@ -98,6 +102,23 @@ function addFeature(){
     };
     emit('add-feature', newFeature);
 }
+
+async function fetchFeatureData() {
+    try {
+        const response = await api.get(`/api/srd/features`)
+        spellStore.features = response.data;
+        console.log(`Fetched feature data:`, response.data);
+    } catch (error) {
+        console.error(`Failed to fetch feature data:`, error);
+        throw error;
+    }
+}
+watch(() => spellStore.showFeatImport, 
+    (open) => {
+    if (open) {
+        fetchFeatureData();
+    }
+});
 
 function removeFeature(index) {
     emit('remove-feature', index);

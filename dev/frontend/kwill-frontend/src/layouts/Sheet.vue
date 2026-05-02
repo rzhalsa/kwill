@@ -559,7 +559,9 @@ function getCharacterData() {
 
 defineExpose({
     populateSheet,
-    getCharacterData
+    getCharacterData,
+    handleAddSpell,
+    handleAddFeature
 });
 
 //Check that prevents API spams with a half second interval incase someone spams three changes quickly
@@ -581,14 +583,14 @@ function handleRemoveFeature(index){
     character.panels.features.splice(index, 1);
 }
 function handleAddSpell(level, newSpell) {
-    if (!character.spells[level]) {
-        character.spells[level] = [];
+    if (!character.panels.spells[level]) {
+        character.panels.spells[level] = [];
     }
 
-    character.spells[level].push(newSpell);
+    character.panels.spells[level].push(newSpell);
 }
 function handleRemoveSpell(level, index) {
-    character.spells[level].splice(index, 1);
+    character.panels.spells[level].splice(index, 1);
 }
 </script>
 <style src="../character.css" scoped></style>

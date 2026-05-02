@@ -109,6 +109,17 @@ namespace Kwill.Api.Services
             var document = await _db.SrdData.Find(filter).FirstOrDefaultAsync();
             return document?["Data"].AsBsonDocument;
         }
+
+        public async Task<List<BsonDocument>> GetSpellsByLevelAsync(int level)
+        {
+            var filter = Builders<BsonDocument>.Filter.And(
+            Builders<BsonDocument>.Filter.Eq("Key", "spells"),
+            Builders<BsonDocument>.Filter.Eq("Data.level", level));
+
+            var documents = await _db.SrdData.Find(filter).ToListAsync();
+            return documents.Select(doc => doc["Data"].AsBsonDocument).ToList();
+        }
+
     }
 }
 

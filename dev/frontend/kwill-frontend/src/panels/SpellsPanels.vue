@@ -7,7 +7,7 @@
             <v-spacer />
             <v-btn class="ml-2" color="primary" size="compact" icon="mdi-plus" v-tooltip="'Add Spell'" @click="addSpell(); "></v-btn>
         </v-card-title>
-        <v-card-item v-for="(spell, index) in character.spells[level]" :key="index" class="d-flex flex-column gap-2">
+        <v-card-item v-for="(spell, index) in character.panels.spells[level]" :key="index" class="d-flex flex-column gap-2">
             <v-expansion-panels class="feature-panel" v-model="spell.expanded">
                 <v-expansion-panel>
                     <v-expansion-panel-title class="d-flex justify-between align-center">
@@ -149,9 +149,10 @@
     </v-card>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import '../sheets/assets/styles.css';
 import {useSpellDialogStore} from '../stores/spells_state.js';
+import api from '../services/api';
 const emit = defineEmits(['add-spell', 'remove-spell']);
 const spellStore = useSpellDialogStore();
 
@@ -165,6 +166,23 @@ const props = defineProps({
 function spellImportHandle() {
     spellStore.level = props.level;
     spellStore.showImport = true;
+}
+
+watch(() => spellStore.level, 
+    async (newLevel) => {
+    if (newLevel !== null && spellStore.showImport) {
+        fetchSpellData(newLevel);
+    }
+});
+
+async function fetchSpellData(level) {
+    try {
+        const response = await api.get(`/api/srd/spells/level/${level}`)
+        spellStore.spells = response.data;
+    } catch (error) {
+        console.error(`Failed to fetch spell data for level ${level}:`, error);
+        throw error;
+    }
 }
 
 function addSpell(){

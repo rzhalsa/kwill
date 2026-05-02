@@ -5,11 +5,13 @@ import Characters from '../pages/Characters.vue'
 import Login from '../pages/Login.vue'
 import Info from '../pages/Info.vue'
 import Create from '../pages/CreateAccount.vue'
+import account from '../pages/Account.vue'
 import { useAuthStore } from '../stores/user_login_state';
 
 const routes = [
   { path: '/', component: Home },
   { path: '/charactercreator', component: CharacterCreator},
+  { path: '/account', component: account, meta: { requiresAuth: true }},
   { path: '/characters', component: Characters, meta: { requiresAuth: true }}, // Only logged-in users can access the Characters page
   { path: '/login', component: Login },
   { path: '/info', component: Info},

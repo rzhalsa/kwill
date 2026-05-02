@@ -63,8 +63,10 @@
 								</v-row>
 								<v-row class="justify-center ma-2">
 									<v-card>
-										<v-card-title class="text-center">Account</v-card-title>
-										<v-card-item class="justify-center"><img src="../assets/community.png" style="height:120px; width: 120px;" /></v-card-item>
+										<router-link to="/account" style="text-decoration: none; color: inherit;">
+											<v-card-title class="text-center">Account</v-card-title>
+											<v-card-item class="justify-center"><img src="../assets/community.png" style="height:120px; width: 120px;" /></v-card-item>
+										</router-link>
 									</v-card>
 								</v-row>
 							</v-card-item>
