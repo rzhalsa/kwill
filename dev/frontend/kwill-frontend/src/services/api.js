@@ -2,7 +2,7 @@ import axios from "axios";
 import { useAuthStore } from '../stores/user_login_state';
 
 const api = axios.create({
-    baseURL: "https://localhost:7187"
+    baseURL: "http://localhost:5262"
 });
 
 /**

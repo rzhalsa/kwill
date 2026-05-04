@@ -1,5 +1,6 @@
 {
   "key": "classes",
+  "name" : "cleric",
   "features": [
     {
       "name": "Spellcasting",

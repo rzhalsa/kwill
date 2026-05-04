@@ -1,5 +1,6 @@
 {
   "Key": "classes",
+  "name" : "paladin",
   "features": [
     {
       "name": "Lay On Hands",

@@ -1,5 +1,6 @@
 {
   "Key": "classes",
+  "name" : "fighter",
   "features": [
     {
       "name": "Fighting Style",

@@ -1,5 +1,6 @@
 {
   "Key": "classes",
+  "name" : "barbarian",
   "features": [
     {
       "name": "Rage",

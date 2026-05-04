@@ -1,5 +1,6 @@
 {
   "Key": "classes",
+  "name" : "monk",
   "features": [
     {
       "name": "Martial Arts",

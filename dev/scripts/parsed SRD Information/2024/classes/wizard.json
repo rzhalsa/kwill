@@ -1,5 +1,6 @@
 {
   "Key": "classes",
+  "name" : "wizard",
   "features": [
     {
       "name": "Spellcasting",

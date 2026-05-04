@@ -13,7 +13,7 @@
 
 </head>
 
-<body>
+<body class="body">
 
     <div class="toolbar">
         <div class="toolbar-section">
@@ -75,10 +75,11 @@
 
                     <div>
                         <div style="display: flex; flex-direction: row; align-items: center; gap: 0px;">
-                            <input class="page1-top-input-value" id="classes_firstclass_name" placeholder="class" autocomplete="off"
-                                style="width: 70px; margin-top: 30px;">
-                            <input class="ability-score" id="classes_firstclass_level_value" placeholder="1" autocomplete="off"
-                                style="position: absolute; width: 25px; height: 25px; margin-left: 75px; margin-top: 30px;"
+                            <input class="page1-top-input-value" id="classes_firstclass_name" placeholder="class"
+                                autocomplete="off" style="width: 60px; margin-top: 30px;">
+                            <input class="ability-score" id="classes_firstclass_level_value" placeholder="1"
+                                autocomplete="off"
+                                style="position: absolute; width: 35px; height: 25px; margin-left: 65px; margin-top: 30px;"
                                 type="number" autocomplete="off">
                         </div>
                     </div>
@@ -92,11 +93,11 @@
 
                     <div>
                         <input class="page1-top-input-value" id="alignment_value" placeholder="alignment"
-                            autocomplete="off">
+                            autocomplete="off" style="font-size: 14px;">
                     </div>
                     <div>
                         <input class="page1-top-input-value" id="background_name" placeholder="background"
-                            autocomplete="off">
+                            autocomplete="off" style="font-size: 14px;">
                     </div>
 
                 </div>
@@ -368,7 +369,7 @@
                             <div>
                                 <input id="initiative_calculated" autocomplete="off" type="text"
                                     style="width: 50px; height: 50px; border: 2px solid #000; display: flex; margin: 5px; text-align: center;"
-                                    value="=> ability_dexterity_modifier_calculated">
+                                    value="= ability_dexterity_modifier_calculated">
                                 <div style="text-align: center;" data-label>Initiative</div>
                             </div>
                             <div><input id="speed_value" autocomplete="off"
@@ -567,9 +568,8 @@
 
                                     <!-- Formula override -->
                                     <div style="display:flex; align-items:center; gap:4px;">
-                                        <input type="text" id="formula_value"
-                                            placeholder="e.g. =+ hitpoints_maximum + character_level" style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent;
-               font-size:12px; font-family:inherit; padding:2px;">
+                                        <textarea id="formula_value" placeholder="field operation value" style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent;
+                                                font-size:12px; font-family:inherit; padding:2px; resize:height;" rows="1"></textarea>
                                         <input type="checkbox" id="formula_active_value" checked>
 
                                     </div>
@@ -603,7 +603,7 @@
             <img class="kwill-logo" src="assets/kwill.svg" alt="Kwill Logo" width="300" height="300">
 
             <div class="page-top-row">
-                <input id="name2_calculated" placeholder="Character name here" value="=>name"
+                <input id="name2_calculated" placeholder="Character name here" value="=name"
                     style="position: absolute; font-size: 18px; top: 75px; left: 130px; width: 200px; height: 30px; border: 2px solid #000;">
 
                 <div class="page-top-col">
@@ -716,15 +716,18 @@
             <div class="row">
 
 
-                <div class="col">
-                    <div id="spells_cantrips_panel"
-                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
-                        <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
-                            <span style="text-align:center; flex:1;" data-label>Cantrips</span>
-                            <button type="button" id="spells_cantrips_button"
-                                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
-                        </div>
-                        <template id="spells_cantrips_template">
+<div class="col">
+    <div id="spells_0_panel"
+        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+            <button type="button" id="spells_0_import_button"
+                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
+            <span style="text-align:center; flex:1;" data-label>Cantrips</span>
+            <button type="button" id="spells_0_button"
+                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
+        </div>
+
+        <template id="spells_0_template">
             <div class="panel-block"
                 style="display:flex; flex-direction:column; gap:4px; background:#f0e6d3; border:1px solid #8b6914; border-radius:3px; padding:4px 6px; flex-shrink:0;">
                 <input type="hidden" id="level_value" value="0">
@@ -734,7 +737,8 @@
                     <input type="text" id="name_value" placeholder="Cantrip name"
                         style="flex:1; min-width:0; border:none; background:transparent; font-size:13px; outline:none; font-family:inherit;">
                     <input type="checkbox" class="formula-indicator" title="Active"
-                        style="flex-shrink:0; width:14px; height:14px; cursor:pointer; accent-color:#8b6914; display:none;" disabled>
+                        style="flex-shrink:0; width:14px; height:14px; cursor:pointer; accent-color:#8b6914; display:none;"
+                        disabled>
                     <button type="button" class="panel-expand-btn"
                         style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
                 </div>
@@ -810,19 +814,22 @@
                     </div>
                     <div style="display:flex; flex-direction:column; gap:4px;">
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
                             <input type="text" id="range_value" placeholder="e.g. 60ft"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
                             <input type="text" id="duration_value" placeholder="e.g. 1 min"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
                     </div>
                     <div style="display:flex; flex-direction:column; gap:4px;">
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
                             <select id="areashape_value"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                                 <option value="">—</option>
@@ -834,7 +841,8 @@
                             </select>
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
                             <input type="text" id="areasize_value" placeholder="e.g. 30ft"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
@@ -844,14 +852,14 @@
                     <textarea id="description_value" placeholder="Description"
                         style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
                     <div style="display:flex; align-items:center; gap:4px;">
-                        <span style="font-size:11px; color:#555; flex-shrink:0;">Formula:</span>
-                        <input type="text" id="formula_value" placeholder="e.g. =+ hitpoints_maximum + character_level"
-                            style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                        <textarea id="formula_value" placeholder="field operation value" style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent;
+                                font-size:12px; font-family:inherit; padding:2px; resize:height;" rows="1"></textarea>
                         <input type="checkbox" id="formula_active_value" title="Active"
                             style="width:14px; height:14px; cursor:pointer; accent-color:#8b6914; flex-shrink:0;">
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <label style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
+                        <label
+                            style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
                             <input type="checkbox" id="showstats_value" checked> Stats in tooltip
                         </label>
                         <button type="button" class="panel-remove-btn" data-delete-label="cantrip"
@@ -859,17 +867,34 @@
                     </div>
                 </div>
             </div>
-                        </template>
-                    </div>
+        </template>
+    </div>
 
-                    <div id="spells_first_panel"
-                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
-                        <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
-                            <span style="text-align:center; flex:1;" data-label>1st Level</span>
-                            <button type="button" id="spells_first_button"
-                                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
-                        </div>
-                        <template id="spells_first_template">
+    <div id="spells_1_panel"
+        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+            <button type="button" id="spells_1_import_button"
+                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
+            <span style="text-align:center; flex:1;" data-label>1st Level</span>
+            <button type="button" id="spells_1_button"
+                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0; font-size:12px;">
+            <span style="white-space:nowrap; color:#333;">Spell Slots:</span>
+
+            <input id="spells_1_slots_current_value" type="number"
+                style="width:36px; height:20px; border:1px solid #8b6914; background:transparent;
+                       text-align:center; font-size:12px; font-family:inherit;">
+
+            <span style="color:#555;">/</span>
+
+            <input id="spells_1_slots_maximum_value" type="number"
+                style="width:36px; height:20px; border:1px solid #8b6914; background:transparent;
+                       text-align:center; font-size:12px; font-family:inherit;">
+        </div>
+
+        <template id="spells_1_template">
             <div class="panel-block"
                 style="display:flex; flex-direction:column; gap:4px; background:#f0e6d3; border:1px solid #8b6914; border-radius:3px; padding:4px 6px; flex-shrink:0;">
                 <input type="hidden" id="level_value" value="1">
@@ -879,7 +904,8 @@
                     <input type="text" id="name_value" placeholder="Spell name"
                         style="flex:1; min-width:0; border:none; background:transparent; font-size:13px; outline:none; font-family:inherit;">
                     <input type="checkbox" class="formula-indicator" title="Active"
-                        style="flex-shrink:0; width:14px; height:14px; cursor:pointer; accent-color:#8b6914; display:none;" disabled>
+                        style="flex-shrink:0; width:14px; height:14px; cursor:pointer; accent-color:#8b6914; display:none;"
+                        disabled>
                     <button type="button" class="panel-expand-btn"
                         style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
                 </div>
@@ -955,19 +981,22 @@
                     </div>
                     <div style="display:flex; flex-direction:column; gap:4px;">
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
                             <input type="text" id="range_value" placeholder="e.g. 60ft"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
                             <input type="text" id="duration_value" placeholder="e.g. 1 min"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
                     </div>
                     <div style="display:flex; flex-direction:column; gap:4px;">
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
                             <select id="areashape_value"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                                 <option value="">—</option>
@@ -979,7 +1008,8 @@
                             </select>
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
                             <input type="text" id="areasize_value" placeholder="e.g. 30ft"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
@@ -989,14 +1019,14 @@
                     <textarea id="description_value" placeholder="Description"
                         style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
                     <div style="display:flex; align-items:center; gap:4px;">
-                        <span style="font-size:11px; color:#555; flex-shrink:0;">Formula:</span>
-                        <input type="text" id="formula_value" placeholder="e.g. =+ hitpoints_maximum + character_level"
-                            style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                        <textarea id="formula_value" placeholder="field operation value" style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent;
+                                font-size:12px; font-family:inherit; padding:2px; resize:height;" rows="1"></textarea>
                         <input type="checkbox" id="formula_active_value" title="Active"
                             style="width:14px; height:14px; cursor:pointer; accent-color:#8b6914; flex-shrink:0;">
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <label style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
+                        <label
+                            style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
                             <input type="checkbox" id="showstats_value" checked> Stats in tooltip
                         </label>
                         <button type="button" class="panel-remove-btn" data-delete-label="spell"
@@ -1004,17 +1034,34 @@
                     </div>
                 </div>
             </div>
-                        </template>
-                    </div>
+        </template>
+    </div>
 
-                    <div id="spells_second_panel"
-                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
-                        <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
-                            <span style="text-align:center; flex:1;" data-label>2nd Level</span>
-                            <button type="button" id="spells_second_button"
-                                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
-                        </div>
-                        <template id="spells_second_template">
+    <div id="spells_2_panel"
+        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+            <button type="button" id="spells_2_import_button"
+                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
+            <span style="text-align:center; flex:1;" data-label>2nd Level</span>
+            <button type="button" id="spells_2_button"
+                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0; font-size:12px;">
+            <span style="white-space:nowrap; color:#333;">Spell Slots:</span>
+
+            <input id="spells_2_slots_current_value" type="number"
+                style="width:36px; height:20px; border:1px solid #8b6914; background:transparent;
+                       text-align:center; font-size:12px; font-family:inherit;">
+
+            <span style="color:#555;">/</span>
+
+            <input id="spells_2_slots_maximum_value" type="number"
+                style="width:36px; height:20px; border:1px solid #8b6914; background:transparent;
+                       text-align:center; font-size:12px; font-family:inherit;">
+        </div>
+
+        <template id="spells_2_template">
             <div class="panel-block"
                 style="display:flex; flex-direction:column; gap:4px; background:#f0e6d3; border:1px solid #8b6914; border-radius:3px; padding:4px 6px; flex-shrink:0;">
                 <input type="hidden" id="level_value" value="2">
@@ -1024,7 +1071,8 @@
                     <input type="text" id="name_value" placeholder="Spell name"
                         style="flex:1; min-width:0; border:none; background:transparent; font-size:13px; outline:none; font-family:inherit;">
                     <input type="checkbox" class="formula-indicator" title="Active"
-                        style="flex-shrink:0; width:14px; height:14px; cursor:pointer; accent-color:#8b6914; display:none;" disabled>
+                        style="flex-shrink:0; width:14px; height:14px; cursor:pointer; accent-color:#8b6914; display:none;"
+                        disabled>
                     <button type="button" class="panel-expand-btn"
                         style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
                 </div>
@@ -1100,19 +1148,22 @@
                     </div>
                     <div style="display:flex; flex-direction:column; gap:4px;">
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
                             <input type="text" id="range_value" placeholder="e.g. 60ft"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
                             <input type="text" id="duration_value" placeholder="e.g. 1 min"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
                     </div>
                     <div style="display:flex; flex-direction:column; gap:4px;">
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
                             <select id="areashape_value"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                                 <option value="">—</option>
@@ -1124,7 +1175,8 @@
                             </select>
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
                             <input type="text" id="areasize_value" placeholder="e.g. 30ft"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
@@ -1134,14 +1186,14 @@
                     <textarea id="description_value" placeholder="Description"
                         style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
                     <div style="display:flex; align-items:center; gap:4px;">
-                        <span style="font-size:11px; color:#555; flex-shrink:0;">Formula:</span>
-                        <input type="text" id="formula_value" placeholder="e.g. =+ hitpoints_maximum + character_level"
-                            style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                        <textarea id="formula_value" placeholder="field operation value" style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent;
+                                font-size:12px; font-family:inherit; padding:2px; resize:height;" rows="1"></textarea>
                         <input type="checkbox" id="formula_active_value" title="Active"
                             style="width:14px; height:14px; cursor:pointer; accent-color:#8b6914; flex-shrink:0;">
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <label style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
+                        <label
+                            style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
                             <input type="checkbox" id="showstats_value" checked> Stats in tooltip
                         </label>
                         <button type="button" class="panel-remove-btn" data-delete-label="spell"
@@ -1149,19 +1201,36 @@
                     </div>
                 </div>
             </div>
-                        </template>
-                    </div>
-                </div>
+        </template>
+    </div>
+</div>
 
-                <div class="col">
-                    <div id="spells_third_panel"
-                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
-                        <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
-                            <span style="text-align:center; flex:1;" data-label>3rd Level</span>
-                            <button type="button" id="spells_third_button"
-                                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
-                        </div>
-                        <template id="spells_third_template">
+<div class="col">
+    <div id="spells_3_panel"
+        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+            <button type="button" id="spells_3_import_button"
+                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
+            <span style="text-align:center; flex:1;" data-label>3rd Level</span>
+            <button type="button" id="spells_3_button"
+                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0; font-size:12px;">
+            <span style="white-space:nowrap; color:#333;">Spell Slots:</span>
+
+            <input id="spells_3_slots_current_value" type="number"
+                style="width:36px; height:20px; border:1px solid #8b6914; background:transparent;
+                       text-align:center; font-size:12px; font-family:inherit;">
+
+            <span style="color:#555;">/</span>
+
+            <input id="spells_3_slots_maximum_value" type="number"
+                style="width:36px; height:20px; border:1px solid #8b6914; background:transparent;
+                       text-align:center; font-size:12px; font-family:inherit;">
+        </div>
+
+        <template id="spells_3_template">
             <div class="panel-block"
                 style="display:flex; flex-direction:column; gap:4px; background:#f0e6d3; border:1px solid #8b6914; border-radius:3px; padding:4px 6px; flex-shrink:0;">
                 <input type="hidden" id="level_value" value="3">
@@ -1171,7 +1240,8 @@
                     <input type="text" id="name_value" placeholder="Spell name"
                         style="flex:1; min-width:0; border:none; background:transparent; font-size:13px; outline:none; font-family:inherit;">
                     <input type="checkbox" class="formula-indicator" title="Active"
-                        style="flex-shrink:0; width:14px; height:14px; cursor:pointer; accent-color:#8b6914; display:none;" disabled>
+                        style="flex-shrink:0; width:14px; height:14px; cursor:pointer; accent-color:#8b6914; display:none;"
+                        disabled>
                     <button type="button" class="panel-expand-btn"
                         style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
                 </div>
@@ -1247,19 +1317,22 @@
                     </div>
                     <div style="display:flex; flex-direction:column; gap:4px;">
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
                             <input type="text" id="range_value" placeholder="e.g. 60ft"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
                             <input type="text" id="duration_value" placeholder="e.g. 1 min"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
                     </div>
                     <div style="display:flex; flex-direction:column; gap:4px;">
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
                             <select id="areashape_value"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                                 <option value="">—</option>
@@ -1271,7 +1344,8 @@
                             </select>
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
                             <input type="text" id="areasize_value" placeholder="e.g. 30ft"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
@@ -1281,14 +1355,14 @@
                     <textarea id="description_value" placeholder="Description"
                         style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
                     <div style="display:flex; align-items:center; gap:4px;">
-                        <span style="font-size:11px; color:#555; flex-shrink:0;">Formula:</span>
-                        <input type="text" id="formula_value" placeholder="e.g. =+ hitpoints_maximum + character_level"
-                            style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                        <textarea id="formula_value" placeholder="field operation value" style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent;
+                                font-size:12px; font-family:inherit; padding:2px; resize:height;" rows="1"></textarea>
                         <input type="checkbox" id="formula_active_value" title="Active"
                             style="width:14px; height:14px; cursor:pointer; accent-color:#8b6914; flex-shrink:0;">
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <label style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
+                        <label
+                            style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
                             <input type="checkbox" id="showstats_value" checked> Stats in tooltip
                         </label>
                         <button type="button" class="panel-remove-btn" data-delete-label="spell"
@@ -1296,17 +1370,34 @@
                     </div>
                 </div>
             </div>
-                        </template>
-                    </div>
+        </template>
+    </div>
 
-                    <div id="spells_fourth_panel"
-                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
-                        <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
-                            <span style="text-align:center; flex:1;" data-label>4th Level</span>
-                            <button type="button" id="spells_fourth_button"
-                                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
-                        </div>
-                        <template id="spells_fourth_template">
+    <div id="spells_4_panel"
+        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+            <button type="button" id="spells_4_import_button"
+                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
+            <span style="text-align:center; flex:1;" data-label>4th Level</span>
+            <button type="button" id="spells_4_button"
+                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0; font-size:12px;">
+            <span style="white-space:nowrap; color:#333;">Spell Slots:</span>
+
+            <input id="spells_4_slots_current_value" type="number"
+                style="width:36px; height:20px; border:1px solid #8b6914; background:transparent;
+                       text-align:center; font-size:12px; font-family:inherit;">
+
+            <span style="color:#555;">/</span>
+
+            <input id="spells_4_slots_maximum_value" type="number"
+                style="width:36px; height:20px; border:1px solid #8b6914; background:transparent;
+                       text-align:center; font-size:12px; font-family:inherit;">
+        </div>
+
+        <template id="spells_4_template">
             <div class="panel-block"
                 style="display:flex; flex-direction:column; gap:4px; background:#f0e6d3; border:1px solid #8b6914; border-radius:3px; padding:4px 6px; flex-shrink:0;">
                 <input type="hidden" id="level_value" value="4">
@@ -1316,7 +1407,8 @@
                     <input type="text" id="name_value" placeholder="Spell name"
                         style="flex:1; min-width:0; border:none; background:transparent; font-size:13px; outline:none; font-family:inherit;">
                     <input type="checkbox" class="formula-indicator" title="Active"
-                        style="flex-shrink:0; width:14px; height:14px; cursor:pointer; accent-color:#8b6914; display:none;" disabled>
+                        style="flex-shrink:0; width:14px; height:14px; cursor:pointer; accent-color:#8b6914; display:none;"
+                        disabled>
                     <button type="button" class="panel-expand-btn"
                         style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
                 </div>
@@ -1392,19 +1484,22 @@
                     </div>
                     <div style="display:flex; flex-direction:column; gap:4px;">
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
                             <input type="text" id="range_value" placeholder="e.g. 60ft"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
                             <input type="text" id="duration_value" placeholder="e.g. 1 min"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
                     </div>
                     <div style="display:flex; flex-direction:column; gap:4px;">
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
                             <select id="areashape_value"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                                 <option value="">—</option>
@@ -1416,7 +1511,8 @@
                             </select>
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
                             <input type="text" id="areasize_value" placeholder="e.g. 30ft"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
@@ -1426,14 +1522,14 @@
                     <textarea id="description_value" placeholder="Description"
                         style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
                     <div style="display:flex; align-items:center; gap:4px;">
-                        <span style="font-size:11px; color:#555; flex-shrink:0;">Formula:</span>
-                        <input type="text" id="formula_value" placeholder="e.g. =+ hitpoints_maximum + character_level"
-                            style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                        <textarea id="formula_value" placeholder="field operation value" style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent;
+                                font-size:12px; font-family:inherit; padding:2px; resize:height;" rows="1"></textarea>
                         <input type="checkbox" id="formula_active_value" title="Active"
                             style="width:14px; height:14px; cursor:pointer; accent-color:#8b6914; flex-shrink:0;">
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <label style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
+                        <label
+                            style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
                             <input type="checkbox" id="showstats_value" checked> Stats in tooltip
                         </label>
                         <button type="button" class="panel-remove-btn" data-delete-label="spell"
@@ -1441,17 +1537,34 @@
                     </div>
                 </div>
             </div>
-                        </template>
-                    </div>
+        </template>
+    </div>
 
-                    <div id="spells_fifth_panel"
-                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
-                        <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
-                            <span style="text-align:center; flex:1;" data-label>5th Level</span>
-                            <button type="button" id="spells_fifth_button"
-                                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
-                        </div>
-                        <template id="spells_fifth_template">
+    <div id="spells_5_panel"
+        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+            <button type="button" id="spells_5_import_button"
+                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
+            <span style="text-align:center; flex:1;" data-label>5th Level</span>
+            <button type="button" id="spells_5_button"
+                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0; font-size:12px;">
+            <span style="white-space:nowrap; color:#333;">Spell Slots:</span>
+
+            <input id="spells_5_slots_current_value" type="number"
+                style="width:36px; height:20px; border:1px solid #8b6914; background:transparent;
+                       text-align:center; font-size:12px; font-family:inherit;">
+
+            <span style="color:#555;">/</span>
+
+            <input id="spells_5_slots_maximum_value" type="number"
+                style="width:36px; height:20px; border:1px solid #8b6914; background:transparent;
+                       text-align:center; font-size:12px; font-family:inherit;">
+        </div>
+
+        <template id="spells_5_template">
             <div class="panel-block"
                 style="display:flex; flex-direction:column; gap:4px; background:#f0e6d3; border:1px solid #8b6914; border-radius:3px; padding:4px 6px; flex-shrink:0;">
                 <input type="hidden" id="level_value" value="5">
@@ -1461,7 +1574,8 @@
                     <input type="text" id="name_value" placeholder="Spell name"
                         style="flex:1; min-width:0; border:none; background:transparent; font-size:13px; outline:none; font-family:inherit;">
                     <input type="checkbox" class="formula-indicator" title="Active"
-                        style="flex-shrink:0; width:14px; height:14px; cursor:pointer; accent-color:#8b6914; display:none;" disabled>
+                        style="flex-shrink:0; width:14px; height:14px; cursor:pointer; accent-color:#8b6914; display:none;"
+                        disabled>
                     <button type="button" class="panel-expand-btn"
                         style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
                 </div>
@@ -1537,19 +1651,22 @@
                     </div>
                     <div style="display:flex; flex-direction:column; gap:4px;">
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
                             <input type="text" id="range_value" placeholder="e.g. 60ft"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
                             <input type="text" id="duration_value" placeholder="e.g. 1 min"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
                     </div>
                     <div style="display:flex; flex-direction:column; gap:4px;">
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
                             <select id="areashape_value"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                                 <option value="">—</option>
@@ -1561,7 +1678,8 @@
                             </select>
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
                             <input type="text" id="areasize_value" placeholder="e.g. 30ft"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
@@ -1571,14 +1689,14 @@
                     <textarea id="description_value" placeholder="Description"
                         style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
                     <div style="display:flex; align-items:center; gap:4px;">
-                        <span style="font-size:11px; color:#555; flex-shrink:0;">Formula:</span>
-                        <input type="text" id="formula_value" placeholder="e.g. =+ hitpoints_maximum + character_level"
-                            style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                        <textarea id="formula_value" placeholder="field operation value" style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent;
+                                font-size:12px; font-family:inherit; padding:2px; resize:height;" rows="1"></textarea>
                         <input type="checkbox" id="formula_active_value" title="Active"
                             style="width:14px; height:14px; cursor:pointer; accent-color:#8b6914; flex-shrink:0;">
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <label style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
+                        <label
+                            style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
                             <input type="checkbox" id="showstats_value" checked> Stats in tooltip
                         </label>
                         <button type="button" class="panel-remove-btn" data-delete-label="spell"
@@ -1586,19 +1704,36 @@
                     </div>
                 </div>
             </div>
-                        </template>
-                    </div>
-                </div>
+        </template>
+    </div>
+</div>
 
-                <div class="col">
-                    <div id="spells_sixth_panel"
-                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
-                        <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
-                            <span style="text-align:center; flex:1;" data-label>6th Level</span>
-                            <button type="button" id="spells_sixth_button"
-                                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
-                        </div>
-                        <template id="spells_sixth_template">
+<div class="col">
+    <div id="spells_6_panel"
+        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+            <button type="button" id="spells_6_import_button"
+                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
+            <span style="text-align:center; flex:1;" data-label>6th Level</span>
+            <button type="button" id="spells_6_button"
+                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0; font-size:12px;">
+            <span style="white-space:nowrap; color:#333;">Spell Slots:</span>
+
+            <input id="spells_6_slots_current_value" type="number"
+                style="width:36px; height:20px; border:1px solid #8b6914; background:transparent;
+                       text-align:center; font-size:12px; font-family:inherit;">
+
+            <span style="color:#555;">/</span>
+
+            <input id="spells_6_slots_maximum_value" type="number"
+                style="width:36px; height:20px; border:1px solid #8b6914; background:transparent;
+                       text-align:center; font-size:12px; font-family:inherit;">
+        </div>
+
+        <template id="spells_6_template">
             <div class="panel-block"
                 style="display:flex; flex-direction:column; gap:4px; background:#f0e6d3; border:1px solid #8b6914; border-radius:3px; padding:4px 6px; flex-shrink:0;">
                 <input type="hidden" id="level_value" value="6">
@@ -1608,7 +1743,8 @@
                     <input type="text" id="name_value" placeholder="Spell name"
                         style="flex:1; min-width:0; border:none; background:transparent; font-size:13px; outline:none; font-family:inherit;">
                     <input type="checkbox" class="formula-indicator" title="Active"
-                        style="flex-shrink:0; width:14px; height:14px; cursor:pointer; accent-color:#8b6914; display:none;" disabled>
+                        style="flex-shrink:0; width:14px; height:14px; cursor:pointer; accent-color:#8b6914; display:none;"
+                        disabled>
                     <button type="button" class="panel-expand-btn"
                         style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
                 </div>
@@ -1684,19 +1820,22 @@
                     </div>
                     <div style="display:flex; flex-direction:column; gap:4px;">
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
                             <input type="text" id="range_value" placeholder="e.g. 60ft"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
                             <input type="text" id="duration_value" placeholder="e.g. 1 min"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
                     </div>
                     <div style="display:flex; flex-direction:column; gap:4px;">
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
                             <select id="areashape_value"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                                 <option value="">—</option>
@@ -1708,7 +1847,8 @@
                             </select>
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
                             <input type="text" id="areasize_value" placeholder="e.g. 30ft"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
@@ -1718,14 +1858,14 @@
                     <textarea id="description_value" placeholder="Description"
                         style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
                     <div style="display:flex; align-items:center; gap:4px;">
-                        <span style="font-size:11px; color:#555; flex-shrink:0;">Formula:</span>
-                        <input type="text" id="formula_value" placeholder="e.g. =+ hitpoints_maximum + character_level"
-                            style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                        <textarea id="formula_value" placeholder="field operation value" style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent;
+                                font-size:12px; font-family:inherit; padding:2px; resize:height;" rows="1"></textarea>
                         <input type="checkbox" id="formula_active_value" title="Active"
                             style="width:14px; height:14px; cursor:pointer; accent-color:#8b6914; flex-shrink:0;">
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <label style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
+                        <label
+                            style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
                             <input type="checkbox" id="showstats_value" checked> Stats in tooltip
                         </label>
                         <button type="button" class="panel-remove-btn" data-delete-label="spell"
@@ -1733,17 +1873,34 @@
                     </div>
                 </div>
             </div>
-                        </template>
-                    </div>
+        </template>
+    </div>
 
-                    <div id="spells_seventh_panel"
-                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
-                        <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
-                            <span style="text-align:center; flex:1;" data-label>7th Level</span>
-                            <button type="button" id="spells_seventh_button"
-                                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
-                        </div>
-                        <template id="spells_seventh_template">
+    <div id="spells_7_panel"
+        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+            <button type="button" id="spells_7_import_button"
+                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
+            <span style="text-align:center; flex:1;" data-label>7th Level</span>
+            <button type="button" id="spells_7_button"
+                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0; font-size:12px;">
+            <span style="white-space:nowrap; color:#333;">Spell Slots:</span>
+
+            <input id="spells_7_slots_current_value" type="number"
+                style="width:36px; height:20px; border:1px solid #8b6914; background:transparent;
+                       text-align:center; font-size:12px; font-family:inherit;">
+
+            <span style="color:#555;">/</span>
+
+            <input id="spells_7_slots_maximum_value" type="number"
+                style="width:36px; height:20px; border:1px solid #8b6914; background:transparent;
+                       text-align:center; font-size:12px; font-family:inherit;">
+        </div>
+
+        <template id="spells_7_template">
             <div class="panel-block"
                 style="display:flex; flex-direction:column; gap:4px; background:#f0e6d3; border:1px solid #8b6914; border-radius:3px; padding:4px 6px; flex-shrink:0;">
                 <input type="hidden" id="level_value" value="7">
@@ -1753,7 +1910,8 @@
                     <input type="text" id="name_value" placeholder="Spell name"
                         style="flex:1; min-width:0; border:none; background:transparent; font-size:13px; outline:none; font-family:inherit;">
                     <input type="checkbox" class="formula-indicator" title="Active"
-                        style="flex-shrink:0; width:14px; height:14px; cursor:pointer; accent-color:#8b6914; display:none;" disabled>
+                        style="flex-shrink:0; width:14px; height:14px; cursor:pointer; accent-color:#8b6914; display:none;"
+                        disabled>
                     <button type="button" class="panel-expand-btn"
                         style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
                 </div>
@@ -1829,19 +1987,22 @@
                     </div>
                     <div style="display:flex; flex-direction:column; gap:4px;">
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
                             <input type="text" id="range_value" placeholder="e.g. 60ft"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
                             <input type="text" id="duration_value" placeholder="e.g. 1 min"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
                     </div>
                     <div style="display:flex; flex-direction:column; gap:4px;">
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
                             <select id="areashape_value"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                                 <option value="">—</option>
@@ -1853,7 +2014,8 @@
                             </select>
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
                             <input type="text" id="areasize_value" placeholder="e.g. 30ft"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
@@ -1863,14 +2025,14 @@
                     <textarea id="description_value" placeholder="Description"
                         style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
                     <div style="display:flex; align-items:center; gap:4px;">
-                        <span style="font-size:11px; color:#555; flex-shrink:0;">Formula:</span>
-                        <input type="text" id="formula_value" placeholder="e.g. =+ hitpoints_maximum + character_level"
-                            style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                        <textarea id="formula_value" placeholder="field operation value" style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent;
+                                font-size:12px; font-family:inherit; padding:2px; resize:height;" rows="1"></textarea>
                         <input type="checkbox" id="formula_active_value" title="Active"
                             style="width:14px; height:14px; cursor:pointer; accent-color:#8b6914; flex-shrink:0;">
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <label style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
+                        <label
+                            style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
                             <input type="checkbox" id="showstats_value" checked> Stats in tooltip
                         </label>
                         <button type="button" class="panel-remove-btn" data-delete-label="spell"
@@ -1878,17 +2040,34 @@
                     </div>
                 </div>
             </div>
-                        </template>
-                    </div>
+        </template>
+    </div>
 
-                    <div id="spells_eighth_panel"
-                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
-                        <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
-                            <span style="text-align:center; flex:1;" data-label>8th Level</span>
-                            <button type="button" id="spells_eighth_button"
-                                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
-                        </div>
-                        <template id="spells_eighth_template">
+    <div id="spells_8_panel"
+        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+            <button type="button" id="spells_8_import_button"
+                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
+            <span style="text-align:center; flex:1;" data-label>8th Level</span>
+            <button type="button" id="spells_8_button"
+                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0; font-size:12px;">
+            <span style="white-space:nowrap; color:#333;">Spell Slots:</span>
+
+            <input id="spells_8_slots_current_value" type="number"
+                style="width:36px; height:20px; border:1px solid #8b6914; background:transparent;
+                       text-align:center; font-size:12px; font-family:inherit;">
+
+            <span style="color:#555;">/</span>
+
+            <input id="spells_8_slots_maximum_value" type="number"
+                style="width:36px; height:20px; border:1px solid #8b6914; background:transparent;
+                       text-align:center; font-size:12px; font-family:inherit;">
+        </div>
+
+        <template id="spells_8_template">
             <div class="panel-block"
                 style="display:flex; flex-direction:column; gap:4px; background:#f0e6d3; border:1px solid #8b6914; border-radius:3px; padding:4px 6px; flex-shrink:0;">
                 <input type="hidden" id="level_value" value="8">
@@ -1898,7 +2077,8 @@
                     <input type="text" id="name_value" placeholder="Spell name"
                         style="flex:1; min-width:0; border:none; background:transparent; font-size:13px; outline:none; font-family:inherit;">
                     <input type="checkbox" class="formula-indicator" title="Active"
-                        style="flex-shrink:0; width:14px; height:14px; cursor:pointer; accent-color:#8b6914; display:none;" disabled>
+                        style="flex-shrink:0; width:14px; height:14px; cursor:pointer; accent-color:#8b6914; display:none;"
+                        disabled>
                     <button type="button" class="panel-expand-btn"
                         style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
                 </div>
@@ -1974,19 +2154,22 @@
                     </div>
                     <div style="display:flex; flex-direction:column; gap:4px;">
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
                             <input type="text" id="range_value" placeholder="e.g. 60ft"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
                             <input type="text" id="duration_value" placeholder="e.g. 1 min"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
                     </div>
                     <div style="display:flex; flex-direction:column; gap:4px;">
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
                             <select id="areashape_value"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                                 <option value="">—</option>
@@ -1998,7 +2181,8 @@
                             </select>
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
                             <input type="text" id="areasize_value" placeholder="e.g. 30ft"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
@@ -2008,14 +2192,14 @@
                     <textarea id="description_value" placeholder="Description"
                         style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
                     <div style="display:flex; align-items:center; gap:4px;">
-                        <span style="font-size:11px; color:#555; flex-shrink:0;">Formula:</span>
-                        <input type="text" id="formula_value" placeholder="e.g. =+ hitpoints_maximum + character_level"
-                            style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                        <textarea id="formula_value" placeholder="field operation value" style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent;
+                                font-size:12px; font-family:inherit; padding:2px; resize:height;" rows="1"></textarea>
                         <input type="checkbox" id="formula_active_value" title="Active"
                             style="width:14px; height:14px; cursor:pointer; accent-color:#8b6914; flex-shrink:0;">
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <label style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
+                        <label
+                            style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
                             <input type="checkbox" id="showstats_value" checked> Stats in tooltip
                         </label>
                         <button type="button" class="panel-remove-btn" data-delete-label="spell"
@@ -2023,17 +2207,34 @@
                     </div>
                 </div>
             </div>
-                        </template>
-                    </div>
+        </template>
+    </div>
 
-                    <div id="spells_ninth_panel"
-                        style="height: 200px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
-                        <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
-                            <span style="text-align:center; flex:1;" data-label>9th Level</span>
-                            <button type="button" id="spells_ninth_button"
-                                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
-                        </div>
-                        <template id="spells_ninth_template">
+    <div id="spells_9_panel"
+        style="height: 200px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px; overflow-y: auto; overflow-x: hidden;">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+            <button type="button" id="spells_9_import_button"
+                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
+            <span style="text-align:center; flex:1;" data-label>9th Level</span>
+            <button type="button" id="spells_9_button"
+                style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">+</button>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0; font-size:12px;">
+            <span style="white-space:nowrap; color:#333;">Spell Slots:</span>
+
+            <input id="spells_9_slots_current_value" type="number"
+                style="width:36px; height:20px; border:1px solid #8b6914; background:transparent;
+                       text-align:center; font-size:12px; font-family:inherit;">
+
+            <span style="color:#555;">/</span>
+
+            <input id="spells_9_slots_maximum_value" type="number"
+                style="width:36px; height:20px; border:1px solid #8b6914; background:transparent;
+                       text-align:center; font-size:12px; font-family:inherit;">
+        </div>
+
+        <template id="spells_9_template">
             <div class="panel-block"
                 style="display:flex; flex-direction:column; gap:4px; background:#f0e6d3; border:1px solid #8b6914; border-radius:3px; padding:4px 6px; flex-shrink:0;">
                 <input type="hidden" id="level_value" value="9">
@@ -2043,7 +2244,8 @@
                     <input type="text" id="name_value" placeholder="Spell name"
                         style="flex:1; min-width:0; border:none; background:transparent; font-size:13px; outline:none; font-family:inherit;">
                     <input type="checkbox" class="formula-indicator" title="Active"
-                        style="flex-shrink:0; width:14px; height:14px; cursor:pointer; accent-color:#8b6914; display:none;" disabled>
+                        style="flex-shrink:0; width:14px; height:14px; cursor:pointer; accent-color:#8b6914; display:none;"
+                        disabled>
                     <button type="button" class="panel-expand-btn"
                         style="width:22px; height:22px; font-size:16px; line-height:1; cursor:pointer; padding:0; flex-shrink:0;">v</button>
                 </div>
@@ -2119,19 +2321,22 @@
                     </div>
                     <div style="display:flex; flex-direction:column; gap:4px;">
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
                             <input type="text" id="range_value" placeholder="e.g. 60ft"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
                             <input type="text" id="duration_value" placeholder="e.g. 1 min"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
                     </div>
                     <div style="display:flex; flex-direction:column; gap:4px;">
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Shape:</span>
                             <select id="areashape_value"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                                 <option value="">—</option>
@@ -2143,7 +2348,8 @@
                             </select>
                         </div>
                         <div style="display:flex; align-items:center; gap:4px;">
-                            <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
+                            <span
+                                style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
                             <input type="text" id="areasize_value" placeholder="e.g. 30ft"
                                 style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                         </div>
@@ -2153,14 +2359,14 @@
                     <textarea id="description_value" placeholder="Description"
                         style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
                     <div style="display:flex; align-items:center; gap:4px;">
-                        <span style="font-size:11px; color:#555; flex-shrink:0;">Formula:</span>
-                        <input type="text" id="formula_value" placeholder="e.g. =+ hitpoints_maximum + character_level"
-                            style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;">
+                        <textarea id="formula_value" placeholder="field operation value" style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent;
+                                font-size:12px; font-family:inherit; padding:2px; resize:height;" rows="1"></textarea>
                         <input type="checkbox" id="formula_active_value" title="Active"
                             style="width:14px; height:14px; cursor:pointer; accent-color:#8b6914; flex-shrink:0;">
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <label style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
+                        <label
+                            style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
                             <input type="checkbox" id="showstats_value" checked> Stats in tooltip
                         </label>
                         <button type="button" class="panel-remove-btn" data-delete-label="spell"
@@ -2168,9 +2374,10 @@
                     </div>
                 </div>
             </div>
-                        </template>
-                    </div>
-                </div>
+        </template>
+    </div>
+</div>
+
 
 
                 <!-- <script src="assets/scripts.js"></script> -->
