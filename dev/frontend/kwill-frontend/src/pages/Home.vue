@@ -4,7 +4,7 @@
 			<!-- Title -->
 			<img class="mb-3 logo-img-home" src="../assets/icon-small-margin.png" v-if="theme.global.name.value==='kwillTheme'"/>
 			<img class="mb-3 logo-img-home" src="../assets/icon2-small-margin.png" v-else/>
-			<v-card elevation="4">
+			<v-card elevation="4" max-width="min(75vw, 1100px)">
 				<v-row>
 					<v-col cols="8">
 						<v-row>
@@ -15,9 +15,10 @@
 									<v-divider opacity=".7" thickness="3" gradient style="margin-left: 7%; margin-right: 7%;"></v-divider>
 									<v-card-item>
 										<v-card-text style="padding-top: 2%;" class="text-center text-h5" >
-											<div class="mb-6 card-text">Welcome to Kwill! Kwill is a webapp which can generate, store, and <br> update user-created smart <i>Dungeons and Dragons</i> character sheets. You <br> can also download your characters locally.</div>
-											<div class="mb-6 card-text">Additional smart functionality includes automated field calculations,<br> real-time spell tooltips, and much more!</div>
+											<div class="mb-6 card-text">Welcome to Kwill! Kwill is a webapp which can generate, store, and update user-created smart <i>Dungeons and Dragons</i> character sheets. You can also download your characters locally.</div>
+											<div class="mb-6 card-text">Additional smart functionality includes automated field calculations, real-time spell tooltips, and much more!</div>
 											<div class="mb-6 card-text">New? Create a free account <b><router-link to="/createaccount">here</router-link></b> to save your characters.</div>
+											<div class="mb-6 card-text">Need help? Take a look at the Guide page.</div>
 										</v-card-text>
 									</v-card-item>
 								</v-card>
@@ -25,14 +26,15 @@
 						</v-row>	
 						<v-row>
 							<v-col>
+								<!-- Why Kwill? section -->
 								<v-card elevation="6" class="gradient-db-card" style="margin-bottom: 5%; margin-left: 5%; outline: solid black 3px;">
 									<v-card-title class="text-center text-h4">Why Kwill?</v-card-title>
 									<v-divider opacity=".7" thickness="3" gradient style="margin-left: 7%; margin-right: 7%;"></v-divider>
 									<v-card-item>
 										<v-card-text style="padding-top: 2%;" class="text-center text-h5" >
 											<div class="mb-6 card-text">Dungeons and Dragons is a fantasy roleplaying game where you create characters and go on adventures with others.</div>
-											<div class="mb-6 card-text">As players ourselves, we want creating a character to be as hassle-free<br> as possible. For this reason we built Kwill.</div>
-											<div class="mb-6 card-text">The added smart-functionality on both our online sheet, as well as the smart<br> version of the local sheet solve many common friction points while playing D&D.<br> No more frantically looking up spells before your turn!</div>
+											<div class="mb-6 card-text">As players ourselves, we want creating a character to be as hassle-free as possible. For this reason we built Kwill.</div>
+											<div class="mb-6 card-text">The added smart-functionality on both our online sheet, as well as the smart version of the local sheet solve many common friction points while playing D&D. No more frantically looking up spells before your turn!</div>
 										</v-card-text>
 									</v-card-item>
 								</v-card>
@@ -54,7 +56,7 @@
 									</router-link>
 								</v-row>
 								<v-row class="justify-center ma-2">
-									<router-link to="/characters" style="text-decoration: none; color: inherit;">
+									<router-link to="/guide" style="text-decoration: none; color: inherit;">
 										<v-card>
 										<v-card-title class="text-center">Guide</v-card-title>
 										<v-card-item class="justify-center"><img src="../assets/community.png" style="height:120px; width: 120px;" /></v-card-item>
@@ -74,6 +76,7 @@
 			</v-card>
 		</v-col>
 		<v-col>
+			<!-- License and names -->
 			<v-divider opacity=".7" thickness="3" gradient></v-divider>
 			<div class="text-center ma-4">
 				<p class="license-text">Released under the MIT License.</p>

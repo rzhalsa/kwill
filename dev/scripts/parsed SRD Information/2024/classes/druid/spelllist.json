@@ -1,0 +1,996 @@
+{
+  "spells": [
+    {
+      "name": "Druidcraft",
+      "level": "0",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Elementalism",
+      "level": "0",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Guidance",
+      "level": "0",
+      "school": "Divination",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Mending",
+      "level": "0",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Message",
+      "level": "0",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Poison Spray",
+      "level": "0",
+      "school": "Necromancy",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Produce Flame",
+      "level": "0",
+      "school": "Conjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Resistance",
+      "level": "0",
+      "school": "Abjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Shillelagh",
+      "level": "0",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Spare the Dying",
+      "level": "0",
+      "school": "Necromancy",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Starry Wisp",
+      "level": "0",
+      "school": "Evocation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Animal Friendship",
+      "level": "1",
+      "school": "Enchantment",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Charm Person",
+      "level": "1",
+      "school": "Enchantment",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Create or Destroy Water",
+      "level": "1",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Cure Wounds",
+      "level": "1",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Detect Magic",
+      "level": "1",
+      "school": "Divination",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Detect Poison and Disease",
+      "level": "1",
+      "school": "Divination",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Entangle",
+      "level": "1",
+      "school": "Conjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Faerie Fire",
+      "level": "1",
+      "school": "Evocation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Fog Cloud",
+      "level": "1",
+      "school": "Conjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Goodberry",
+      "level": "1",
+      "school": "Conjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Healing Word",
+      "level": "1",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Ice Knife",
+      "level": "1",
+      "school": "Conjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Jump",
+      "level": "1",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Longstrider",
+      "level": "1",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Protection from Evil and Good",
+      "level": "1",
+      "school": "Abjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Purify Food and Drink",
+      "level": "1",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": true,
+      "material": false
+    },
+    {
+      "name": "Speak with Animals",
+      "level": "1",
+      "school": "Divination",
+      "concentration": false,
+      "ritual": true,
+      "material": false
+    },
+    {
+      "name": "Thunderwave",
+      "level": "1",
+      "school": "Evocation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Aid",
+      "level": "2",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Animal Messenger",
+      "level": "2",
+      "school": "Enchantment",
+      "concentration": false,
+      "ritual": true,
+      "material": false
+    },
+    {
+      "name": "Augury",
+      "level": "2",
+      "school": "Divination",
+      "concentration": false,
+      "ritual": true,
+      "material": false
+    },
+    {
+      "name": "Barkskin",
+      "level": "2",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Continual Flame",
+      "level": "2",
+      "school": "Evocation",
+      "concentration": false,
+      "ritual": false,
+      "material": true
+    },
+    {
+      "name": "Darkvision",
+      "level": "2",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Enhance Ability",
+      "level": "2",
+      "school": "Transmutation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Enlarge/Reduce",
+      "level": "2",
+      "school": "Transmutation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Find Traps",
+      "level": "2",
+      "school": "Divination",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Flame Blade",
+      "level": "2",
+      "school": "Evocation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Flaming Sphere",
+      "level": "2",
+      "school": "Evocation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Gust of Wind",
+      "level": "2",
+      "school": "Evocation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Heat Metal",
+      "level": "2",
+      "school": "Transmutation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Hold Person",
+      "level": "2",
+      "school": "Enchantment",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Lesser Restoration",
+      "level": "2",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Locate Animals or Plants",
+      "level": "2",
+      "school": "Divination",
+      "concentration": false,
+      "ritual": true,
+      "material": false
+    },
+    {
+      "name": "Locate Object",
+      "level": "2",
+      "school": "Divination",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Moonbeam",
+      "level": "2",
+      "school": "Evocation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Pass without Trace",
+      "level": "2",
+      "school": "Abjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Protection from Poison",
+      "level": "2",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Spike Growth",
+      "level": "2",
+      "school": "Transmutation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Call Lightning",
+      "level": "3",
+      "school": "Conjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Conjure Animals",
+      "level": "3",
+      "school": "Conjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Daylight",
+      "level": "3",
+      "school": "Evocation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Dispel Magic",
+      "level": "3",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Meld into Stone",
+      "level": "3",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": true,
+      "material": false
+    },
+    {
+      "name": "Plant Growth",
+      "level": "3",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Protection from Energy",
+      "level": "3",
+      "school": "Abjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Revivify",
+      "level": "3",
+      "school": "Necromancy",
+      "concentration": false,
+      "ritual": false,
+      "material": true
+    },
+    {
+      "name": "Sleet Storm",
+      "level": "3",
+      "school": "Conjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Speak with Plants",
+      "level": "3",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Water Breathing",
+      "level": "3",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": true,
+      "material": false
+    },
+    {
+      "name": "Water Walk",
+      "level": "3",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": true,
+      "material": false
+    },
+    {
+      "name": "Wind Wall",
+      "level": "3",
+      "school": "Evocation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Blight",
+      "level": "4",
+      "school": "Necromancy",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Charm Monster",
+      "level": "4",
+      "school": "Enchantment",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Confusion",
+      "level": "4",
+      "school": "Enchantment",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Conjure Minor Elementals",
+      "level": "4",
+      "school": "Conjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Conjure Woodland Beings",
+      "level": "4",
+      "school": "Conjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Control Water",
+      "level": "4",
+      "school": "Transmutation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Divination",
+      "level": "4",
+      "school": "Divination",
+      "concentration": false,
+      "ritual": true,
+      "material": false
+    },
+    {
+      "name": "Dominate Beast",
+      "level": "4",
+      "school": "Enchantment",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Fire Shield",
+      "level": "4",
+      "school": "Evocation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Freedom of Movement",
+      "level": "4",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Giant Insect",
+      "level": "4",
+      "school": "Conjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Hallucinatory Terrain",
+      "level": "4",
+      "school": "Illusion",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Ice Storm",
+      "level": "4",
+      "school": "Evocation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Locate Creature",
+      "level": "4",
+      "school": "Divination",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Polymorph",
+      "level": "4",
+      "school": "Transmutation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Stone Shape",
+      "level": "4",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Stoneskin",
+      "level": "4",
+      "school": "Transmutation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Wall of Fire",
+      "level": "4",
+      "school": "Evocation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Antilife Shell",
+      "level": "5",
+      "school": "Abjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Awaken",
+      "level": "5",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": false,
+      "material": true
+    },
+    {
+      "name": "Commune with Nature",
+      "level": "5",
+      "school": "Divination",
+      "concentration": false,
+      "ritual": true,
+      "material": false
+    },
+    {
+      "name": "Cone of Cold",
+      "level": "5",
+      "school": "Evocation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Conjure Elemental",
+      "level": "5",
+      "school": "Conjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Contagion",
+      "level": "5",
+      "school": "Necromancy",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Geas",
+      "level": "5",
+      "school": "Enchantment",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Greater Restoration",
+      "level": "5",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": true
+    },
+    {
+      "name": "Insect Plague",
+      "level": "5",
+      "school": "Conjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Mass Cure Wounds",
+      "level": "5",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Planar Binding",
+      "level": "5",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": true
+    },
+    {
+      "name": "Reincarnate",
+      "level": "5",
+      "school": "Necromancy",
+      "concentration": false,
+      "ritual": false,
+      "material": true
+    },
+    {
+      "name": "Scrying",
+      "level": "5",
+      "school": "Divination",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Tree Stride",
+      "level": "5",
+      "school": "Conjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Wall of Stone",
+      "level": "5",
+      "school": "Evocation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Conjure Fey",
+      "level": "6",
+      "school": "Conjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Find the Path",
+      "level": "6",
+      "school": "Divination",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Flesh to Stone",
+      "level": "6",
+      "school": "Transmutation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Heal",
+      "level": "6",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Heroes\u2019 Feast",
+      "level": "6",
+      "school": "Conjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": true
+    },
+    {
+      "name": "Move Earth",
+      "level": "6",
+      "school": "Transmutation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Sunbeam",
+      "level": "6",
+      "school": "Evocation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Transport via Plants",
+      "level": "6",
+      "school": "Conjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Wall of Thorns",
+      "level": "6",
+      "school": "Conjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Wind Walk",
+      "level": "6",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Fire Storm",
+      "level": "7",
+      "school": "Evocation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Mirage Arcane",
+      "level": "7",
+      "school": "Illusion",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Plane Shift",
+      "level": "7",
+      "school": "Conjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": true
+    },
+    {
+      "name": "Regenerate",
+      "level": "7",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Reverse Gravity",
+      "level": "7",
+      "school": "Transmutation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Symbol",
+      "level": "7",
+      "school": "Abjuration",
+      "concentration": false,
+      "ritual": false,
+      "material": true
+    },
+    {
+      "name": "Animal Shapes",
+      "level": "8",
+      "school": "Transmutation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Antipathy/Sympathy",
+      "level": "8",
+      "school": "Enchantment",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Befuddlement",
+      "level": "8",
+      "school": "Enchantment",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Control Weather",
+      "level": "8",
+      "school": "Transmutation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Earthquake",
+      "level": "8",
+      "school": "Transmutation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Incendiary Cloud",
+      "level": "8",
+      "school": "Conjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Sunburst",
+      "level": "8",
+      "school": "Evocation",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Tsunami",
+      "level": "8",
+      "school": "Conjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Foresight",
+      "level": "9",
+      "school": "Divination",
+      "concentration": false,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Shapechange",
+      "level": "9",
+      "school": "Transmutation",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "Storm of Vengeance",
+      "level": "9",
+      "school": "Conjuration",
+      "concentration": true,
+      "ritual": false,
+      "material": false
+    },
+    {
+      "name": "True Resurrection",
+      "level": "9",
+      "school": "Necromancy",
+      "concentration": false,
+      "ritual": false,
+      "material": true
+    }
+  ]
+}

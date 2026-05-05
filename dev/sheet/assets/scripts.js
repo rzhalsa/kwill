@@ -1083,7 +1083,13 @@ function saveAllPanels(base) {
     getPanelIds().forEach(panelId => {
         const data = savePanel(panelId);
         if (data !== null) {
-            panelsData[panelId] = data;
+            const parts = panelId.split("_");
+            let obj = panelsData;
+            for (let i = 0; i < parts.length - 1; i++) {
+                if (!obj[parts[i]]) obj[parts[i]] = {};
+                obj = obj[parts[i]];
+            }
+            obj[parts[parts.length - 1]] = data;
             hasAny = true;
         }
     });
@@ -1098,9 +1104,13 @@ function saveAllPanels(base) {
 function loadAllPanels(characterData) {
     if (!characterData.panels) return;
     getPanelIds().forEach(panelId => {
-        if (characterData.panels[panelId]) {
-            loadPanel(panelId, characterData.panels[panelId]);
+        const parts = panelId.split("_");
+        let obj = characterData.panels;
+        for (const part of parts) {
+            if (obj && typeof obj === "object") obj = obj[part];
+            else { obj = undefined; break; }
         }
+        if (obj) loadPanel(panelId, obj);
     });
     applyPanelOverrides();
 }
