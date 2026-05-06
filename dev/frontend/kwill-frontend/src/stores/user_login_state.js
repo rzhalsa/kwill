@@ -5,7 +5,8 @@ export const useAuthStore = defineStore('auth', {
     state:() =>({
         token: null,
         user: null,
-        showLogin:false
+        showLogin:false,
+        isExporting: false,
     }),
     getters:{
         isAuthenticated: (state) => !!state.token

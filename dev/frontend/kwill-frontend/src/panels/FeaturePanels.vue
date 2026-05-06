@@ -1,11 +1,11 @@
 <template>
-    <v-card variant="flat" style="overflow-y: auto;">
+    <v-card variant="flat" style="overflow-y: auto;" theme="light">
         <v-card-title class="d-flex justify-center text-subtitle-2">
             <v-btn class="ml-2" color="grey-lighten" size="compact" icon="mdi-import" @click="spellStore.showFeatImport = true"></v-btn>
             <v-spacer/>
             Features
             <v-spacer />
-            <v-btn class="ml-2" color="primary" size="compact" icon="mdi-plus" @click="addFeature"></v-btn>
+            <v-btn class="ml-2" color="#e66c63" size="compact" icon="mdi-plus" @click="addFeature"></v-btn>
         </v-card-title>
         <v-card-item v-for="(feature, index) in character.panels.features" :key="index" class="d-flex flex-column gap-2">
             <v-expansion-panels class="feature-panel" v-model="feature.expanded">

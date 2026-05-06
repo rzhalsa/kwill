@@ -48,6 +48,11 @@
     gap: 40px;
 }
 
+#character-sheet {
+  --v-theme-on-surface: 0, 0, 0;
+  color: rgb(var(--v-theme-on-surface));
+}
+
 /* CHANGED - zoom instead of transform */
 .page {
     position: relative;
@@ -82,6 +87,16 @@
     justify-content: center;
     gap: 35px;
 }
+.page input {
+    color: black !important;
+}
+
+.page textarea {
+    color: black !important;
+}
+.page span {
+    color: black !important;
+}
 
 .page1-top-input-value {
     position: absolute;
@@ -115,6 +130,11 @@
     height: auto;
     width: auto;
 }
+
+#character-sheet input[type="checkbox"] {
+  accent-color: #9e0f0f;
+  background-color: rgb(255, 255, 255);
+} 
 
 .ability-score {
     border: 2px solid #000;

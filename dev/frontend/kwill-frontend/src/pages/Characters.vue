@@ -87,6 +87,10 @@
                     <div v-if="selectedFile" class="pa-3" style="background-color: #f5f5f5; border-radius: 8px;">
                         <p class="mb-0"><strong>Selected file:</strong> {{ selectedFile.name }}</p>
                     </div>
+                    <v-radio-group v-model="selectedImportType">
+                        <v-radio label="Import as New Character" value="new"></v-radio>
+                        <v-radio label="Import and Replace Current Character" value="replace"></v-radio>
+                    </v-radio-group>
                 </div>
             </v-card-text>
             <v-card-actions class="d-flex justify-end gap-2">
@@ -198,6 +202,7 @@ import { useAuthStore } from '../stores/user_login_state';
 import { first } from 'lodash';
 import {useSpellDialogStore} from '../stores/spells_state.js';
 import { createCharacter} from '../models/characterModel';
+import {createNewCharacter} from '../helpers/charCreationHelpers';
 const character = createCharacter();
 const authStore = useAuthStore(); //Store for user authentication and login state
 const characterStore = useCharacterCreationStore(); //Store for character data and state, including selected character, character list, and character sheet updates
@@ -221,7 +226,7 @@ const showDeleteDialog = ref(false);
 const characterToDelete = ref(null);
 const selectedSpell = ref(null);
 const selectedFeature = ref(null);
-
+const selectedImportType = ref(null);
 /**
  * Responsible for updating and populating values on the chracter sheet.
  */
@@ -343,9 +348,17 @@ async function importFile() {
 
         console.log('File text:', text);
         console.log('Parsed:', JSON.parse(text));
-
-        sheetRef.value.populateSheet(text);
-
+        const parsed = JSON.parse(text);
+        if(selectedImportType.value === 'new'){
+            createNewCharacter(parsed, userID.value);
+            await fetchCharsName();
+        } 
+        else if (selectedImportType.value === 'replace') {
+            sheetRef.value.populateSheet(parsed);
+        }else{
+            alert('Please select an import type');
+            return;
+        }
         closeImportDialog();
     } catch (error) {
         console.error('Failed to import file:', error);
@@ -413,13 +426,17 @@ async function downloadSheet() {
 
 // Exports the current state of the sheet to json
 function exportCharacter() {
-    const characterToExport = sheetRef.value.getCharacterData();
+    authStore.isExporting = true;// Set exporting state to true to disable export button and prevent multiple exports at once
+
+    const raw = sheetRef.value.getCharacterData();
     
-    if (!characterToExport || !characterToExport.name) {
+    if (!raw || !raw.name) {
         alert('No character data to export');
         return;
     }
     
+    const characterToExport = JSON.parse(JSON.stringify(raw));
+
     const jsonString = JSON.stringify(characterToExport, null, 2);
     const blob = new Blob([jsonString], { type: 'application/json' });
     
@@ -432,6 +449,8 @@ function exportCharacter() {
     
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+
+    authStore.isExporting = false;// Reset exporting state after export is complete
 }
 
 </script>

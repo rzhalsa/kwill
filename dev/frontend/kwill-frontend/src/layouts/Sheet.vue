@@ -1,6 +1,6 @@
 <template>
 
-    <div class="page-wrapper" id="character-sheet">
+    <v-container class="page-wrapper" id="character-sheet" theme="light">
 
         <!-- Page 1 -->
         <div class="page">
@@ -67,7 +67,7 @@
                     <!-- Proficiency boxes -->
                     <div style="display: flex; flex-direction: column; gap: 5px; align-items: flex-start; ">
                         <div class="proficiency-box" v-for="ability in abilityList">
-                            <div data-label style="text-align: center; font-weight: bold; margin-bottom: 5px;">
+                            <div data-label style="text-align: center; font-weight: bold; margin-bottom: 5px; ">
                                 {{ ability.name.toUpperCase() }}
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 4px; width: 100%;">
@@ -428,7 +428,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </v-container>
 </template>
 <script setup>
     import {ref, reactive, readonly, computed, watch, nextTick} from 'vue';
@@ -554,7 +554,7 @@ function populateSheet(data) {
 }
 
 function getCharacterData() {
-    return character;
+    return JSON.parse(JSON.stringify(character));
 }
 
 defineExpose({
@@ -572,7 +572,7 @@ const debounceUpdate = debounce((newVal)=>{
 
 //watches character model and waits for three changes to be made before calling debounce
 watch(character,(newVal)=>{
-    if(suppressSave.value) return;
+    if(suppressSave.value ) return;
     debounceUpdate(newVal);
 })
 
@@ -593,4 +593,5 @@ function handleRemoveSpell(level, index) {
     character.panels.spells[level].splice(index, 1);
 }
 </script>
-<style src="../character.css" scoped></style>
+<style src="../character.css" scoped>
+</style>
