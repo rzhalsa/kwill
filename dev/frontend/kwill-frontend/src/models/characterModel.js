@@ -127,19 +127,22 @@ export function createCharacter() {
         treasure: "",
         spellcasting: { class: "" },
         spell: { castingAbility: "", saveDc: "", attackBonus: "" },
-        'spells' : {
-            0: [],
-            1: [],
-            2: [],
-            3: [],
-            4: [],
-            5: [],
-            6: [],
-            7: [],
-            8: [],
-            9: [],
-        },
-    });
+        panels:{
+            features:[],
+            'spells' : {
+                0: [],
+                1: [],
+                2: [],
+                3: [],
+                4: [],
+                5: [],
+                6: [],
+                7: [],
+                8: [],
+                9: [],
+            },
+        }
+        });
 }
 
 /**
@@ -212,7 +215,7 @@ export function copyJsonToCharacter(character, jsonData) {
 }
 export async function postCharacter(characterData, userId){
     try {
-        const payload = {...characterData, user_id: userId};
+        const payload = {...characterData, userid: userId};
          const response = await api.post("/api/character", payload);
         console.log("created character successfully: ",response.data );
         return response.data;
@@ -222,9 +225,9 @@ export async function postCharacter(characterData, userId){
 }
 export async function updateCharacter(characterId, characterData, userId){
     try {
-        const payload = {...characterData, user_id: userId}
+        const payload = {...characterData, userid: userId}
         const response = await api.put(`/api/character/${characterId}`, payload);
-        console.log("created character successfully: ",response.data );
+        console.log("updated character successfully: ",response.data );
         return response.data;
     } catch (error) {
         console.error("Failed to post API data: ", error)

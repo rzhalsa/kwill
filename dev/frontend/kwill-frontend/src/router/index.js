@@ -5,17 +5,38 @@ import Characters from '../pages/Characters.vue'
 import Login from '../pages/Login.vue'
 import Guide from '../pages/Guide.vue'
 import Create from '../pages/CreateAccount.vue'
+import account from '../pages/Account.vue'
+import { useAuthStore } from '../stores/user_login_state';
 
 const routes = [
   { path: '/', component: Home },
   { path: '/charactercreator', component: CharacterCreator},
-  { path: '/characters', component: Characters },
+  { path: '/account', component: account, meta: { requiresAuth: true }},
+  { path: '/characters', component: Characters, meta: { requiresAuth: true }}, // Only logged-in users can access the Characters page
   { path: '/login', component: Login },
   { path: '/guide', component: Guide},
   { path: '/createaccount', component: Create}
 ]
 
-export default createRouter({
+const router= createRouter({
   history: createWebHistory(),
   routes
 })
+
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore()
+
+  // If we have a token but no user yet, initialize
+  if (!authStore.user && authStore.token) {
+    await authStore.initializeAuth()
+  }
+
+  // If route requires auth and user is not logged in
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    authStore.showLogin = true;
+    return next(true);
+  }
+
+  next()
+})
+export default router;

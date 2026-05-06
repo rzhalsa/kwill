@@ -124,28 +124,28 @@ public class SrdController : ControllerBase
             return StatusCode(500, new { error = ex.Message });
         }
     }
-
-[HttpGet("spells/level/{level}")]
-public async Task<IActionResult> GetSpellsByLevel(int level)
-{
-    try
+    [HttpGet("spells/level/{level}")]
+    public async Task<IActionResult> GetSpellsByLevel(int level)
     {
-        if (level < 0 || level > 9)
+        try
         {
-            return BadRequest(new { message = "Spell level must be between 0 (cantrip) and 9" });
-        }
+            if (level < 0 || level > 9)
+            {
+                return BadRequest(new { message = "Spell level must be between 0 (cantrip) and 9" });
+            }
 
-        var spells = await _srdService.GetSpellsByLevelAsync(level);
-        
-        // Convert BsonDocuments to JSON string
-        var settings = new JsonWriterSettings { OutputMode = JsonOutputMode.RelaxedExtendedJson };
-        var json = "[" + string.Join(",", spells.Select(d => d.ToJson(settings))) + "]";
-        
-        return Content(json, "application/json");
+            var spells = await _srdService.GetSpellsByLevelAsync(level);
+
+            // Convert BsonDocuments to JSON string
+            var settings = new JsonWriterSettings { OutputMode = JsonOutputMode.RelaxedExtendedJson };
+            var json = "[" + string.Join(",", spells.Select(d => d.ToJson(settings))) + "]";
+
+            return Content(json, "application/json");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = ex.Message });
+        }
     }
-    catch (Exception ex)
-    {
-        return StatusCode(500, new { error = ex.Message });
-    }
-}
+
 }

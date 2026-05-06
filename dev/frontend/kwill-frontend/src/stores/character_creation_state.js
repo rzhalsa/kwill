@@ -8,6 +8,8 @@ import { reactive } from 'vue'
 
 export const useCharacterCreationStore = defineStore('character_creation', {
     state: () => ({
+        characterList: [],   // list of characters to display on the character selection page, so suer doesn't have to refresh after creating a character to see it in the list.
+        selectedCharacterId: null,    // the characterId of the currently selected character on the character selection page
         // Map which holds the state of the currently created character in key-value pairs
         character_state: reactive({
             'name': null,

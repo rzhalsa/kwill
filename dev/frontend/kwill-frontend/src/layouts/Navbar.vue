@@ -31,7 +31,7 @@
             <v-btn to="/characters" class="mr-2" append-icon="mdi-chevron-down">Menus</v-btn>
         </v-menu>
         <v-divider vertical class="mt-3 mb-3"></v-divider>
-        <v-btn icon="mdi-cog" class="ml-2"></v-btn>
+        <v-btn icon="mdi-cog" class="ml-2" to="/account"></v-btn>
         <v-btn icon="mdi-theme-light-dark" @click="toggleTheme"></v-btn>
         <v-divider vertical class="ma-3"></v-divider>
         <!-- GitHub logo -->

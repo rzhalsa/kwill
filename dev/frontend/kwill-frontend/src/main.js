@@ -7,7 +7,6 @@ import router from './router'
 import '@mdi/font/css/materialdesignicons.css'
 import './main.css'
 import api from './services/api'
-
 const pinia = createPinia()
 
 createApp(App)
@@ -17,9 +16,5 @@ createApp(App)
   .mount('#app')
 
 //Prevents user from not logging out upon page refresh.
-const token = localStorage.getItem("token");
-if (token) {
-    const authStore = useAuthStore();
-    authStore.setToken(token);
-    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-}
+const authStore = useAuthStore();
+await authStore.initializeAuth();

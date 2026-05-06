@@ -90,13 +90,7 @@
                 const token = response.data.token;
                 localStorage.setItem("token", token);
                 authStore.setToken(token);
-                // Fetch and set user data before navigating
-                try {
-                    const userRes = await api.get("/api/auth/me");
-                    authStore.setUser(userRes.data);
-                } catch (err) {
-                    console.error("Failed to fetch user data: ", err);
-                }
+                authStore.showLogin = false;
                 router.replace('/');
             }
         } catch (error) {

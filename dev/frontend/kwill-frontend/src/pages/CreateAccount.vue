@@ -11,7 +11,7 @@
                     <v-form v-model="form" @submit.prevent="createAccount">
                         <v-text-field class="mt-2 px-10" :rules="[required, validEmail]" v-model="email" label="Email*:" variant="outlined"></v-text-field>
                         <v-text-field class="mt-2 px-10" :rules="[required]" v-model="username" label="Username*:" variant="outlined"></v-text-field>
-                        <v-text-field class="mt-2 px-10" :rules="[required, passwordStrength]" v-model="password" label="Password*:" variant="outlined" :type="showPassword ? 'text':'password'"
+                        <v-text-field class="mt-2 px-10" :rules="[required, passwordStrength, noMatch]" v-model="password" label="Password*:" variant="outlined" :type="showPassword ? 'text':'password'"
                             :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'" @click:append-inner="showPassword = !showPassword"></v-text-field>
                         <div class="text-caption px-10 ">Password Must Contain:</div>
                         <div class="text-caption px-14">*At least 8 characters</div>
@@ -65,6 +65,15 @@ const authStore = useAuthStore();
 function mustMatch(value){
     return value === password.value || 'Passwords must match';
 }
+
+/**
+ * Rule set that confirms second password matches first
+ * @param value input value in verify password field
+ */
+function noMatch(value){
+    return value !== password.value || "Passwords can't match username";
+}
+
 /**
  * Rule set that confirms each field has a value
  * @param value input value in verify password field
@@ -131,13 +140,7 @@ async function createAccount(){
             const token = response.data.token;
             localStorage.setItem("token", token);
             authStore.setToken(token);
-            // Fetch and set user data before navigating
-            try {
-                const userRes = await api.get("/api/auth/me");
-                authStore.setUser(userRes.data);
-            } catch (err) {
-                console.error("Failed to fetch user data: ", err);
-            }
+            authStore.showLogin = false;
             router.push('/');
         }
     } catch (error) {

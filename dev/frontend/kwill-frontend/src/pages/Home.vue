@@ -65,8 +65,10 @@
 								</v-row>
 								<v-row class="justify-center ma-2">
 									<v-card>
-										<v-card-title class="text-center">Account</v-card-title>
-										<v-card-item class="justify-center"><img src="../assets/community.png" style="height:120px; width: 120px;" /></v-card-item>
+										<router-link to="/account" style="text-decoration: none; color: inherit;">
+											<v-card-title class="text-center">Account</v-card-title>
+											<v-card-item class="justify-center"><img src="../assets/community.png" style="height:120px; width: 120px;" /></v-card-item>
+										</router-link>
 									</v-card>
 								</v-row>
 							</v-card-item>
@@ -99,16 +101,6 @@
   	import { useAuthStore } from '../stores/user_login_state';
 	const theme = useTheme()
   	const authStore = useAuthStore();
-
-	onMounted(async () => {
-		try {
-			if (!authStore.token) return;
-			const res = await api.get("/api/auth/me");
-			authStore.setUser(res.data);
-		} catch (err) {
-			console.log("Not authenticated", err);
-		}
-	})
 </script>
 
 <style>
