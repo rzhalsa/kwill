@@ -57,6 +57,8 @@ builder.Services.AddSingleton<KwillDB.KwillDB>(); // ASP.NET creates the instanc
 builder.Services.AddScoped<SrdService>();
 builder.Services.AddScoped<CharacterService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<UserService>();
+
 builder.Services.AddHttpClient();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -84,20 +86,6 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = jwtSection["Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
         ClockSkew = TimeSpan.Zero
-    };
-
-    options.Events = new JwtBearerEvents
-    {
-        OnAuthenticationFailed = context =>
-        {
-            Console.WriteLine($"Authentication failed: {context.Exception.Message}");
-            return Task.CompletedTask;
-        },
-        OnTokenValidated = context =>
-        {
-            Console.WriteLine("Token validated successfully");
-            return Task.CompletedTask;
-        }
     };
 });
 builder.Services.AddAuthorization();
