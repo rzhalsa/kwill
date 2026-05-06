@@ -3,7 +3,7 @@ import Home from '../pages/Home.vue'
 import CharacterCreator from '../pages/CharacterCreator.vue'
 import Characters from '../pages/Characters.vue'
 import Login from '../pages/Login.vue'
-import Info from '../pages/Info.vue'
+import Guide from '../pages/Guide.vue'
 import Create from '../pages/CreateAccount.vue'
 import account from '../pages/Account.vue'
 import { useAuthStore } from '../stores/user_login_state';
@@ -14,7 +14,7 @@ const routes = [
   { path: '/account', component: account, meta: { requiresAuth: true }},
   { path: '/characters', component: Characters, meta: { requiresAuth: true }}, // Only logged-in users can access the Characters page
   { path: '/login', component: Login },
-  { path: '/info', component: Info},
+  { path: '/guide', component: Guide},
   { path: '/createaccount', component: Create}
 ]
 

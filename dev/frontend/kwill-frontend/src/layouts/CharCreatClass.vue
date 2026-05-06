@@ -80,11 +80,4 @@
 </script>
 
 <style>
-    p, li {
-        font-size: clamp(1rem, calc(1vw + 0.3rem), 3rem);
-    }
-
-    .v-select .v-field-label, .v-select .v-field__input, .v-text-field .v-field__input {
-        font-size: clamp(1rem, calc(1vw + 0.1rem), 3rem);
-    }
 </style>
