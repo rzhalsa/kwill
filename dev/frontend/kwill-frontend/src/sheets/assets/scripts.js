@@ -37,6 +37,9 @@ const saveButton = document.getElementById("saveButton");
 // ============================================================
 let characters = {};
 
+let database = {};
+
+
 // ── Folder Input Events ──────────────────────────────────────
 
 // Clears the input's value before each click so the browser
@@ -93,6 +96,53 @@ folderInput.addEventListener("change", () => {
         populateDropdown();
     }
 });
+
+
+// ── Database Folder Input ────────────────────────────────────
+
+const databaseFolderInput = document.getElementById("databaseFolderInput");
+
+databaseFolderInput.addEventListener("click", () => {
+    databaseFolderInput.value = null;
+});
+
+databaseFolderInput.addEventListener("change", () => {
+    const files = Array.from(databaseFolderInput.files);
+    database = {};
+    if (files.length === 0) { /* populateClassSelect(); */ return; }
+    const jsonFiles = files.filter(f => f.name.endsWith(".json"));
+    let loaded = 0;
+    jsonFiles.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                database[file.name] = JSON.parse(e.target.result);
+            } catch (err) {
+                console.error(`Error parsing database file ${file.name}:`, err);
+            }
+            loaded++;
+            if (loaded === jsonFiles.length) { /* populateClassSelect(); */ }
+        };
+        reader.readAsText(file);
+    });
+});
+
+// Rebuilds the spellcasting class <select> from all database files with Key === "classes".
+function populateClassSelect() {
+    const sel = document.getElementById('spellcasting_class_value');
+    if (!sel) return;
+    const current = sel.value;
+    sel.innerHTML = '<option value="">— Select Class —</option>';
+    Object.entries(database).forEach(([filename, data]) => {
+        if (data.Key === 'classes') {
+            const option = document.createElement('option');
+            option.value = filename.replace('.json', '').toLowerCase();
+            option.textContent = filename.replace('.json', '');
+            sel.appendChild(option);
+        }
+    });
+    if (current) sel.value = current;
+}
 
 // ── Dropdown population ──────────────────────────────────────
 
@@ -1115,24 +1165,18 @@ function clearAllPanels() {
 // main sheet fields. Raw JSON values are never modified.
 //
 // Syntax:
-//   fieldName = expr        — sets fieldName to the result of expr
+//   fieldName = expr        — sets fieldName to the result of expr (string or number)
 //   fieldName = fieldName + expr  — adds expr to fieldName's base value
 //
 // expr can include variable names (resolved from panel block, live DOM, or JSON),
-// literals, and any JS math expression using BUILTINS.
+// literals (including string literals like "Kyle" or "30ft"), and any JS math 
+// expression using BUILTINS.
+//
+// String support:
+//   name = "Kyle"           — sets name field to "Kyle"
+//   speed = 30 + "ft"       — sets speed field to "30ft"
+//   title = name + " Jr."   — concatenates name variable with " Jr."
 
-// Scans all active panel block formula fields and applies their computed
-// values as visual overrides to main sheet _value fields. The underlying
-// JSON is never touched; overrides are purely a display layer.
-//
-// Override resolution when multiple blocks target the same field:
-//   All formulas are evaluated independently, and the highest computed
-//   value is displayed.
-//
-// After computing overrides, fields that previously had overrides but
-// no longer do are restored to their JSON base values.
-//
-// Depends on: characterSelect, characters (global state)
 function applyPanelOverrides() {
     const selected = characterSelect.value;
     if (!selected || !characters[selected]) return;
@@ -1178,10 +1222,6 @@ function applyPanelOverrides() {
         // 3. Final fallback
         return (val === undefined || val === null || val === '') ? 0 : Number(val) || 0;
     }
-
-
-
-
 
     // First pass: collect all overrides per target field.
     // Separate into 'set' (name = value) and 'add' (name [operators]) operations.
@@ -1230,15 +1270,18 @@ function applyPanelOverrides() {
                 if (!overrideList[targetId]) overrideList[targetId] = [];
                 overrideList[targetId].push({
                     type: 'set',
-                    value: Number(computedValue) || 0,
+                    value: computedValue,  // Keep as-is (string or number)
+                    isString: typeof computedValue === 'string',
                     modifierExpr: null
                 });
             } else if (rest) {
                 // Modify mode: just store, don't evaluate yet
+                // Note: modifiers only work with numeric values
                 if (!overrideList[targetId]) overrideList[targetId] = [];
                 overrideList[targetId].push({
                     type: 'add',
                     value: 0,  // Will be calculated in second pass
+                    isString: false,
                     modifierExpr: rest
                 });
             }
@@ -1246,7 +1289,7 @@ function applyPanelOverrides() {
     });
 
     // Second pass: reduce each field's list of overrides.
-    // For sets: pick the highest value as the new base.
+    // For sets: if any are strings, use the first string; otherwise pick highest numeric value.
     // For modifies: parse by PEMDAS, combine, and evaluate using the DOM value.
     const overrides = {};
     Object.entries(overrideList).forEach(([targetId, list]) => {
@@ -1254,14 +1297,29 @@ function applyPanelOverrides() {
         const addOps = list.filter(o => o.type === 'add');
 
         // Start with highest set value, or 0 if no sets
-        let finalValue = setOps.length > 0 ? Math.max(...setOps.map(o => o.value)) : 0;
+        let finalValue = 0;
+        let finalIsString = false;
 
-        // Process modifiers if they exist
-        if (addOps.length > 0) {
+        if (setOps.length > 0) {
+            // Check if any set operations produced strings
+            const stringOps = setOps.filter(o => o.isString);
+            if (stringOps.length > 0) {
+                // If strings exist, use the first string value
+                finalValue = stringOps[0].value;
+                finalIsString = true;
+            } else {
+                // All numeric - pick the highest
+                finalValue = Math.max(...setOps.map(o => o.value));
+                finalIsString = false;
+            }
+        }
+
+        // Process modifiers if they exist (only for numeric base values)
+        if (addOps.length > 0 && !finalIsString) {
             const targetKey = targetId.replace(/_value$/, '');
 
             // For modifiers, determine base value by priority:
-            // 1. Highest set value (if sets exist)
+            // 1. Set value (if numeric sets exist)
             // 2. Base JSON value (if no sets)
             // 3. Zero (if field doesn't exist in JSON)
             let baseValue = finalValue;  // This is highest set or 0
@@ -1330,7 +1388,10 @@ function applyPanelOverrides() {
             finalValue = Number(modifierResult) || 0;
         }
 
-        overrides[targetId] = { value: finalValue };
+        overrides[targetId] = { 
+            value: finalValue,
+            isString: finalIsString
+        };
     });
 
     // Helper: Parse modifier expression by PEMDAS rules
@@ -1404,6 +1465,7 @@ function applyPanelOverrides() {
         el.value = override.value;
         el.dataset.overrideApplied = 'true';
         el.dataset.overrideValue = String(override.value);
+        el.dataset.overrideIsString = String(override.isString);
     });
 }
 
@@ -1411,7 +1473,7 @@ function applyPanelOverrides() {
 
 
 // ── Formula Evaluator ────────────────────────────────────────
-
+ 
 // Evaluates an "operation" object (as produced by parseFormulaToOperation
 // or stored in the character JSON) against a JSON data context and returns
 // the computed result as a string or number.
@@ -1419,10 +1481,15 @@ function applyPanelOverrides() {
 // Variable resolution for numeric types prefers JSON path traversal;
 // for string types (_mirror), it also checks the live DOM for _calculated fields.
 //
+// STRING SUPPORT:
+//   "Name"        — returns the string "Name"
+//   30 + "ft"     — evaluates 30, concatenates with "ft", returns "30ft"
+//   name + " Jr." — concatenates name variable with " Jr."
+//
 // Depends on: nothing external (self-contained recursive evaluator)
 function evaluateOperation(operationObj, jsonData) {
     if (!operationObj || operationObj.object_id !== 'operation') return '';
-
+ 
     function resolveByPath(obj, pathStr) {
         const parts = pathStr.split('_');
         for (let i = parts.length; i >= 1; i--) {
@@ -1436,7 +1503,7 @@ function evaluateOperation(operationObj, jsonData) {
         }
         return undefined;
     }
-
+ 
     function resolveByKey(obj, key) {
         if (!obj || typeof obj !== 'object') return undefined;
         if (obj[key] !== undefined) return obj[key];
@@ -1446,57 +1513,119 @@ function evaluateOperation(operationObj, jsonData) {
         }
         return undefined;
     }
-
+ 
     function resolveVar(name) {
         const clean = name.replace(/_(value|calculated)$/, '');
         let val = resolveByPath(jsonData, clean);
         if (val === undefined) val = resolveByKey(jsonData, clean);
-
+ 
         if (val && typeof val === 'object' && val.object_id === 'operation') {
             val = evaluateOperation(val, jsonData);
         }
-
+ 
         if (val && typeof val === 'object') return 0;
         return (val === undefined || val === '' || val === null) ? 0 : Number(val) || 0;
     }
-
+ 
     const BUILTINS = new Set([
         'Math', 'floor', 'ceil', 'round', 'abs', 'max', 'min', 'sqrt', 'pow',
         'parseInt', 'parseFloat', 'isNaN', 'isFinite', 'Number', 'String',
         'Boolean', 'true', 'false', 'null', 'undefined', 'Infinity', 'NaN'
     ]);
-
+ 
     let formula = (operationObj.value ?? '').trim();
     if (!formula) return '';
-
+ 
+    // Check if formula is a string literal (quoted string)
+    if ((formula.startsWith('"') && formula.endsWith('"')) || 
+        (formula.startsWith("'") && formula.endsWith("'"))) {
+        return formula.slice(1, -1);
+    }
+ 
     // Excel-style reference: =fieldName
     if (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(formula)) {
         let val = resolveByPath(jsonData, formula);
         if (val === undefined) val = resolveByKey(jsonData, formula);
-
+ 
         if (val && typeof val === 'object' && val.object_id === 'operation') {
             return evaluateOperation(val, jsonData);
         }
-
+ 
         return val ?? '';
     }
-
+ 
+    // Check if formula contains string concatenation (has + with quoted strings or variables)
+    if ((formula.includes('"') || formula.includes("'")) && formula.includes('+')) {
+        return evaluateStringExpression(formula);
+    }
+ 
     // Replace identifiers with numeric values for math expressions
     formula = formula.replace(/\b[a-zA-Z_][a-zA-Z0-9_]*\b/g, (match) => {
         if (BUILTINS.has(match)) return match;
         return resolveVar(match);
     });
-
+ 
     if (/[^0-9a-zA-Z_+\-*\/(). \t]/.test(formula)) {
         console.warn('Unsafe characters in formula:', formula);
         return '';
     }
-
+ 
     try {
         return Function(`"use strict"; return (${formula})`)();
     } catch (err) {
         console.warn('Failed to evaluate formula:', formula, err);
         return '';
+    }
+ 
+    // Helper to evaluate string concatenation expressions like: 30 + "ft" or name + " Jr."
+    function evaluateStringExpression(expr) {
+        expr = expr.trim();
+        let result = '';
+        
+        // Split by + but respect quoted strings
+        const parts = [];
+        let current = '';
+        let inQuotes = false;
+        let quoteChar = '';
+        
+        for (let i = 0; i < expr.length; i++) {
+            const char = expr[i];
+            
+            if ((char === '"' || char === "'") && (i === 0 || expr[i-1] !== '\\')) {
+                if (!inQuotes) {
+                    inQuotes = true;
+                    quoteChar = char;
+                } else if (char === quoteChar) {
+                    inQuotes = false;
+                }
+                current += char;
+            } else if (char === '+' && !inQuotes) {
+                if (current.trim()) parts.push(current.trim());
+                current = '';
+            } else {
+                current += char;
+            }
+        }
+        
+        if (current.trim()) parts.push(current.trim());
+        
+        // Evaluate each part
+        parts.forEach(part => {
+            part = part.trim();
+            if ((part.startsWith('"') && part.endsWith('"')) || 
+                (part.startsWith("'") && part.endsWith("'"))) {
+                // String literal
+                result += part.slice(1, -1);
+            } else {
+                // Variable or expression - evaluate numerically
+                let val = resolveByPath(jsonData, part);
+                if (val === undefined) val = resolveByKey(jsonData, part);
+                if (val === undefined || val === null || val === '') val = 0;
+                result += String(Number(val) || 0);
+            }
+        });
+        
+        return result;
     }
 }
 
@@ -1686,4 +1815,257 @@ document.getElementById('character-sheet').addEventListener('change', (e) => {
     // Re-apply panel overrides so any panel-driven bonuses reflect the
     // newly updated base values.
     applyPanelOverrides();
+});
+
+// ── Database Import System ────────────────────────────────────────────────────
+
+// Parses a filter value string like "3", "=3", "<=3", "<3", ">3", ">=3"
+// Returns { op, rawValue } where op is one of: '=', '<', '<=', '>', '>='
+// rawValue is the string after the operator (could be a number or future formula)
+function parseFilterValue(filterStr) {
+    if (!filterStr) return null;
+    filterStr = String(filterStr).trim();
+    let op = '=';
+    let rawValue = filterStr;
+    if (filterStr.startsWith('<=')) { op = '<='; rawValue = filterStr.slice(2).trim(); }
+    else if (filterStr.startsWith('>=')) { op = '>='; rawValue = filterStr.slice(2).trim(); }
+    else if (filterStr.startsWith('<'))  { op = '<';  rawValue = filterStr.slice(1).trim(); }
+    else if (filterStr.startsWith('>'))  { op = '>';  rawValue = filterStr.slice(1).trim(); }
+    else if (filterStr.startsWith('='))  { op = '=';  rawValue = filterStr.slice(1).trim(); }
+    return { op, rawValue };
+}
+
+// Evaluates a parsed filter against an item's field value.
+// threshold is the resolved numeric threshold.
+// itemVal is the value from the item being tested.
+function applyFilter(itemVal, op, threshold) {
+    const a = Number(itemVal);
+    const b = Number(threshold);
+    if (isNaN(a) || isNaN(b)) {
+        // Fall back to string equality for non-numeric values
+        return op === '=' ? String(itemVal) === String(threshold) : false;
+    }
+    switch (op) {
+        case '=':  return a === b;
+        case '<':  return a < b;
+        case '<=': return a <= b;
+        case '>':  return a > b;
+        case '>=': return a >= b;
+    }
+    return false;
+}
+
+// Resolves the filter threshold. Currently just parses as a number,
+// Resolves a filter threshold by passing rawValue through evaluateOperation
+// against the current character's JSON. This allows dynamic expressions like
+// "classes_firstclass_level" or "classes_firstclass_level / 2".
+function resolveFilterThreshold(rawValue) {
+    const num = parseFloat(rawValue);
+    if (!isNaN(num)) return num;  // Plain number, no need to evaluate
+    try {
+        const selected = characterSelect ? characterSelect.value : '';
+        const characterData = (selected && characters[selected]) ? characters[selected] : {};
+        const op = parseFormulaToOperation(rawValue);
+        const result = evaluateOperation(op, characterData);
+        const resolved = parseFloat(result);
+        return isNaN(resolved) ? null : resolved;
+    } catch (e) {
+        return null;
+    }
+}
+
+// Finds database entries for a given panel's import button.
+// btn: the import button element with data attributes
+// Returns an array of item objects ready to pass to addPanelBlock.
+function getDatabaseItemsForPanel(btn) {
+    const panelId = btn.dataset.panelId;
+    const dbKey   = btn.dataset.dbKey;       // e.g. "spells" or "classes"
+    const filterKey   = btn.dataset.filterKey;   // e.g. "level"
+    const filterValue = btn.dataset.filterValue; // e.g. "<=3", "=1", "<=classes_firstclass_level"
+
+    if (!dbKey) return [];
+
+    // Resolve threshold once
+    const parsed = filterValue ? parseFilterValue(filterValue) : null;
+    const threshold = parsed ? resolveFilterThreshold(parsed.rawValue) : null;
+
+    let items = [];
+
+    if (dbKey === 'classes') {
+        // Look up the class name from the class dropdown
+        const classNameEl = document.getElementById('classes_firstclass_name');
+        const className = classNameEl ? classNameEl.value.trim().toLowerCase() : '';
+
+        // Find the database file whose filename (minus .json) matches the class name
+        const classFile = Object.values(database).find(f =>
+            f.Key === 'classes' &&
+            Object.keys(database).find(k => database[k] === f &&
+                k.replace('.json', '').toLowerCase() === className)
+        );
+
+        if (!classFile) return [];
+
+        // Pull features array from the class file
+        items = Array.isArray(classFile.features) ? classFile.features : [];
+
+    } else if (dbKey === 'spells') {
+        // Find the spells database file (Key === "spells")
+        const spellFile = Object.values(database).find(f => f.Key === 'spells');
+        if (!spellFile) return [];
+
+        items = Array.isArray(spellFile.spells) ? spellFile.spells : [];
+
+        // Optionally filter to only spells in the class spell list
+        const classNameEl = document.getElementById('spellcasting_class_value');
+        const className = classNameEl ? classNameEl.value.trim().toLowerCase() : '';
+        if (className) {
+            const classFile = Object.values(database).find(f =>
+                f.Key === 'classes' &&
+                Object.keys(database).find(k => database[k] === f &&
+                    k.replace('.json', '').toLowerCase() === className)
+            );
+            if (classFile && Array.isArray(classFile.spells)) {
+                const allowed = new Set(classFile.spells.map(s => s.toLowerCase()));
+                items = items.filter(item => allowed.has((item.name || '').toLowerCase()));
+            }
+        }
+    }
+
+    // Apply filter if present
+    if (parsed && filterKey && threshold !== null) {
+        items = items.filter(item => applyFilter(item[filterKey], parsed.op, threshold));
+    }
+
+    return items;
+}
+
+// ── Import Modal ──────────────────────────────────────────────────────────────
+
+// Creates and shows a searchable import modal for the given panel/items.
+function showImportModal(panelId, items) {
+    // Remove any existing modal
+    const existing = document.getElementById('db-import-modal');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'db-import-modal';
+    modal.style.cssText = `
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        background: #fff; border: 2px solid #000; padding: 12px;
+        z-index: 9999; width: 320px; max-height: 480px;
+        display: flex; flex-direction: column; gap: 8px;
+        box-shadow: 4px 4px 0 #000;
+    `;
+
+    // Header
+    const header = document.createElement('div');
+    header.style.cssText = 'display:flex; justify-content:space-between; align-items:center;';
+    const title = document.createElement('strong');
+    title.textContent = 'Import from Database';
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '×';
+    closeBtn.style.cssText = 'border:none; background:none; font-size:18px; cursor:pointer; line-height:1;';
+    closeBtn.onclick = () => modal.remove();
+    header.appendChild(title);
+    header.appendChild(closeBtn);
+
+    // Search input
+    const search = document.createElement('input');
+    search.type = 'text';
+    search.placeholder = 'Search...';
+    search.style.cssText = 'width:100%; box-sizing:border-box; border:1px solid #000; padding:4px 6px; font-size:13px; font-family:inherit;';
+
+    // List
+    const list = document.createElement('div');
+    list.style.cssText = 'overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:3px;';
+
+    function renderList(query) {
+        list.innerHTML = '';
+        const q = query.trim().toLowerCase();
+        const filtered = q ? items.filter(item =>
+            (item.name || '').toLowerCase().includes(q)
+        ) : items;
+
+        if (filtered.length === 0) {
+            const empty = document.createElement('div');
+            empty.textContent = 'No results.';
+            empty.style.cssText = 'color:#888; font-size:12px; padding:4px;';
+            list.appendChild(empty);
+            return;
+        }
+
+        filtered.forEach(item => {
+            const row = document.createElement('div');
+            row.style.cssText = `
+                display:flex; justify-content:space-between; align-items:center;
+                padding:4px 6px; border:1px solid #ccc; cursor:pointer;
+                font-size:12px; font-family:inherit;
+            `;
+            row.onmouseover = () => row.style.background = '#f0e6d3';
+            row.onmouseout  = () => row.style.background = '';
+
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = item.name || '(unnamed)';
+            if (item.level !== undefined) {
+                nameSpan.textContent += ` (Lv ${item.level})`;
+            }
+
+            const addBtn = document.createElement('button');
+            addBtn.textContent = '+';
+            addBtn.style.cssText = 'border:1px solid #000; background:#fff; cursor:pointer; width:20px; height:20px; line-height:1; padding:0; font-size:14px;';
+            addBtn.onclick = (e) => {
+                e.stopPropagation();
+                addPanelBlock(panelId, item);
+                modal.remove();
+            };
+
+            row.appendChild(nameSpan);
+            row.appendChild(addBtn);
+            row.ondblclick = () => {
+                addPanelBlock(panelId, item);
+                modal.remove();
+            };
+            list.appendChild(row);
+        });
+    }
+
+    search.addEventListener('input', () => renderList(search.value));
+    renderList('');
+
+    modal.appendChild(header);
+    modal.appendChild(search);
+    modal.appendChild(list);
+    document.body.appendChild(modal);
+
+    // Close on outside click
+    setTimeout(() => {
+        document.addEventListener('click', function handler(e) {
+            if (!modal.contains(e.target)) {
+                modal.remove();
+                document.removeEventListener('click', handler);
+            }
+        });
+    }, 0);
+
+    search.focus();
+}
+
+// ── Wire up import buttons ────────────────────────────────────────────────────
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[id$="_import_button"]').forEach(btn => {
+        // Derive panelId from button id: "spells_third_import_button" -> "spells_third"
+        const panelId = btn.id.slice(0, -'_import_button'.length);
+        btn.dataset.panelId = panelId;
+
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const items = getDatabaseItemsForPanel(btn);
+            if (items.length === 0) {
+                alert('No database loaded or no items match the filter. Load a Database Folder first.');
+                return;
+            }
+            showImportModal(panelId, items);
+        });
+    });
 });

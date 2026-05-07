@@ -7,8 +7,9 @@ __pycache__/
 .env
 # SRD Seeder generated data
 dev/scripts/srd_seeder/data/
-
+.gitignore
 dev/backend/Backend/obj
 dev/backend/Backend/bin
 .continue/
 .editorconfig
+usersecrets.json
