@@ -16,8 +16,8 @@
                         <v-select
                             v-for="(item, index) in store.character_state.feat_amt"
                             :key="index"
-                            v-model="store.character_state['text.features'][index]"
-                            :items="feats"
+                            v-model="store.character_state.panels.features[index]"
+                            :items="feats[0].feats"
                             item-title="name"
                             :rules="[required]"
                             label="Feats"
@@ -68,7 +68,9 @@
      */
     onMounted(async () => {
         const feat_data = await fetchApiData('api/srd/features')
+        console.log(feat_data)
         setCharCreateArrayData(feats, feat_data)
+        console.log(feats.value[0].feats)
     })
 </script>
 

@@ -13,7 +13,7 @@
             </v-row>
             <v-row>
                 <v-col cols="3" class="ml-4 mr-16">
-                    <!-- Selected spell leve dropdown -->
+                    <!-- Selected spell level dropdown -->
                     <v-select
                         v-model="store.character_state.selected_level"
                         :items="Object.values(levels)"
@@ -29,7 +29,7 @@
                             v-for="(item, index) in store.character_state.spell_amt[store.character_state.selected_level]"
                             :key="index"
                             v-model="spellModel(store.character_state.selected_level, index).value"
-                            :items="spells.filter(n => n.level === store.character_state.selected_level)"
+                            :items="spells.filter(n => n.level == store.character_state.selected_level)"
                             item-title="name"
                             :rules="[required]"
                             label="Spell"
@@ -51,6 +51,7 @@
     const form = ref(null)                       // for input validation
     const store = useCharacterCreationStore()    // pinia store for character creation
     const spells = ref([])                       // array of all spells
+    const char_class = (store.character_state.classes.firstclass.name)
     const levels = {
         "Cantrips" : 0,
         "1st": 1,
@@ -64,17 +65,28 @@
         "9th": 9
     }
 
+
     /**
      * Trims spells so that only spells selectable by the user's current class are shown
      */
-    function trimSpells() {
-        const char_class = (store.character_state.classes.firstclass.name).toLowerCase()
-        for(let i = 0; i < spells.value.length; i++) {
-            if(!((spells.value[i].classes).includes(char_class))) {
-                spells.value.splice(i, 1)
-                i--
-            }
+    async function trimSpells() {
+        const classes = await fetchApiData('api/srd/classes')
+        // Check if the player's class is valid
+        for(let i = 0; i < classes.length; i++) {
+            if(char_class === classes[i].name) {
+                const spell_list = classes[i].spells
+
+                // Remove all spells which are not in the player class spell list
+                for(let i = 0; i < spells.value.length; i++) {
+                    if(!(spell_list.includes(spells.value[i].name))) {
+                        spells.value.splice(i, 1)
+                        i--
+                    }
+                }
+                return
+            } 
         }
+        
     }
 
     /**
@@ -86,11 +98,10 @@
      */
     function spellModel(level, index) {
         return computed({
-            get: () => store.character_state.spells[level][index],
+            get: () => store.character_state.panels.spells[level][index],
             set: value => {
-                store.character_state.spells[level][index] = {
+                store.character_state.panels.spells[level][index] = {
                     ...value,
-                    prepared: false,
                 }
             }
         })
@@ -129,7 +140,7 @@
     })
 
     onBeforeMount(() => {
-        console.log(store.character_state.spells)
+        console.log(store.character_state.panels.spells)
     })
 </script>
 

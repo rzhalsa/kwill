@@ -19,6 +19,7 @@ export function savePageData(data) {
 export async function fetchApiData(path) {
     try {
         const response = await api.get(`${path}`)
+        console.log(response.data)
         return response.data
     } catch (error) {
         console.error("Failed to fetch API data: ", error)
@@ -34,6 +35,14 @@ export function setCharCreateArrayData(arr, data) {
     for(let i = 0; i < data.length; i++) {
         if(!arr.value.includes(data[i].name)) { // prevent duplicates
             arr.value.push(data[i])
+        }
+    }
+}
+
+export function setRaceArrayData(arr, data) {
+    for(let i = 0; i < data[0].races.length; i++) {
+        if(!arr.value.includes(data[0].races[i].name)) {
+            arr.value.push(data[0].races[i].name)
         }
     }
 }

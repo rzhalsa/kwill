@@ -99,28 +99,42 @@
         </v-card>
     </v-dialog>
 
-    <v-dialog v-model="showDownloadDialog" width="50dvw">
-        <v-card>
-            <v-card-title>Download Character Sheet</v-card-title>
-            <v-divider></v-divider>
-            <v-card-text>
-                <div class="d-flex flex-column gap-4">
-                    <div class="d-flex flex-column gap-2">
-                        <v-radio-group v-model="selectedSheetType">
-                            <v-radio label="Download Simple Character Sheet" value="simple"></v-radio>
-                            <v-radio label="Download Smart Character Sheet" value="smart"></v-radio>
-                        </v-radio-group>
-                    </div>
-                    <v-divider></v-divider>
-                    <v-checkbox v-model="includeCharData" label="Include character data"></v-checkbox>
+<v-dialog v-model="showDownloadDialog" width="50dvw">
+    <v-card>
+        <v-card-title>Download Character Sheet</v-card-title>
+        <v-divider></v-divider>
+        <v-card-text>
+            <div class="d-flex flex-column gap-4">
+                <div class="d-flex flex-column gap-2">
+                    <v-radio-group v-model="selectedSheetType">
+                        <v-radio label="Download Simple Character Sheet" value="simple"></v-radio>
+                        <v-radio label="Download Smart Character Sheet" value="smart"></v-radio>
+                    </v-radio-group>
                 </div>
-            </v-card-text>
-            <v-card-actions class="d-flex justify-end gap-2">
-                <v-btn variant="text" @click="showDownloadDialog = false">Cancel</v-btn>
-                <v-btn color="primary" @click="downloadSheet">Download</v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
+                <v-divider></v-divider>
+                <v-checkbox 
+                    v-model="includeCharData" 
+                    label="Include character data"
+                    @update:model-value="(val) => includeCharData = val"
+                ></v-checkbox>
+                <v-checkbox 
+                    v-model="includeDataFolder" 
+                    label="Include data folder"
+                    @update:model-value="(val) => includeDataFolder = val"
+                ></v-checkbox>
+            </div>
+        </v-card-text>
+        <v-card-actions class="d-flex justify-end gap-2">
+            <v-btn variant="text" @click="showDownloadDialog = false">Cancel</v-btn>
+            <v-btn color="primary" @click="downloadSheet">Download</v-btn>
+        </v-card-actions>
+    </v-card>
+</v-dialog>
+
+
+
+
+
     <v-dialog v-model="showLoginDialog" width="50dvw">
         <v-card>
             <v-card-title>Login Required</v-card-title>
@@ -222,6 +236,7 @@ const sheetRef = ref();
 const charData = ref();
 const spellData = ref();
 const includeCharData = ref(false);
+const includeDataFolder = ref(false);
 const showDownloadDialog = ref(false);
 const showImportDialog = ref(false);
 const selectedSheetType = ref('simple');
@@ -432,10 +447,24 @@ async function downloadSheet() {
     // Add character data ONLY if checkbox is selected
     if (includeCharData.value) {
         const characterData = sheetRef.value.getCharacterData();
-    charactersFolder.file(
-        `${characterData.name || 'character'}.json`, 
-        JSON.stringify(characterData, null, 2)
-    );
+        charactersFolder.file(
+            `${characterData.name || 'character'}.json`, 
+            JSON.stringify(characterData, null, 2)
+        );
+    }
+
+    // Add data folder ONLY if checkbox is selected
+    if (includeDataFolder.value) {
+        const dataFolder = zip.folder('data');
+        
+        // Import all JSON files from data folder
+        const dataModules = import.meta.glob('../sheets/data/*.json', { as: 'raw' });
+        
+        for (const [path, importFn] of Object.entries(dataModules)) {
+            const content = await importFn();
+            const fileName = path.split('/').pop(); // Extract filename
+            dataFolder.file(fileName, content);
+        }
     }
 
     // Generate and download zip

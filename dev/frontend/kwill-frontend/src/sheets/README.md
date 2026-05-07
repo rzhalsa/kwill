@@ -3,8 +3,6 @@ This is the WIP version of the html character sheet and json data structure for 
 ### JSON
 The information associated with a dnd character will be stored as a json file. This information will be parsed by javascript embedded into the Kwill character sheet to automatically populate fields with stored or calculated values.
 
-Every character.json will contain the user_id and character_id keys for storing online on our database.
-
 The json is and will be html agnostic, meaning that any html with the proper javascript should be able to interact with the json files.
 
 ### HTML
