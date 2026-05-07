@@ -135,10 +135,6 @@
                                         style="width:14px; height:14px; cursor:pointer; accent-color:#8b6914; flex-shrink:0;">
                                 </div>
                                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                                    <label
-                                        style="font-size:11px; color:#555; display:flex; align-items:center; gap:3px; cursor:pointer;">
-                                        <input type="checkbox" id="showstats_value" v-model="spell.showstats" checked> Stats in tooltip
-                                    </label>
                                     <v-btn color="error" class="ma-2" size="compact" icon="mdi-close" @click.stop="removeSpell(index)"></v-btn>
                                 </div>
                             </div>
@@ -170,29 +166,41 @@ const props = defineProps({
     title: String,
     level: Number
 })
-
+/**
+ * Handles opening the spell import dialog and setting the appropriate spell level in the store. The dialog itself watches for changes in the spell level and class filter to fetch and display the correct spells for import.
+ */
 function spellImportHandle() {
     spellStore.level = props.level;
     spellStore.showImport = true;
 }
-
-watch(() => spellStore.level, 
-    async (newLevel) => {
-    if (newLevel !== null && spellStore.showImport) {
-        fetchSpellData(newLevel);
+/**
+ * Watches for changes in spell dialog level or class filter, and fetches spell data accordingly when the import dialog is open.
+ */
+watch(
+    () => [spellStore.level, spellStore.classFilter],
+    async ([newLevel, newClass]) => {
+        if (newLevel !== null && spellStore.showImport) {
+            await fetchSpellData(newLevel, newClass);
+        }
     }
-});
-
-async function fetchSpellData(level) {
+);
+/**
+ * Fetches spell data for the specified level and class filter.
+ * @param level 
+ * @param classFilter 
+ */
+async function fetchSpellData(level, classFilter) {
     try {
-        const response = await api.get(`/api/srd/spells/level/${level}`)
+        const response = await api.get(`/api/srd/spells?level=${level}${classFilter ? `&class=${classFilter}` : ''}`)
         spellStore.spells = response.data;
     } catch (error) {
         console.error(`Failed to fetch spell data for level ${level}:`, error);
         throw error;
     }
 }
-
+/**
+ * Adds a new spell to the character model with default values. Emits an event to the parent component to handle the actual addition to the character data structure.
+ */ 
 function addSpell(){
     const newSpell = {
         level: "0",

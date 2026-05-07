@@ -236,6 +236,126 @@ namespace Kwill.Api.Services
             var result = await response.Content.ReadFromJsonAsync<TurnstileResponse>();
             return result?.Success == true;
         }
+        public async Task<AuthResponse> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword)
+        {
+            // Validate new password
+            if (string.IsNullOrWhiteSpace(newPassword))
+            {
+                return new AuthResponse
+                {
+                    Success = false,
+                    Message = "New password is required."
+                };
+            }
+
+            if (newPassword.Length < 8)
+            {
+                return new AuthResponse
+                {
+                    Success = false,
+                    Message = "New password must be at least 8 characters long."
+                };
+            }
+
+            // Get user from database
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+
+            if (user == null)
+            {
+                return new AuthResponse
+                {
+                    Success = false,
+                    Message = "User not found."
+                };
+            }
+
+            // Verify current password
+            var verifyResult = _passwordHasher.VerifyHashedPassword(
+                user,
+                user.PasswordHash,
+                currentPassword
+            );
+
+            if (verifyResult == PasswordVerificationResult.Failed)
+            {
+                return new AuthResponse
+                {
+                    Success = false,
+                    Message = "Current password is incorrect."
+                };
+            }
+
+            // Hash and update new password
+            user.PasswordHash = _passwordHasher.HashPassword(user, newPassword);
+            await _db.SaveChangesAsync();
+
+            return new AuthResponse
+            {
+                Success = true,
+                Message = "Password changed successfully."
+            };
+        }
+
+        public async Task<AuthResponse> DeleteAccountAsync(Guid userId, string password)
+        {
+            // Get user from PostgreSQL
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+
+            if (user == null)
+            {
+                return new AuthResponse
+                {
+                    Success = false,
+                    Message = "User not found."
+                };
+            }
+
+            // Verify password
+            var verifyResult = _passwordHasher.VerifyHashedPassword(
+                user,
+                user.PasswordHash,
+                password
+            );
+
+            if (verifyResult == PasswordVerificationResult.Failed)
+            {
+                return new AuthResponse
+                {
+                    Success = false,
+                    Message = "Password is incorrect."
+                };
+            }
+
+            // Delete user's characters from MongoDB
+            var userFilter = Builders<BsonDocument>.Filter.Eq("userid",
+                new BsonBinaryData(userId, GuidRepresentation.Standard));
+            var mongoUser = await _mongoDb.Users.Find(userFilter).FirstOrDefaultAsync();
+
+            if (mongoUser != null && mongoUser.Contains("characterIds"))
+            {
+                var characterIds = mongoUser["characterIds"].AsBsonArray;
+
+                // Delete each character
+                foreach (var charId in characterIds)
+                {
+                    var charFilter = Builders<BsonDocument>.Filter.Eq("characterid", charId);
+                    await _mongoDb.CharacterSheets.DeleteOneAsync(charFilter);
+                }
+            }
+
+            // Delete user from MongoDB
+            await _mongoDb.Users.DeleteOneAsync(userFilter);
+
+            // Delete user from PostgreSQL
+            _db.Users.Remove(user);
+            await _db.SaveChangesAsync();
+
+            return new AuthResponse
+            {
+                Success = true,
+                Message = "Account deleted successfully."
+            };
+        }
 
         private class TurnstileResponse
         {

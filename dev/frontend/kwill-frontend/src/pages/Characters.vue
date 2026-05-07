@@ -95,7 +95,7 @@
             </v-card-text>
             <v-card-actions class="d-flex justify-end gap-2">
                 <v-btn variant="text" @click="closeImportDialog">Cancel</v-btn>
-                <v-btn color="primary" @click="importFile" :disabled="!selectedFile">Import</v-btn>
+                <v-btn color="primary" @click="importFile" :disabled="!selectedFile || !selectedImportType">Import</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -154,6 +154,15 @@
             <v-card-title v-else>Import Level {{ spellStore.level }} Spells</v-card-title>
             <v-divider></v-divider>
             <v-card-text>
+                <v-row>
+                <v-select 
+                    v-model="spellStore.classFilter" 
+                    class="mr-3"
+                    label="Class" variant="outlined" 
+                    style="max-width: fit-content;"
+                    :items="['paladin','bard','warlock','ranger','fighter','rogue','wizard','cleric','barbarian','sorcerer','monk','druid']" 
+                    clearable
+                    ></v-select>
                  <v-autocomplete
                     v-model="selectedSpell"
                     :items="spellStore.spells"
@@ -162,7 +171,8 @@
                     label="Select a spell to import"
                     variant="outlined"
                     clearable/>
-                    <v-btn color="primary" @click="sheetRef.handleAddSpell(spellStore.level, selectedSpell)" :disabled="!selectedSpell">Add Spell</v-btn>
+                </v-row>
+                <v-btn color="primary" @click="sheetRef.handleAddSpell(spellStore.level, selectedSpell)" :disabled="!selectedSpell">Add Spell</v-btn>
             </v-card-text>
             <v-card-actions class="d-flex justify-end gap-2">
                 <v-btn variant="text" @click="spellStore.showImport = false">Close</v-btn>
@@ -227,6 +237,8 @@ const characterToDelete = ref(null);
 const selectedSpell = ref(null);
 const selectedFeature = ref(null);
 const selectedImportType = ref(null);
+const selectedClassSpells = ref(null);
+const selectedClassFeatures = ref(null);
 /**
  * Responsible for updating and populating values on the chracter sheet.
  */
@@ -279,6 +291,18 @@ async function fetchCharsName() {
         console.error('Failed to fetch character data:', error);
     }
 }
+/**
+ * Wipes previous selections for importing spells.
+ */
+watch(
+    () => [spellStore.level, spellStore.classFilter, spellStore.showImport],
+    ([level, classFilter, open]) => {
+        if (open) {
+            selectedSpell.value = null;
+            spellStore.classFilter = null;
+        }
+    }
+);
 /**
  * Sends the currenttly selected chracter to the backend to delete the character data. It retrieves the characterId from the sheet component, 
  * sends it to the backend, and then refreshes the character list and data to reflect any changes.
@@ -349,6 +373,15 @@ async function importFile() {
         console.log('File text:', text);
         console.log('Parsed:', JSON.parse(text));
         const parsed = JSON.parse(text);
+
+        // remove Mongo-generated identifiers
+        delete parsed._id;
+        delete parsed.characterid;
+
+        // remove bad accidental key if present
+        if (parsed.spells) {
+            delete parsed.spells["[object Object]"];
+        }
         if(selectedImportType.value === 'new'){
             createNewCharacter(parsed, userID.value);
             await fetchCharsName();

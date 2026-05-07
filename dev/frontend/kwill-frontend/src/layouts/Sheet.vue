@@ -102,7 +102,7 @@
                                 <div style="text-align: center;" data-label>AC</div>
                             </div>
                             <div>
-                                <input v-model="character.initiative" autocomplete="off" type="text" inputmode="numeric"
+                                <input v-model="initiativeBonus" autocomplete="off" type="text" inputmode="numeric" readonly=""
                                     oninput="this.value=this.value.replace(/[^0-9+\-]/g,'').replace(/(?!^)[+\-]/g,'')"
                                     style="width: 50px; height: 50px; border: 2px solid #000; display: flex; margin: 5px; text-align: center;">
                                 <div style="text-align: center;" data-label>Initiative</div>
@@ -327,83 +327,25 @@
                     <div
                         style="height: 220px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px;">
                         <SpellPanels :character="character" :title="'Cantrips'" :level="0" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
-                        <!--<span style="text-align: center;" data-label>Cantrips</span>
-                        <div class="row" style="gap: 10px;">
-                             Cantrips 
-                            <div class="col">
-                                <input v-for="i in character.spells[0].length" :key="i" v-model="character.spells[0][i - 1].name" type="text"
-                                    class="line-input">
-                            </div>
-                            
-                            <div class="col">
-                                <input v-for="i in 6" :key="i" v-model="character.spells[0][i + 6]" type="text"
-                                    class="line-input">
-                            </div>
-                        </div>-->
                     </div>
                     <div style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <!--<span style="text-align: center;" data-label>1st Level</span>
-                        <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                             Level 1 
-                            <div v-for="i in character.spells[1].length" :key="i"
-                                style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
-                                <input type="checkbox" v-model="character.spells[1][i - 1].prepared">
-                                <input type="text" class="line-input" v-model="character.spells[1][i - 1].name">
-                            </div>
-                        </div>-->
                         <SpellPanels :character="character" :title="'1st Level'" :level="1" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
                     </div>
                     <div style="height: 275px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <!--<span style="text-align: center;" data-label>2nd Level</span>
-                        <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                             Level 2
-                            <div v-for="i in character.spells[2].length" :key="i"
-                                style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
-                                <input type="checkbox" v-model="character.spells[2][i - 1].prepared">
-                                <input type="text" class="line-input" v-model="character.spells[2][i - 1].name">
-                            </div>
-                        </div>-->
                         <SpellPanels :character="character" :title="'2nd Level'" :level="2" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
                     </div>
                 </div>
 
                 <div class="col">
                     <div style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <!--<span style="text-align: center;" data-label>3rd Level</span>
-                        <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                             Level 3 
-                            <div v-for="(i) in character.spells[3].length" :key="i"
-                                style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
-                                <input type="checkbox" v-model="character.spells[3][i - 1].prepared">
-                                <input type="text" class="line-input" v-model="character.spells[3][i - 1].name">
-                            </div>
-                        </div>-->
                         <SpellPanels :character="character" :title="'3rd Level'" :level="3" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
                     </div>
                     <div
                         style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <!--<span style="text-align: center;" data-label>4th Level</span>
-                        <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                             Level 4
-                            <div v-for="i in character.spells[4].length" :key="i"
-                                style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
-                                <input type="checkbox" v-model="character.spells[4][i - 1].prepared">
-                                <input type="text" class="line-input" v-model="character.spells[4][i - 1].name">
-                            </div>
-                        </div>-->
                         <SpellPanels :character="character" :title="'4th Level'" :level="4" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
                     </div>
                     <div
                         style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <!--<span style="text-align: center;" data-label>5th Level</span>
-                        <div class="row" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
-                                Level 5
-                            <div v-for="i in character.spells[5].length" :key="i"
-                                style="display:flex; align-items:center; gap: 5px; flex:1; min-height: 0;">
-                                <input type="checkbox" v-model="character.spells[5][i - 1].prepared">
-                                <input type="text" class="line-input" v-model="character.spells[5][i - 1].name">
-                            </div>
-                        </div>-->
                         <SpellPanels :character="character" :title="'5th Level'" :level="5" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
                     </div>
                 </div>
@@ -438,6 +380,7 @@
     import FeaturePanels from '../panels/FeaturePanels.vue';
     import SpellPanels from '../panels/SpellsPanels.vue';
     import { useAuthStore } from '../stores/user_login_state';
+    import {evaluateOperation} from '../components/formulaEvaluator.js';
     const characterStore = useCharacterCreationStore();
     const authStore = useAuthStore();
     const userId = computed(() => authStore.user?.userId);
@@ -445,6 +388,13 @@
     const amourBonus = ref(0);
     const changeCount = ref(0);
     const suppressSave = ref(false);
+
+    defineExpose({
+    populateSheet,
+    getCharacterData,
+    handleAddSpell,
+    handleAddFeature
+    });
     
      // ability mapping
     const skillAbilityMap = {
@@ -486,11 +436,6 @@
             const label = abilityLabels[key];
             //calculates saves mod
             character.saves[key].modifier = modifier + (character.saves[key].proficiency ? proficiencyBonus.value : 0);
-            //calculates AC
-            if(key == "dexterity")
-            {
-                character.ac = modifier + 10 + amourBonus.value;
-            }
             //populates list
             list.push({
                 name:key,
@@ -509,6 +454,12 @@
     function getAbiltyMod(score) {
         return Math.floor((score - 10) / 2);
     }
+
+    //Calculates initiative bonus from dex mod
+    const initiativeBonus = computed(() => {
+        const dexMod = getAbiltyMod(character.ability.dexterity.score);
+        character.initiative = dexMod;
+        return dexMod;});
 
     //Groups skills and connects skills to abilities
     const groupedSkills = computed(() => {
@@ -557,12 +508,43 @@ function getCharacterData() {
     return JSON.parse(JSON.stringify(character));
 }
 
-defineExpose({
-    populateSheet,
-    getCharacterData,
-    handleAddSpell,
-    handleAddFeature
-});
+function evaluateSpellFormula(formula, character){
+    return evaluateOperation(
+        {object_id: "operation", value: formula},
+        {
+            character
+        }
+    )
+}
+
+function applySpellEffects(spell) {
+    let charData = JSON.parse(JSON.stringify(character));
+    const result = evaluateSpellFormula(spell.formula, charData);
+    console.log(result);
+}
+function removeSpellEffects(spell, character) {
+    console.log('removed');
+}
+
+watch(
+    () => character.panels.spells,
+    (spells) => {
+        for (const level in spells) {
+            for (const spell of spells[level]) {
+                if (spell.formula_active) {
+                    applySpellEffects(spell);
+                }
+                if (!spell.formula_active) {
+                    console.log('removing spell effects');
+                }
+            }
+        }
+    },
+    { deep: true }
+);
+
+
+
 
 //Check that prevents API spams with a half second interval incase someone spams three changes quickly
 const debounceUpdate = debounce((newVal)=>{

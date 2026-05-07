@@ -11,7 +11,7 @@
                     <v-form v-model="form" @submit.prevent="createAccount">
                         <v-text-field class="mt-2 px-10" :rules="[required, validEmail]" v-model="email" label="Email*:" variant="outlined"></v-text-field>
                         <v-text-field class="mt-2 px-10" :rules="[required]" v-model="username" label="Username*:" variant="outlined"></v-text-field>
-                        <v-text-field class="mt-2 px-10" :rules="[required, passwordStrength, noMatch]" v-model="password" label="Password*:" variant="outlined" :type="showPassword ? 'text':'password'"
+                        <v-text-field class="mt-2 px-10" :rules="[required, passwordStrength]" v-model="password" label="Password*:" variant="outlined" :type="showPassword ? 'text':'password'"
                             :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'" @click:append-inner="showPassword = !showPassword"></v-text-field>
                         <div class="text-caption px-10 ">Password Must Contain:</div>
                         <div class="text-caption px-14">*At least 8 characters</div>

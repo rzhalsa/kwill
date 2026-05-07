@@ -77,14 +77,6 @@ namespace Kwill.Api.Services
                 var characterId = Guid.NewGuid();
                 doc["characterid"] = new BsonBinaryData(characterId, GuidRepresentation.Standard);
 
-                var srdData = await LoadSrdDataAsync();
-                var validation = CharacterSheetValidator.ValidateCharacterSheet(doc, srdData);
-                if (!validation.IsValid)
-                {
-                    Console.WriteLine($"Validation failed: {string.Join(", ", validation.Errors)}");
-                    return (false, null, validation.Errors, null);
-                }
-
                 // Insert character document (without userid field)
                 await _db.CharacterSheets.InsertOneAsync(doc);
 
@@ -127,12 +119,6 @@ namespace Kwill.Api.Services
                 
                 if (!characterIds.Contains(characterIdBinary))
                     return (false, null, null, null, false, true);
-
-                var srdData = await LoadSrdDataAsync();
-                var validation = CharacterSheetValidator.ValidateCharacterSheet(doc, srdData);
-
-                if (!validation.IsValid)
-                    return (false, null, validation.Errors, null, false, false);
 
                 await _db.CharacterSheets.ReplaceOneAsync(filter, doc);
                 return (true, doc, null, null, false, false);

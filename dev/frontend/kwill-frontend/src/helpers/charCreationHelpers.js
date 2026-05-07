@@ -62,5 +62,7 @@ export async function createNewCharacter(characterData, userId){
         return response.data;
     } catch (error) {
         console.error("Failed to post API data: ", error)
+        console.error(error.response)
+        console.error(error.response.data)
     }
 }

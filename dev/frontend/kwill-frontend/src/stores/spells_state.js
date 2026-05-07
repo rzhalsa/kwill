@@ -7,5 +7,7 @@ export const useSpellDialogStore = defineStore('spellDialog', {
     level: null, // which level we're working with
     showFeatImport: false,
     features: [],
+    classFilter: null,
+    classFilterFeat: null,
   })
 })

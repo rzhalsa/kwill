@@ -55,5 +55,60 @@ namespace Kwill.Api.Controllers
                 Email = email
             });
         }
+        [Authorize]
+        [HttpPut("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+        {
+            try
+            {
+                // Get user ID from JWT token
+                var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (!Guid.TryParse(userIdClaim, out Guid userId))
+                {
+                    return Unauthorized(new { success = false, message = "Invalid user token" });
+                }
+
+                var result = await _authService.ChangePasswordAsync(userId, request.CurrentPassword, request.NewPassword);
+
+                if (!result.Success)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
+
+        [Authorize]
+        [HttpDelete("account")]
+        public async Task<IActionResult> DeleteAccount([FromBody] DeleteAccountRequest request)
+        {
+            try
+            {
+                // Get user ID from JWT token
+                var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (!Guid.TryParse(userIdClaim, out Guid userId))
+                {
+                    return Unauthorized(new { success = false, message = "Invalid user token" });
+                }
+
+                var result = await _authService.DeleteAccountAsync(userId, request.Password);
+
+                if (!result.Success)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
     }
 }

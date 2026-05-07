@@ -79,7 +79,7 @@ import { ref, watch } from 'vue';
 import {useSpellDialogStore} from '../stores/spells_state.js';
 import '../sheets/assets/styles.css';
 import api from '../services/api';
-const emit = defineEmits(['add-feature'], ['remove-feature']);
+const emit = defineEmits(['add-feature', 'remove-feature']);
 const spellStore = useSpellDialogStore();
 defineProps({
     character: {
@@ -106,8 +106,8 @@ function addFeature(){
 async function fetchFeatureData() {
     try {
         const response = await api.get(`/api/srd/features`)
-        spellStore.features = response.data;
-        console.log(`Fetched feature data:`, response.data);
+        spellStore.features = response.data[0].feats;
+        console.log(`Fetched feature data:`, response.data[0].feats);
     } catch (error) {
         console.error(`Failed to fetch feature data:`, error);
         throw error;
