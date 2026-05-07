@@ -309,8 +309,8 @@ async function fetchCharsName() {
  * Wipes previous selections for importing spells.
  */
 watch(
-    () => [spellStore.level, spellStore.classFilter, spellStore.showImport],
-    ([level, classFilter, open]) => {
+    () => spellStore.showImport,
+    ( open) => {
         if (open) {
             selectedSpell.value = null;
             spellStore.classFilter = null;
