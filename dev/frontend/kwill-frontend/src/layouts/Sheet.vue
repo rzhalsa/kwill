@@ -1,376 +1,408 @@
 <template>
-
-    <v-container class="page-wrapper" id="character-sheet" theme="light">
-
-        <!-- Page 1 -->
-        <div class="page">
-            <img class="kwill-logo" src="../assets/icon.png" alt="Kwill Logo" width="300" height="300">
-            <div class="page-top-row">
-                <input v-model="character.name" placeholder="Character name" autocomplete="off"
-                    style="position: absolute; font-size: 18px; top: 75px; left: 130px; width: 200px; height: 30px; border: 2px solid #000;">
-                <div class="page-top-col">
-                    <div>
-                        <div style="display: flex; flex-direction: row; align-items: center; gap: 0px;">
-                            <input class="page1-top-input-value" v-model="character.classes.firstclass.name"
-                                placeholder="class" autocomplete="off" style="width: 70px; margin-top: 30px;">
-                            <input class="character-level" v-model="character.classes.firstclass.level" placeholder="1"
-                                autocomplete="off"
-                                style="position: absolute; width: 33px; height: 25px; margin-left: 75px; margin-top: 30px;"
-                                max="20" min="0" type="number">
+     <div class="sheet-layout">
+        <v-container class="page-wrapper flex-1" id="character-sheet" theme="light">
+            <!-- Page 1 -->
+            <div class="page">
+                <img class="kwill-logo" src="../assets/icon.png" alt="Kwill Logo" width="300" height="300">
+                <div class="page-top-row">
+                    <input v-model="character.name" placeholder="Character name" autocomplete="off"
+                        style="position: absolute; font-size: 18px; top: 75px; left: 130px; width: 200px; height: 30px; border: 2px solid #000;">
+                    <div class="page-top-col">
+                        <div>
+                            <div style="display: flex; flex-direction: row; align-items: center; gap: 0px;">
+                                <input class="page1-top-input-value" v-model="character.classes.firstclass.name"
+                                    placeholder="class" autocomplete="off" style="width: 70px; margin-top: 30px;">
+                                <input class="character-level" v-model="character.classes.firstclass.level" placeholder="1"
+                                    autocomplete="off"
+                                    style="position: absolute; width: 33px; height: 25px; margin-left: 75px; margin-top: 30px;"
+                                    max="20" min="0" type="number">
+                            </div>
+                        </div>
+                        <div>
+                            <input class="page1-top-input-value" v-model="character.race.name" placeholder="race"
+                                autocomplete="off">
                         </div>
                     </div>
-                    <div>
-                        <input class="page1-top-input-value" v-model="character.race.name" placeholder="race"
-                            autocomplete="off">
+                    <div class="page-top-col">
+                        <div>
+                            <input class="page1-top-input-value" v-model="character.alignment" placeholder="allignment"
+                                autocomplete="off">
+                        </div>
+                        <div>
+                            <input class="page1-top-input-value" v-model="character.background.name"
+                                placeholder="background" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="page-top-col">
+                        <div>
+                            <input class="page1-top-input-value" v-model="character.player" placeholder="player"
+                                autocomplete="off">
+                        </div>
+                        <div>
+                            <input class="page1-top-input-value" v-model="character.exp" placeholder="exp"
+                                autocomplete="off">
+                        </div>
                     </div>
                 </div>
-                <div class="page-top-col">
-                    <div>
-                        <input class="page1-top-input-value" v-model="character.alignment" placeholder="allignment"
-                            autocomplete="off">
+
+                <!-- Page 1 body -->
+                <div class="row" style="justify-content: center; align-items: flex-start; gap: 20px; padding: 10px;">
+                    <!-- Left Column -->
+                    <!-- Left Column: Ability Scores + Proficiencies -->
+                    <div
+                        style="display: flex; flex-direction: row; align-items: flex-start; gap: 0px; flex: 0 0 auto; margin-left: -20px;">
+                        <!-- Stat boxes -->
+                        <div style="display: flex; flex-direction: column; gap: 15px; align-items: center;">
+
+                            <div class="stat-box mt-1" v-for="key in abilityList">
+                                <div class="col">
+                                    <span data-label style="font-size: 11px; font-weight: bold;">{{
+                                        key.label.toUpperCase()}}</span>
+                                    <input class="ability-modifier" type="text" :value="key.mod" readonly>
+                                    <input class="ability-score" type="number" v-model="character.ability[key.name].score">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Proficiency boxes -->
+                        <div style="display: flex; flex-direction: column; gap: 5px; align-items: flex-start; ">
+                            <div class="proficiency-box" v-for="ability in abilityList">
+                                <div data-label style="text-align: center; font-weight: bold; margin-bottom: 5px; ">
+                                    {{ ability.name.toUpperCase() }}
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 4px; width: 100%;">
+                                    <!-- Saving Throw -->
+                                    <div class="skill-row">
+                                        <input type="checkbox" v-model="character.saves[ability.name].proficiency">
+                                        <input class="line-input" type="number"
+                                            v-model="character.saves[ability.name].modifier" readonly>
+                                        <span data-label>saves</span>
+                                    </div>
+                                    <!-- Skills -->
+                                    <div class="skill-row" v-for="skill in groupedSkills[ability.name]">
+                                        <input type="checkbox" v-model="character.skills[skill.name].proficiency">
+                                        <input class="line-input" type="number"
+                                            v-model="character.skills[skill.name].modifier" readonly>
+                                        <span data-label>{{ skill.name }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <input class="page1-top-input-value" v-model="character.background.name"
-                            placeholder="background" autocomplete="off">
+
+                    <!-- Middle Column -->
+                    <div class="col" style="flex: 0 0 auto;">
+                        <div class="col">
+                            <!-- AC Initiative Speed -->
+                            <div class="row">
+                                <div>
+                                    <input v-model="character.ac" autocomplete="off"
+                                        oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+                                        style="width: 50px; height: 50px; border: 2px solid #000; display: flex; margin: 5px; text-align: center;">
+                                    <div style="text-align: center;" data-label>AC</div>
+                                </div>
+                                <div>
+                                    <input v-model="initiativeBonus" autocomplete="off" type="text" inputmode="numeric" readonly=""
+                                        oninput="this.value=this.value.replace(/[^0-9+\-]/g,'').replace(/(?!^)[+\-]/g,'')"
+                                        style="width: 50px; height: 50px; border: 2px solid #000; display: flex; margin: 5px; text-align: center;">
+                                    <div style="text-align: center;" data-label>Initiative</div>
+                                </div>
+                                <div>
+                                    <input v-model="character.speed" autocomplete="off"
+                                        oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+                                        style="width: 50px; height: 50px; border: 2px solid #000; display: flex; margin: 5px; text-align: center;">
+                                    <div style="text-align: center;" data-label>Speed</div>
+                                </div>
+                            </div>
+                            <!-- HP, Hit Dice, Death Saves -->
+                            <div
+                                style="width: 200px; height: 100px; border: 2px solid #000; display: flex; margin: -3px; margin-top: -10px;">
+                                <div style="text-align: center;" data-label>Current Hitpoints:
+                                    <div>
+                                        <input v-model="character.hitpoints.current" type="number" autocomplete="off"
+                                            style="width: 50px; height: 50px; border: 2px solid #000; display: flex; margin-left: 20px; text-align: center;">
+                                    </div>
+                                </div>
+                                <div style="text-align: center;" data-label>Hitpoint Maximum:
+                                    <div>
+                                        <input v-model="character.hitpoints.maximum" autocomplete="off" type="number"
+                                            style="width: 50px; height: 50px; border: 2px solid #000; display: flex; margin-left: 25px; text-align: center;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="position: relative; width: 200px; align-items: center; margin-left: -6px;">
+                                <span
+                                    style="position: absolute; top: 2px; left: 48px; background: white; padding: 0 4px; font-size: 12px; text-align: center;"
+                                    data-label> Temporary Hitpoints
+                                </span>
+
+                                <input v-model="character.hitpoints.temporary" autocomplete="off" type="number" class="pt-4"
+                                    style="width: 100%; height: 40px; border: 2px solid #000; text-align: center; text-anchor: middle;">
+                            </div>
+
+                            <div class="row">
+                                <div class="col"
+                                    style="width: 120px; height: 65px; border: 2px solid #000; display: flex; flex-direction: column; margin-right: 5px; text-align: center; margin-bottom: 15px;">
+                                    <span data-label>Hit Dice</span>
+                                    <div
+                                        style="display: flex; flex-direction: row; align-items: center; gap: 7px; margin-top: -10px;">
+                                        <span data-label>Total:</span>
+                                        <input type="text" v-model="character.hitDice.total" style="width: 40px;">
+                                    </div>
+                                    <div
+                                        style="display: flex; flex-direction: row; align-items: center; gap: 0px; margin-top: -10px; margin-left: -10px;">
+                                        <span data-label>Current:</span>
+                                        <input type="text" v-model="character.hitDice.current" style="width: 40px;">
+                                    </div>
+                                </div>
+
+                                <div class="col"
+                                    style="width: 120px; height: 65px; border: 2px solid #000; display: flex; flex-direction: column; align-items: center; margin-left: 5px; text-align: center;">
+                                    <span data-label>Death Saves</span>
+                                    <div
+                                        style="display: flex; flex-direction: row; align-items: center; gap: 3px; margin-top: -10px;">
+                                        <span data-label>✓</span>
+                                        <input type="checkbox" v-model="character.death.saves.success1">
+                                        <input type="checkbox" v-model="character.death.saves.success2">
+                                        <input type="checkbox" v-model="character.death.saves.success3">
+                                    </div>
+                                    <div
+                                        style="display: flex; flex-direction: row; align-items: center; gap: 3px; margin-top: -10px;">
+                                        <span data-label>✗</span>
+                                        <input type="checkbox" v-model="character.death.saves.failure1">
+                                        <input type="checkbox" v-model="character.death.saves.failure2">
+                                        <input type="checkbox" v-model="character.death.saves.failure3">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <textarea v-model="character.attacks" placeholder="Attacks and Spellcasting"
+                                style="width: 200px; height: 125px; border: 2px solid #000; display: flex; margin-top: -30px; text-align: left; margin-bottom: 5px; resize: none;"></textarea>
+                            <div class="row">
+                                <div class="col" style="margin-top: 8px; margin-right: 5px;">
+                                    <span style="margin-top: -10px; margin-bottom: -2px;" data-label>Cp</span>
+                                    <input class="money-pieces" v-model="character.coins.copper" type="number"
+                                        autocomplete="off">
+
+                                    <span style="margin-top: -10px; margin-bottom: -2px;" data-label>Sp</span>
+                                    <input class="money-pieces" v-model="character.coins.silver" type="number"
+                                        autocomplete="off">
+
+                                    <span style="margin-top: -10px; margin-bottom: -2px;" data-label>Ep</span>
+                                    <input class="money-pieces" v-model="character.coins.electrum" type="number"
+                                        autocomplete="off">
+
+                                    <span style="margin-top: -10px; margin-bottom: -2px;" data-label>Gp</span>
+                                    <input class="money-pieces" v-model="character.coins.gold" type="number"
+                                        autocomplete="off">
+
+                                    <span style="margin-top: -10px; margin-bottom: -2px;" data-label="">Pp</span>
+                                    <input class="money-pieces" v-model="character.coins.platinum" type="number"
+                                        autocomplete="off">
+
+                                </div>
+                                <textarea v-model="character.equipment.text" placeholder="Equipment"
+                                    style="width: 160px; height: 270px; border: 2px solid #000; display: flex; text-align: left; resize: none;"></textarea>
+                            </div>
+
+                        </div>
                     </div>
-                </div>
-                <div class="page-top-col">
-                    <div>
-                        <input class="page1-top-input-value" v-model="character.player" placeholder="player"
-                            autocomplete="off">
-                    </div>
-                    <div>
-                        <input class="page1-top-input-value" v-model="character.exp" placeholder="exp"
-                            autocomplete="off">
+                    <!-- Right Column -->
+                    <div class="col" style="flex: 0 0 auto; gap: 10px; align-items: flex-start;">
+                        <textarea v-model="character.text.personality" placeholder="Personality"
+                            style="height: 75px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
+                        <textarea v-model="character.text.ideals" placeholder="Ideals"
+                            style="height: 75px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
+                        <textarea v-model="character.text.bonds" placeholder="Bonds"
+                            style="height: 75px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
+                        <textarea v-model="character.text.flaws" placeholder="Flaws"
+                            style="height: 75px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
+                        <div id="features_panel" style="height: 407px; width: 200px; border: 2px solid #000; overflow-y: auto;
+                            display: flex; flex-direction: column; gap: 6px; padding: 6px; padding-top: 5px;
+                            box-sizing: border-box; background: #fff; position: relative;">
+                            <FeaturePanels :character="character" @add-feature="handleAddFeature" @remove-feature="handleRemoveFeature" />
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Page 1 body -->
-            <div class="row" style="justify-content: center; align-items: flex-start; gap: 20px; padding: 10px;">
-                <!-- Left Column -->
-                <!-- Left Column: Ability Scores + Proficiencies -->
-                <div
-                    style="display: flex; flex-direction: row; align-items: flex-start; gap: 0px; flex: 0 0 auto; margin-left: -20px;">
-                    <!-- Stat boxes -->
-                    <div style="display: flex; flex-direction: column; gap: 15px; align-items: center;">
+            <!-- Page 2 -->
+            <div class="page">
+                <img class="kwill-logo" src="../assets/icon.png" alt="Kwill Logo" width="300" height="300">
 
-                        <div class="stat-box mt-1" v-for="key in abilityList">
-                            <div class="col">
-                                <span data-label style="font-size: 11px; font-weight: bold;">{{
-                                    key.label.toUpperCase()}}</span>
-                                <input class="ability-modifier" type="text" :value="key.mod" readonly>
-                                <input class="ability-score" type="number" v-model="character.ability[key.name].score">
-                            </div>
+                <div class="page-top-row">
+                    <input v-model="character.name" placeholder="Character name here"
+                        style="position: absolute; font-size: 18px; top: 75px; left: 130px; width: 200px; height: 30px; border: 2px solid #000;">
+
+                    <div class="page-top-col">
+                        <div>
+                            <input class="page1-top-input-value" v-model="character.age" placeholder="age"
+                                autocomplete="off">
+                        </div>
+                        <div>
+                            <input class="page1-top-input-value" v-model="character.eyes" placeholder="eyes"
+                                autocomplete="off">
                         </div>
                     </div>
-                    <!-- Proficiency boxes -->
-                    <div style="display: flex; flex-direction: column; gap: 5px; align-items: flex-start; ">
-                        <div class="proficiency-box" v-for="ability in abilityList">
-                            <div data-label style="text-align: center; font-weight: bold; margin-bottom: 5px; ">
-                                {{ ability.name.toUpperCase() }}
-                            </div>
-                            <div style="display: flex; flex-direction: column; gap: 4px; width: 100%;">
-                                <!-- Saving Throw -->
-                                <div class="skill-row">
-                                    <input type="checkbox" v-model="character.saves[ability.name].proficiency">
-                                    <input class="line-input" type="number"
-                                        v-model="character.saves[ability.name].modifier" readonly>
-                                    <span data-label>saves</span>
-                                </div>
-                                <!-- Skills -->
-                                <div class="skill-row" v-for="skill in groupedSkills[ability.name]">
-                                    <input type="checkbox" v-model="character.skills[skill.name].proficiency">
-                                    <input class="line-input" type="number"
-                                        v-model="character.skills[skill.name].modifier" readonly>
-                                    <span data-label>{{ skill.name }}</span>
-                                </div>
-                            </div>
+
+                    <div class="page-top-col">
+                        <div>
+                            <input class="page1-top-input-value" v-model="character.height" placeholder="height"
+                                autocomplete="off">
+                        </div>
+                        <div>
+                            <input class="page1-top-input-value" v-model="character.skin" placeholder="skin"
+                                autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="page-top-col">
+                        <div>
+                            <input class="page1-top-input-value" v-model="character.weight" placeholder="weight"
+                                autocomplete="off">
+                        </div>
+                        <div>
+                            <input class="page1-top-input-value" v-model="character.hair" placeholder="hair"
+                                autocomplete="off">
                         </div>
                     </div>
                 </div>
+                <!-- Page 2 body -->
+                <div class="row" style="margin-left: -30px;">
 
-                <!-- Middle Column -->
-                <div class="col" style="flex: 0 0 auto;">
                     <div class="col">
-                        <!-- AC Initiative Speed -->
-                        <div class="row">
-                            <div>
-                                <input v-model="character.ac" autocomplete="off"
-                                    oninput="this.value=this.value.replace(/[^0-9]/g,'')"
-                                    style="width: 50px; height: 50px; border: 2px solid #000; display: flex; margin: 5px; text-align: center;">
-                                <div style="text-align: center;" data-label>AC</div>
-                            </div>
-                            <div>
-                                <input v-model="initiativeBonus" autocomplete="off" type="text" inputmode="numeric" readonly=""
-                                    oninput="this.value=this.value.replace(/[^0-9+\-]/g,'').replace(/(?!^)[+\-]/g,'')"
-                                    style="width: 50px; height: 50px; border: 2px solid #000; display: flex; margin: 5px; text-align: center;">
-                                <div style="text-align: center;" data-label>Initiative</div>
-                            </div>
-                            <div>
-                                <input v-model="character.speed" autocomplete="off"
-                                    oninput="this.value=this.value.replace(/[^0-9]/g,'')"
-                                    style="width: 50px; height: 50px; border: 2px solid #000; display: flex; margin: 5px; text-align: center;">
-                                <div style="text-align: center;" data-label>Speed</div>
-                            </div>
+                        <textarea v-model="character.appearance" placeholder="Appearance"
+                            style="height: 260px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
+
+                        <textarea v-model="character.backstory" placeholder="Backstory"
+                            style="height: 538px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
+                    </div>
+
+                    <div class="col" style="margin-left: -25px;">
+                        <textarea v-model="character.alliesAndOrganizations" placeholder="Allies and Organizations"
+                            style="height: 260px; width: 500px; border: 2px solid #000; resize: none;"></textarea>
+
+                        <textarea v-model="character.features.additional" placeholder="Aditional Features and Traits"
+                            style="height: 260px; width: 500px; border: 2px solid #000; resize: none;"></textarea>
+
+                        <textarea v-model="character.treasure" placeholder="Treasure"
+                            style="height: 260px; width: 500px; border: 2px solid #000; resize: none;"></textarea>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Page 3 -->
+            <div class="page">
+                <img class="kwill-logo" src="../assets/icon.png" alt="Kwill Logo" width="300" height="300">
+
+
+                <div class="page-top-row">
+                    <input v-model="character.spellcasting.class" placeholder="Spellcasting class"
+                        style="position: absolute; font-size: 18px; top: 75px; left: 130px; width: 200px; height: 30px; border: 2px solid #000;">
+
+                    <div class="page-top-col">
+                        <div>
+                            <input class="page1-top-input-value" v-model="character.spell.castingAbility"
+                                placeholder="spell abi" autocomplete="off">
                         </div>
-                        <!-- HP, Hit Dice, Death Saves -->
+                    </div>
+                    <div class="page-top-col">
+                        <div>
+                            <input class="page1-top-input-value" v-model="character.spell.saveDc"
+                                placeholder="spell save dc" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="page-top-col">
+                        <div>
+                            <input class="page1-top-input-value" v-model="character.spell.attackBonus"
+                                placeholder="spell attack bonus" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+                <!-- Page 3 body -->
+                <!-- Spells -->
+                <div class="row">
+                    <div class="col">
                         <div
-                            style="width: 200px; height: 100px; border: 2px solid #000; display: flex; margin: -3px; margin-top: -10px;">
-                            <div style="text-align: center;" data-label>Current Hitpoints:
-                                <div>
-                                    <input v-model="character.hitpoints.current" type="number" autocomplete="off"
-                                        style="width: 50px; height: 50px; border: 2px solid #000; display: flex; margin-left: 20px; text-align: center;">
-                                </div>
-                            </div>
-                            <div style="text-align: center;" data-label>Hitpoint Maximum:
-                                <div>
-                                    <input v-model="character.hitpoints.maximum" autocomplete="off" type="number"
-                                        style="width: 50px; height: 50px; border: 2px solid #000; display: flex; margin-left: 25px; text-align: center;">
-                                </div>
-                            </div>
+                            style="height: 220px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px;">
+                            <SpellPanels :character="character" :title="'Cantrips'" :level="0" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
                         </div>
-                        <div style="position: relative; width: 200px; align-items: center; margin-left: -6px;">
-                            <span
-                                style="position: absolute; top: 2px; left: 48px; background: white; padding: 0 4px; font-size: 12px; text-align: center;"
-                                data-label> Temporary Hitpoints
-                            </span>
-
-                            <input v-model="character.hitpoints.temporary" autocomplete="off" type="number" class="pt-4"
-                                style="width: 100%; height: 40px; border: 2px solid #000; text-align: center; text-anchor: middle;">
+                        <div style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                            <SpellPanels :character="character" :title="'1st Level'" :level="1" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
                         </div>
-
-                        <div class="row">
-                            <div class="col"
-                                style="width: 120px; height: 65px; border: 2px solid #000; display: flex; flex-direction: column; margin-right: 5px; text-align: center; margin-bottom: 15px;">
-                                <span data-label>Hit Dice</span>
-                                <div
-                                    style="display: flex; flex-direction: row; align-items: center; gap: 7px; margin-top: -10px;">
-                                    <span data-label>Total:</span>
-                                    <input type="text" v-model="character.hitDice.total" style="width: 40px;">
-                                </div>
-                                <div
-                                    style="display: flex; flex-direction: row; align-items: center; gap: 0px; margin-top: -10px; margin-left: -10px;">
-                                    <span data-label>Current:</span>
-                                    <input type="text" v-model="character.hitDice.current" style="width: 40px;">
-                                </div>
-                            </div>
-
-                            <div class="col"
-                                style="width: 120px; height: 65px; border: 2px solid #000; display: flex; flex-direction: column; align-items: center; margin-left: 5px; text-align: center;">
-                                <span data-label>Death Saves</span>
-                                <div
-                                    style="display: flex; flex-direction: row; align-items: center; gap: 3px; margin-top: -10px;">
-                                    <span data-label>✓</span>
-                                    <input type="checkbox" v-model="character.death.saves.success1">
-                                    <input type="checkbox" v-model="character.death.saves.success2">
-                                    <input type="checkbox" v-model="character.death.saves.success3">
-                                </div>
-                                <div
-                                    style="display: flex; flex-direction: row; align-items: center; gap: 3px; margin-top: -10px;">
-                                    <span data-label>✗</span>
-                                    <input type="checkbox" v-model="character.death.saves.failure1">
-                                    <input type="checkbox" v-model="character.death.saves.failure2">
-                                    <input type="checkbox" v-model="character.death.saves.failure3">
-                                </div>
-                            </div>
+                        <div style="height: 275px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                            <SpellPanels :character="character" :title="'2nd Level'" :level="2" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
                         </div>
                     </div>
+
                     <div class="col">
-                        <textarea v-model="character.attacks" placeholder="Attacks and Spellcasting"
-                            style="width: 200px; height: 125px; border: 2px solid #000; display: flex; margin-top: -30px; text-align: left; margin-bottom: 5px; resize: none;"></textarea>
-                        <div class="row">
-                            <div class="col" style="margin-top: 8px; margin-right: 5px;">
-                                <span style="margin-top: -10px; margin-bottom: -2px;" data-label>Cp</span>
-                                <input class="money-pieces" v-model="character.coins.copper" type="number"
-                                    autocomplete="off">
-
-                                <span style="margin-top: -10px; margin-bottom: -2px;" data-label>Sp</span>
-                                <input class="money-pieces" v-model="character.coins.silver" type="number"
-                                    autocomplete="off">
-
-                                <span style="margin-top: -10px; margin-bottom: -2px;" data-label>Ep</span>
-                                <input class="money-pieces" v-model="character.coins.electrum" type="number"
-                                    autocomplete="off">
-
-                                <span style="margin-top: -10px; margin-bottom: -2px;" data-label>Gp</span>
-                                <input class="money-pieces" v-model="character.coins.gold" type="number"
-                                    autocomplete="off">
-
-                                <span style="margin-top: -10px; margin-bottom: -2px;" data-label="">Pp</span>
-                                <input class="money-pieces" v-model="character.coins.platinum" type="number"
-                                    autocomplete="off">
-
-                            </div>
-                            <textarea v-model="character.equipment.text" placeholder="Equipment"
-                                style="width: 160px; height: 270px; border: 2px solid #000; display: flex; text-align: left; resize: none;"></textarea>
+                        <div style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                            <SpellPanels :character="character" :title="'3rd Level'" :level="3" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
                         </div>
+                        <div
+                            style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                            <SpellPanels :character="character" :title="'4th Level'" :level="4" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
+                        </div>
+                        <div
+                            style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                            <SpellPanels :character="character" :title="'5th Level'" :level="5" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
+                        </div>
+                    </div>
 
-                    </div>
-                </div>
-                <!-- Right Column -->
-                <div class="col" style="flex: 0 0 auto; gap: 10px; align-items: flex-start;">
-                    <textarea v-model="character.text.personality" placeholder="Personality"
-                        style="height: 75px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
-                    <textarea v-model="character.text.ideals" placeholder="Ideals"
-                        style="height: 75px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
-                    <textarea v-model="character.text.bonds" placeholder="Bonds"
-                        style="height: 75px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
-                    <textarea v-model="character.text.flaws" placeholder="Flaws"
-                        style="height: 75px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
-                    <div id="features_panel" style="height: 407px; width: 200px; border: 2px solid #000; overflow-y: auto;
-                        display: flex; flex-direction: column; gap: 6px; padding: 6px; padding-top: 5px;
-                        box-sizing: border-box; background: #fff; position: relative;">
-                        <FeaturePanels :character="character" @add-feature="handleAddFeature" @remove-feature="handleRemoveFeature" />
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Page 2 -->
-        <div class="page">
-            <img class="kwill-logo" src="../assets/icon.png" alt="Kwill Logo" width="300" height="300">
-
-            <div class="page-top-row">
-                <input v-model="character.name" placeholder="Character name here"
-                    style="position: absolute; font-size: 18px; top: 75px; left: 130px; width: 200px; height: 30px; border: 2px solid #000;">
-
-                <div class="page-top-col">
-                    <div>
-                        <input class="page1-top-input-value" v-model="character.age" placeholder="age"
-                            autocomplete="off">
-                    </div>
-                    <div>
-                        <input class="page1-top-input-value" v-model="character.eyes" placeholder="eyes"
-                            autocomplete="off">
-                    </div>
-                </div>
-
-                <div class="page-top-col">
-                    <div>
-                        <input class="page1-top-input-value" v-model="character.height" placeholder="height"
-                            autocomplete="off">
-                    </div>
-                    <div>
-                        <input class="page1-top-input-value" v-model="character.skin" placeholder="skin"
-                            autocomplete="off">
-                    </div>
-                </div>
-
-                <div class="page-top-col">
-                    <div>
-                        <input class="page1-top-input-value" v-model="character.weight" placeholder="weight"
-                            autocomplete="off">
-                    </div>
-                    <div>
-                        <input class="page1-top-input-value" v-model="character.hair" placeholder="hair"
-                            autocomplete="off">
+                    <div class="col">
+                        <div
+                            style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                            <SpellPanels :character="character" :title="'6th Level'" :level="6" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
+                        </div>
+                        <div
+                            style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                            <SpellPanels :character="character" :title="'7th Level'" :level="7" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
+                        </div>
+                        <div
+                            style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                            <SpellPanels :character="character" :title="'8th Level'" :level="8" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
+                        </div>
+                        <div
+                            style="height: 200px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
+                            <SpellPanels :character="character" :title="'9th Level'" :level="9" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
+                        </div>
                     </div>
                 </div>
             </div>
-            <!-- Page 2 body -->
-            <div class="row" style="margin-left: -30px;">
-
-                <div class="col">
-                    <textarea v-model="character.appearance" placeholder="Appearance"
-                        style="height: 260px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
-
-                    <textarea v-model="character.backstory" placeholder="Backstory"
-                        style="height: 538px; width: 200px; border: 2px solid #000; resize: none;"></textarea>
-                </div>
-
-                <div class="col" style="margin-left: -25px;">
-                    <textarea v-model="character.alliesAndOrganizations" placeholder="Allies and Organizations"
-                        style="height: 260px; width: 500px; border: 2px solid #000; resize: none;"></textarea>
-
-                    <textarea v-model="character.features.additional" placeholder="Aditional Features and Traits"
-                        style="height: 260px; width: 500px; border: 2px solid #000; resize: none;"></textarea>
-
-                    <textarea v-model="character.treasure" placeholder="Treasure"
-                        style="height: 260px; width: 500px; border: 2px solid #000; resize: none;"></textarea>
-                </div>
+        </v-container>
+         <v-card
+            width="300"
+            elevation="6"
+            class="pa-3 active-effects-card">
+            <v-card-title class="text-h6">
+                Active Spell Effects
+            </v-card-title>
+            <v-divider class="mb-3"></v-divider>
+            <div
+                v-if="activeSpellEffects.length === 0"
+                class="text-medium-emphasis" >
+                No active spell effects
             </div>
-
-        </div>
-        <!-- Page 3 -->
-        <div class="page">
-            <img class="kwill-logo" src="../assets/icon.png" alt="Kwill Logo" width="300" height="300">
-
-
-            <div class="page-top-row">
-                <input v-model="character.spellcasting.class" placeholder="Spellcasting class"
-                    style="position: absolute; font-size: 18px; top: 75px; left: 130px; width: 200px; height: 30px; border: 2px solid #000;">
-
-                <div class="page-top-col">
-                    <div>
-                        <input class="page1-top-input-value" v-model="character.spell.castingAbility"
-                            placeholder="spell abi" autocomplete="off">
-                    </div>
+            <v-card
+                v-for="spell in activeSpellEffects"
+                :key="spell.name"
+                variant="outlined"
+                class="mb-3 pa-2">
+                <div class="font-weight-bold">
+                    {{ spell.name }}
                 </div>
-                <div class="page-top-col">
-                    <div>
-                        <input class="page1-top-input-value" v-model="character.spell.saveDc"
-                            placeholder="spell save dc" autocomplete="off">
-                    </div>
+                <div class="text-caption mt-1">
+                    Formula:
                 </div>
-                <div class="page-top-col">
-                    <div>
-                        <input class="page1-top-input-value" v-model="character.spell.attackBonus"
-                            placeholder="spell attack bonus" autocomplete="off">
-                    </div>
+                <div class="font-monospace text-body-2">
+                    {{ spell.formula }}
                 </div>
-            </div>
-            <!-- Page 3 body -->
-            <!-- Spells -->
-            <div class="row">
-                <div class="col">
-                    <div
-                        style="height: 220px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box; gap: 5px;">
-                        <SpellPanels :character="character" :title="'Cantrips'" :level="0" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
-                    </div>
-                    <div style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <SpellPanels :character="character" :title="'1st Level'" :level="1" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
-                    </div>
-                    <div style="height: 275px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <SpellPanels :character="character" :title="'2nd Level'" :level="2" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
-                    </div>
+                <div class="mt-2 text-success">
+                    Result: {{ spell.result }}
                 </div>
-
-                <div class="col">
-                    <div style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <SpellPanels :character="character" :title="'3rd Level'" :level="3" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
-                    </div>
-                    <div
-                        style="height: 300px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <SpellPanels :character="character" :title="'4th Level'" :level="4" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
-                    </div>
-                    <div
-                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <SpellPanels :character="character" :title="'5th Level'" :level="5" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div
-                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <SpellPanels :character="character" :title="'6th Level'" :level="6" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
-                    </div>
-                    <div
-                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <SpellPanels :character="character" :title="'7th Level'" :level="7" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
-                    </div>
-                    <div
-                        style="height: 195px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <SpellPanels :character="character" :title="'8th Level'" :level="8" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
-                    </div>
-                    <div
-                        style="height: 200px; width: 200px; border: 2px solid #000; display: flex; flex-direction: column; padding: 5px; box-sizing: border-box;">
-                        <SpellPanels :character="character" :title="'9th Level'" :level="9" @add-spell="handleAddSpell" @remove-spell="handleRemoveSpell" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </v-container>
+            </v-card>
+        </v-card>
+    </div>
 </template>
 <script setup>
     import {ref, reactive, readonly, computed, watch, nextTick} from 'vue';
@@ -508,6 +540,35 @@ function getCharacterData() {
     return JSON.parse(JSON.stringify(character));
 }
 
+
+const activeSpellEffects = computed(() => {
+    const active = [];
+
+    for (const level in character.panels.spells) {
+        for (const spell of character.panels.spells[level]) {
+
+            if (!spell.formula_active || !spell.formula) continue;
+
+            let result = '';
+
+            try {
+                result = evaluateSpellFormula(spell.formula, character);
+            } catch (err) {
+                result = 'Error';
+            }
+
+            active.push({
+                name: spell.name,
+                formula: spell.formula,
+                result
+            });
+        }
+    }
+
+    return active;
+});
+
+
 function evaluateSpellFormula(formula, character){
     return evaluateOperation(
         {object_id: "operation", value: formula},
@@ -516,7 +577,7 @@ function evaluateSpellFormula(formula, character){
         }
     )
 }
-
+/** 
 function applySpellEffects(spell) {
     let charData = JSON.parse(JSON.stringify(character));
     const result = evaluateSpellFormula(spell.formula, charData);
@@ -543,7 +604,7 @@ watch(
     { deep: true }
 );
 
-
+*/
 
 
 //Check that prevents API spams with a half second interval incase someone spams three changes quickly
@@ -576,4 +637,22 @@ function handleRemoveSpell(level, index) {
 }
 </script>
 <style src="../character.css" scoped>
+</style>
+<style scoped>
+    .sheet-layout {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .active-effects-card {
+        position: sticky;
+        top: 20px;
+
+        min-width: 300px;
+        max-height: 90vh;
+
+        overflow-y: auto;
+    }
 </style>

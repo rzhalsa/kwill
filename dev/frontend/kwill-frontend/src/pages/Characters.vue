@@ -17,8 +17,7 @@
                             :title="character.name || 'Unnamed Character'"
                             :value="character"
                             :active="character.characterId === characterStore.selectedCharacterId"
-                            @click="fetchCharData(character.characterId)"
-                        >
+                            @click="fetchCharData(character.characterId)">
                             <template v-slot:append >
                                 <v-btn
                                     color="grey-lighten"
