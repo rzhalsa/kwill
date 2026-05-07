@@ -322,18 +322,18 @@ function clearSheet() {
         else el.value = '';
     });
 
-    // Pass 2: clear text-only leaf elements (e.g. <span>, <div>
-    // used as display fields) that aren't interactive controls.
-    container.querySelectorAll('*').forEach(el => {
-        if (el.closest('[id$="_panel"]')) return;
-        if (el.hasAttribute('data-label')) return;
-        const tag = el.tagName.toUpperCase();
-        // Only clear elements that aren't form controls AND have no
-        // child elements (i.e. are leaf text nodes).
-        if (!['INPUT', 'TEXTAREA', 'SELECT'].includes(tag) && el.children.length === 0) {
-            el.textContent = '';
-        }
-    });
+// Pass 2: clear text-only leaf elements (e.g. <span>, <div>
+// used as display fields) that aren't interactive controls.
+container.querySelectorAll('*').forEach(el => {
+    if (el.closest('[id$="_panel"]')) return;
+    if (el.hasAttribute('data-label')) return;
+    const tag = el.tagName.toUpperCase();
+    // Only clear elements that aren't form controls AND have no
+    // child elements (i.e. are leaf text nodes).
+    if (!['INPUT', 'TEXTAREA', 'SELECT', 'OPTION'].includes(tag) && el.children.length === 0) {
+        el.textContent = '';
+    }
+});
 
     // Clear all panel containers independently.
     clearAllPanels();
@@ -1165,18 +1165,24 @@ function clearAllPanels() {
 // main sheet fields. Raw JSON values are never modified.
 //
 // Syntax:
-//   fieldName = expr        — sets fieldName to the result of expr (string or number)
+//   fieldName = expr        — sets fieldName to the result of expr
 //   fieldName = fieldName + expr  — adds expr to fieldName's base value
 //
 // expr can include variable names (resolved from panel block, live DOM, or JSON),
-// literals (including string literals like "Kyle" or "30ft"), and any JS math 
-// expression using BUILTINS.
-//
-// String support:
-//   name = "Kyle"           — sets name field to "Kyle"
-//   speed = 30 + "ft"       — sets speed field to "30ft"
-//   title = name + " Jr."   — concatenates name variable with " Jr."
+// literals, and any JS math expression using BUILTINS.
 
+// Scans all active panel block formula fields and applies their computed
+// values as visual overrides to main sheet _value fields. The underlying
+// JSON is never touched; overrides are purely a display layer.
+//
+// Override resolution when multiple blocks target the same field:
+//   All formulas are evaluated independently, and the highest computed
+//   value is displayed.
+//
+// After computing overrides, fields that previously had overrides but
+// no longer do are restored to their JSON base values.
+//
+// Depends on: characterSelect, characters (global state)
 function applyPanelOverrides() {
     const selected = characterSelect.value;
     if (!selected || !characters[selected]) return;
@@ -1222,6 +1228,10 @@ function applyPanelOverrides() {
         // 3. Final fallback
         return (val === undefined || val === null || val === '') ? 0 : Number(val) || 0;
     }
+
+
+
+
 
     // First pass: collect all overrides per target field.
     // Separate into 'set' (name = value) and 'add' (name [operators]) operations.
@@ -1270,18 +1280,15 @@ function applyPanelOverrides() {
                 if (!overrideList[targetId]) overrideList[targetId] = [];
                 overrideList[targetId].push({
                     type: 'set',
-                    value: computedValue,  // Keep as-is (string or number)
-                    isString: typeof computedValue === 'string',
+                    value: Number(computedValue) || 0,
                     modifierExpr: null
                 });
             } else if (rest) {
                 // Modify mode: just store, don't evaluate yet
-                // Note: modifiers only work with numeric values
                 if (!overrideList[targetId]) overrideList[targetId] = [];
                 overrideList[targetId].push({
                     type: 'add',
                     value: 0,  // Will be calculated in second pass
-                    isString: false,
                     modifierExpr: rest
                 });
             }
@@ -1289,7 +1296,7 @@ function applyPanelOverrides() {
     });
 
     // Second pass: reduce each field's list of overrides.
-    // For sets: if any are strings, use the first string; otherwise pick highest numeric value.
+    // For sets: pick the highest value as the new base.
     // For modifies: parse by PEMDAS, combine, and evaluate using the DOM value.
     const overrides = {};
     Object.entries(overrideList).forEach(([targetId, list]) => {
@@ -1297,29 +1304,14 @@ function applyPanelOverrides() {
         const addOps = list.filter(o => o.type === 'add');
 
         // Start with highest set value, or 0 if no sets
-        let finalValue = 0;
-        let finalIsString = false;
+        let finalValue = setOps.length > 0 ? Math.max(...setOps.map(o => o.value)) : 0;
 
-        if (setOps.length > 0) {
-            // Check if any set operations produced strings
-            const stringOps = setOps.filter(o => o.isString);
-            if (stringOps.length > 0) {
-                // If strings exist, use the first string value
-                finalValue = stringOps[0].value;
-                finalIsString = true;
-            } else {
-                // All numeric - pick the highest
-                finalValue = Math.max(...setOps.map(o => o.value));
-                finalIsString = false;
-            }
-        }
-
-        // Process modifiers if they exist (only for numeric base values)
-        if (addOps.length > 0 && !finalIsString) {
+        // Process modifiers if they exist
+        if (addOps.length > 0) {
             const targetKey = targetId.replace(/_value$/, '');
 
             // For modifiers, determine base value by priority:
-            // 1. Set value (if numeric sets exist)
+            // 1. Highest set value (if sets exist)
             // 2. Base JSON value (if no sets)
             // 3. Zero (if field doesn't exist in JSON)
             let baseValue = finalValue;  // This is highest set or 0
@@ -1388,10 +1380,7 @@ function applyPanelOverrides() {
             finalValue = Number(modifierResult) || 0;
         }
 
-        overrides[targetId] = { 
-            value: finalValue,
-            isString: finalIsString
-        };
+        overrides[targetId] = { value: finalValue };
     });
 
     // Helper: Parse modifier expression by PEMDAS rules
@@ -1465,7 +1454,6 @@ function applyPanelOverrides() {
         el.value = override.value;
         el.dataset.overrideApplied = 'true';
         el.dataset.overrideValue = String(override.value);
-        el.dataset.overrideIsString = String(override.isString);
     });
 }
 
@@ -1473,7 +1461,7 @@ function applyPanelOverrides() {
 
 
 // ── Formula Evaluator ────────────────────────────────────────
- 
+
 // Evaluates an "operation" object (as produced by parseFormulaToOperation
 // or stored in the character JSON) against a JSON data context and returns
 // the computed result as a string or number.
@@ -1481,15 +1469,10 @@ function applyPanelOverrides() {
 // Variable resolution for numeric types prefers JSON path traversal;
 // for string types (_mirror), it also checks the live DOM for _calculated fields.
 //
-// STRING SUPPORT:
-//   "Name"        — returns the string "Name"
-//   30 + "ft"     — evaluates 30, concatenates with "ft", returns "30ft"
-//   name + " Jr." — concatenates name variable with " Jr."
-//
 // Depends on: nothing external (self-contained recursive evaluator)
 function evaluateOperation(operationObj, jsonData) {
     if (!operationObj || operationObj.object_id !== 'operation') return '';
- 
+
     function resolveByPath(obj, pathStr) {
         const parts = pathStr.split('_');
         for (let i = parts.length; i >= 1; i--) {
@@ -1503,7 +1486,7 @@ function evaluateOperation(operationObj, jsonData) {
         }
         return undefined;
     }
- 
+
     function resolveByKey(obj, key) {
         if (!obj || typeof obj !== 'object') return undefined;
         if (obj[key] !== undefined) return obj[key];
@@ -1513,119 +1496,57 @@ function evaluateOperation(operationObj, jsonData) {
         }
         return undefined;
     }
- 
+
     function resolveVar(name) {
         const clean = name.replace(/_(value|calculated)$/, '');
         let val = resolveByPath(jsonData, clean);
         if (val === undefined) val = resolveByKey(jsonData, clean);
- 
+
         if (val && typeof val === 'object' && val.object_id === 'operation') {
             val = evaluateOperation(val, jsonData);
         }
- 
+
         if (val && typeof val === 'object') return 0;
         return (val === undefined || val === '' || val === null) ? 0 : Number(val) || 0;
     }
- 
+
     const BUILTINS = new Set([
         'Math', 'floor', 'ceil', 'round', 'abs', 'max', 'min', 'sqrt', 'pow',
         'parseInt', 'parseFloat', 'isNaN', 'isFinite', 'Number', 'String',
         'Boolean', 'true', 'false', 'null', 'undefined', 'Infinity', 'NaN'
     ]);
- 
+
     let formula = (operationObj.value ?? '').trim();
     if (!formula) return '';
- 
-    // Check if formula is a string literal (quoted string)
-    if ((formula.startsWith('"') && formula.endsWith('"')) || 
-        (formula.startsWith("'") && formula.endsWith("'"))) {
-        return formula.slice(1, -1);
-    }
- 
+
     // Excel-style reference: =fieldName
     if (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(formula)) {
         let val = resolveByPath(jsonData, formula);
         if (val === undefined) val = resolveByKey(jsonData, formula);
- 
+
         if (val && typeof val === 'object' && val.object_id === 'operation') {
             return evaluateOperation(val, jsonData);
         }
- 
+
         return val ?? '';
     }
- 
-    // Check if formula contains string concatenation (has + with quoted strings or variables)
-    if ((formula.includes('"') || formula.includes("'")) && formula.includes('+')) {
-        return evaluateStringExpression(formula);
-    }
- 
+
     // Replace identifiers with numeric values for math expressions
     formula = formula.replace(/\b[a-zA-Z_][a-zA-Z0-9_]*\b/g, (match) => {
         if (BUILTINS.has(match)) return match;
         return resolveVar(match);
     });
- 
+
     if (/[^0-9a-zA-Z_+\-*\/(). \t]/.test(formula)) {
         console.warn('Unsafe characters in formula:', formula);
         return '';
     }
- 
+
     try {
         return Function(`"use strict"; return (${formula})`)();
     } catch (err) {
         console.warn('Failed to evaluate formula:', formula, err);
         return '';
-    }
- 
-    // Helper to evaluate string concatenation expressions like: 30 + "ft" or name + " Jr."
-    function evaluateStringExpression(expr) {
-        expr = expr.trim();
-        let result = '';
-        
-        // Split by + but respect quoted strings
-        const parts = [];
-        let current = '';
-        let inQuotes = false;
-        let quoteChar = '';
-        
-        for (let i = 0; i < expr.length; i++) {
-            const char = expr[i];
-            
-            if ((char === '"' || char === "'") && (i === 0 || expr[i-1] !== '\\')) {
-                if (!inQuotes) {
-                    inQuotes = true;
-                    quoteChar = char;
-                } else if (char === quoteChar) {
-                    inQuotes = false;
-                }
-                current += char;
-            } else if (char === '+' && !inQuotes) {
-                if (current.trim()) parts.push(current.trim());
-                current = '';
-            } else {
-                current += char;
-            }
-        }
-        
-        if (current.trim()) parts.push(current.trim());
-        
-        // Evaluate each part
-        parts.forEach(part => {
-            part = part.trim();
-            if ((part.startsWith('"') && part.endsWith('"')) || 
-                (part.startsWith("'") && part.endsWith("'"))) {
-                // String literal
-                result += part.slice(1, -1);
-            } else {
-                // Variable or expression - evaluate numerically
-                let val = resolveByPath(jsonData, part);
-                if (val === undefined) val = resolveByKey(jsonData, part);
-                if (val === undefined || val === null || val === '') val = 0;
-                result += String(Number(val) || 0);
-            }
-        });
-        
-        return result;
     }
 }
 
