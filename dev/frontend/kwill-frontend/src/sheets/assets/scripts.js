@@ -37,6 +37,9 @@ const saveButton = document.getElementById("saveButton");
 // ============================================================
 let characters = {};
 
+let database = {};
+
+
 // ── Folder Input Events ──────────────────────────────────────
 
 // Clears the input's value before each click so the browser
@@ -93,6 +96,53 @@ folderInput.addEventListener("change", () => {
         populateDropdown();
     }
 });
+
+
+// ── Database Folder Input ────────────────────────────────────
+
+const databaseFolderInput = document.getElementById("databaseFolderInput");
+
+databaseFolderInput.addEventListener("click", () => {
+    databaseFolderInput.value = null;
+});
+
+databaseFolderInput.addEventListener("change", () => {
+    const files = Array.from(databaseFolderInput.files);
+    database = {};
+    if (files.length === 0) { /* populateClassSelect(); */ return; }
+    const jsonFiles = files.filter(f => f.name.endsWith(".json"));
+    let loaded = 0;
+    jsonFiles.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                database[file.name] = JSON.parse(e.target.result);
+            } catch (err) {
+                console.error(`Error parsing database file ${file.name}:`, err);
+            }
+            loaded++;
+            if (loaded === jsonFiles.length) { /* populateClassSelect(); */ }
+        };
+        reader.readAsText(file);
+    });
+});
+
+// Rebuilds the spellcasting class <select> from all database files with Key === "classes".
+function populateClassSelect() {
+    const sel = document.getElementById('spellcasting_class_value');
+    if (!sel) return;
+    const current = sel.value;
+    sel.innerHTML = '<option value="">— Select Class —</option>';
+    Object.entries(database).forEach(([filename, data]) => {
+        if (data.Key === 'classes') {
+            const option = document.createElement('option');
+            option.value = filename.replace('.json', '').toLowerCase();
+            option.textContent = filename.replace('.json', '');
+            sel.appendChild(option);
+        }
+    });
+    if (current) sel.value = current;
+}
 
 // ── Dropdown population ──────────────────────────────────────
 
@@ -1686,4 +1736,257 @@ document.getElementById('character-sheet').addEventListener('change', (e) => {
     // Re-apply panel overrides so any panel-driven bonuses reflect the
     // newly updated base values.
     applyPanelOverrides();
+});
+
+// ── Database Import System ────────────────────────────────────────────────────
+
+// Parses a filter value string like "3", "=3", "<=3", "<3", ">3", ">=3"
+// Returns { op, rawValue } where op is one of: '=', '<', '<=', '>', '>='
+// rawValue is the string after the operator (could be a number or future formula)
+function parseFilterValue(filterStr) {
+    if (!filterStr) return null;
+    filterStr = String(filterStr).trim();
+    let op = '=';
+    let rawValue = filterStr;
+    if (filterStr.startsWith('<=')) { op = '<='; rawValue = filterStr.slice(2).trim(); }
+    else if (filterStr.startsWith('>=')) { op = '>='; rawValue = filterStr.slice(2).trim(); }
+    else if (filterStr.startsWith('<'))  { op = '<';  rawValue = filterStr.slice(1).trim(); }
+    else if (filterStr.startsWith('>'))  { op = '>';  rawValue = filterStr.slice(1).trim(); }
+    else if (filterStr.startsWith('='))  { op = '=';  rawValue = filterStr.slice(1).trim(); }
+    return { op, rawValue };
+}
+
+// Evaluates a parsed filter against an item's field value.
+// threshold is the resolved numeric threshold.
+// itemVal is the value from the item being tested.
+function applyFilter(itemVal, op, threshold) {
+    const a = Number(itemVal);
+    const b = Number(threshold);
+    if (isNaN(a) || isNaN(b)) {
+        // Fall back to string equality for non-numeric values
+        return op === '=' ? String(itemVal) === String(threshold) : false;
+    }
+    switch (op) {
+        case '=':  return a === b;
+        case '<':  return a < b;
+        case '<=': return a <= b;
+        case '>':  return a > b;
+        case '>=': return a >= b;
+    }
+    return false;
+}
+
+// Resolves the filter threshold. Currently just parses as a number,
+// Resolves a filter threshold by passing rawValue through evaluateOperation
+// against the current character's JSON. This allows dynamic expressions like
+// "classes_firstclass_level" or "classes_firstclass_level / 2".
+function resolveFilterThreshold(rawValue) {
+    const num = parseFloat(rawValue);
+    if (!isNaN(num)) return num;  // Plain number, no need to evaluate
+    try {
+        const selected = characterSelect ? characterSelect.value : '';
+        const characterData = (selected && characters[selected]) ? characters[selected] : {};
+        const op = parseFormulaToOperation(rawValue);
+        const result = evaluateOperation(op, characterData);
+        const resolved = parseFloat(result);
+        return isNaN(resolved) ? null : resolved;
+    } catch (e) {
+        return null;
+    }
+}
+
+// Finds database entries for a given panel's import button.
+// btn: the import button element with data attributes
+// Returns an array of item objects ready to pass to addPanelBlock.
+function getDatabaseItemsForPanel(btn) {
+    const panelId = btn.dataset.panelId;
+    const dbKey   = btn.dataset.dbKey;       // e.g. "spells" or "classes"
+    const filterKey   = btn.dataset.filterKey;   // e.g. "level"
+    const filterValue = btn.dataset.filterValue; // e.g. "<=3", "=1", "<=classes_firstclass_level"
+
+    if (!dbKey) return [];
+
+    // Resolve threshold once
+    const parsed = filterValue ? parseFilterValue(filterValue) : null;
+    const threshold = parsed ? resolveFilterThreshold(parsed.rawValue) : null;
+
+    let items = [];
+
+    if (dbKey === 'classes') {
+        // Look up the class name from the class dropdown
+        const classNameEl = document.getElementById('classes_firstclass_name');
+        const className = classNameEl ? classNameEl.value.trim().toLowerCase() : '';
+
+        // Find the database file whose filename (minus .json) matches the class name
+        const classFile = Object.values(database).find(f =>
+            f.Key === 'classes' &&
+            Object.keys(database).find(k => database[k] === f &&
+                k.replace('.json', '').toLowerCase() === className)
+        );
+
+        if (!classFile) return [];
+
+        // Pull features array from the class file
+        items = Array.isArray(classFile.features) ? classFile.features : [];
+
+    } else if (dbKey === 'spells') {
+        // Find the spells database file (Key === "spells")
+        const spellFile = Object.values(database).find(f => f.Key === 'spells');
+        if (!spellFile) return [];
+
+        items = Array.isArray(spellFile.spells) ? spellFile.spells : [];
+
+        // Optionally filter to only spells in the class spell list
+        const classNameEl = document.getElementById('spellcasting_class_value');
+        const className = classNameEl ? classNameEl.value.trim().toLowerCase() : '';
+        if (className) {
+            const classFile = Object.values(database).find(f =>
+                f.Key === 'classes' &&
+                Object.keys(database).find(k => database[k] === f &&
+                    k.replace('.json', '').toLowerCase() === className)
+            );
+            if (classFile && Array.isArray(classFile.spells)) {
+                const allowed = new Set(classFile.spells.map(s => s.toLowerCase()));
+                items = items.filter(item => allowed.has((item.name || '').toLowerCase()));
+            }
+        }
+    }
+
+    // Apply filter if present
+    if (parsed && filterKey && threshold !== null) {
+        items = items.filter(item => applyFilter(item[filterKey], parsed.op, threshold));
+    }
+
+    return items;
+}
+
+// ── Import Modal ──────────────────────────────────────────────────────────────
+
+// Creates and shows a searchable import modal for the given panel/items.
+function showImportModal(panelId, items) {
+    // Remove any existing modal
+    const existing = document.getElementById('db-import-modal');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'db-import-modal';
+    modal.style.cssText = `
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        background: #fff; border: 2px solid #000; padding: 12px;
+        z-index: 9999; width: 320px; max-height: 480px;
+        display: flex; flex-direction: column; gap: 8px;
+        box-shadow: 4px 4px 0 #000;
+    `;
+
+    // Header
+    const header = document.createElement('div');
+    header.style.cssText = 'display:flex; justify-content:space-between; align-items:center;';
+    const title = document.createElement('strong');
+    title.textContent = 'Import from Database';
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '×';
+    closeBtn.style.cssText = 'border:none; background:none; font-size:18px; cursor:pointer; line-height:1;';
+    closeBtn.onclick = () => modal.remove();
+    header.appendChild(title);
+    header.appendChild(closeBtn);
+
+    // Search input
+    const search = document.createElement('input');
+    search.type = 'text';
+    search.placeholder = 'Search...';
+    search.style.cssText = 'width:100%; box-sizing:border-box; border:1px solid #000; padding:4px 6px; font-size:13px; font-family:inherit;';
+
+    // List
+    const list = document.createElement('div');
+    list.style.cssText = 'overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:3px;';
+
+    function renderList(query) {
+        list.innerHTML = '';
+        const q = query.trim().toLowerCase();
+        const filtered = q ? items.filter(item =>
+            (item.name || '').toLowerCase().includes(q)
+        ) : items;
+
+        if (filtered.length === 0) {
+            const empty = document.createElement('div');
+            empty.textContent = 'No results.';
+            empty.style.cssText = 'color:#888; font-size:12px; padding:4px;';
+            list.appendChild(empty);
+            return;
+        }
+
+        filtered.forEach(item => {
+            const row = document.createElement('div');
+            row.style.cssText = `
+                display:flex; justify-content:space-between; align-items:center;
+                padding:4px 6px; border:1px solid #ccc; cursor:pointer;
+                font-size:12px; font-family:inherit;
+            `;
+            row.onmouseover = () => row.style.background = '#f0e6d3';
+            row.onmouseout  = () => row.style.background = '';
+
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = item.name || '(unnamed)';
+            if (item.level !== undefined) {
+                nameSpan.textContent += ` (Lv ${item.level})`;
+            }
+
+            const addBtn = document.createElement('button');
+            addBtn.textContent = '+';
+            addBtn.style.cssText = 'border:1px solid #000; background:#fff; cursor:pointer; width:20px; height:20px; line-height:1; padding:0; font-size:14px;';
+            addBtn.onclick = (e) => {
+                e.stopPropagation();
+                addPanelBlock(panelId, item);
+                modal.remove();
+            };
+
+            row.appendChild(nameSpan);
+            row.appendChild(addBtn);
+            row.ondblclick = () => {
+                addPanelBlock(panelId, item);
+                modal.remove();
+            };
+            list.appendChild(row);
+        });
+    }
+
+    search.addEventListener('input', () => renderList(search.value));
+    renderList('');
+
+    modal.appendChild(header);
+    modal.appendChild(search);
+    modal.appendChild(list);
+    document.body.appendChild(modal);
+
+    // Close on outside click
+    setTimeout(() => {
+        document.addEventListener('click', function handler(e) {
+            if (!modal.contains(e.target)) {
+                modal.remove();
+                document.removeEventListener('click', handler);
+            }
+        });
+    }, 0);
+
+    search.focus();
+}
+
+// ── Wire up import buttons ────────────────────────────────────────────────────
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[id$="_import_button"]').forEach(btn => {
+        // Derive panelId from button id: "spells_third_import_button" -> "spells_third"
+        const panelId = btn.id.slice(0, -'_import_button'.length);
+        btn.dataset.panelId = panelId;
+
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const items = getDatabaseItemsForPanel(btn);
+            if (items.length === 0) {
+                alert('No database loaded or no items match the filter. Load a Database Folder first.');
+                return;
+            }
+            showImportModal(panelId, items);
+        });
+    });
 });
