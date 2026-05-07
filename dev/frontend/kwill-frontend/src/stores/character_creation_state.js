@@ -144,17 +144,20 @@ export const useCharacterCreationStore = defineStore('character_creation', {
             'selected_skills': [],
             'selected_level': 0,
             'spellcasting': { class: "" },
-            'spells' : {
-                0: [],
-                1: [],
-                2: [],
-                3: [],
-                4: [],
-                5: [],
-                6: [],
-                7: [],
-                8: [],
-                9: [],
+            'panels' :{
+                'features':[],
+                'spells' : {
+                    0: [],
+                    1: [],
+                    2: [],
+                    3: [],
+                    4: [],
+                    5: [],
+                    6: [],
+                    7: [],
+                    8: [],
+                    9: [],
+                },
             },
             'spell_amt': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             'feat_amt': 0,
@@ -165,7 +168,6 @@ export const useCharacterCreationStore = defineStore('character_creation', {
             'text.ideals': null,
             'text.bonds': null,
             'text.flaws': null,
-            'text.features': [],
             'backstory': null,
             'appearance': null
         }),
@@ -226,7 +228,6 @@ export const useCharacterCreationStore = defineStore('character_creation', {
                     case 'selected_skills':
                     case 'features':
                     case 'equipment':
-                    case 'text.features':
                         this.character_state[key] = []
                         break
                     case 'ability_scores':
@@ -355,18 +356,21 @@ export const useCharacterCreationStore = defineStore('character_creation', {
                     case 'spellcasting':
                         this.character_state[key] = { class: "" }
                         break
-                    case 'spells':
+                    case "panels":
                         this.character_state[key] = {
-                            0: [],
-                            1: [],
-                            2: [],
-                            3: [],
-                            4: [],
-                            5: [],
-                            6: [],
-                            7: [],
-                            8: [],
-                            9: [],
+                            'features':[],
+                            'spells' : {
+                                0: [],
+                                1: [],
+                                2: [],
+                                3: [],
+                                4: [],
+                                5: [],
+                                6: [],
+                                7: [],
+                                8: [],
+                                9: [],
+                            },
                         }
                         break
                     case 'spell_amt':
@@ -381,10 +385,10 @@ export const useCharacterCreationStore = defineStore('character_creation', {
             this.allow_leave = false
         },
         /**
-         * Separate function for resetting skill proficiencies when the user
+         * Separate function for resetting skill proficiencies and spells when the user
          * changes their selected class
          */
-        resetSkills() {
+        resetClassData() {
             this.character_state.selected_skills = []
             this.character_state.skills = {
                 "object_id": "skills",
@@ -461,6 +465,21 @@ export const useCharacterCreationStore = defineStore('character_creation', {
                     "modifier": ""
                 }
             }
+
+            this.character_state.panels.spells = {
+                0: [],
+                1: [],
+                2: [],
+                3: [],
+                4: [],
+                5: [],
+                6: [],
+                7: [],
+                8: [],
+                9: [],
+            }
+
+            this.character_state.spell_amt = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         }
     }
 })

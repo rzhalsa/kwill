@@ -48,7 +48,7 @@
     import { ref, onMounted, onBeforeUnmount } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import axios from 'axios'
-    import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'
+    import { fetchApiData, setCharCreateArrayData, setRaceArrayData } from '../helpers/charCreationHelpers'
     import { required } from '../helpers/requiredField'
     defineExpose({ validate })
     const store = useCharacterCreationStore()     // pinia store for character creation
@@ -111,9 +111,10 @@
      */
     onMounted(async () => {
         const race_data = await fetchApiData('api/srd/races')
-        setCharCreateArrayData(races, race_data)
+        setRaceArrayData(races, race_data)
         const background_data = await fetchBackgroundData()
         setBackgrounds(background_data)
+        console.log(race_data)
     })
 </script>
 
