@@ -76,7 +76,6 @@
     onMounted(async () => {
         const character_data = await fetchApiData('api/srd/classes')
         setCharCreateArrayData(classes, character_data)
-        console.log(classes.value)
     })
 </script>
 

@@ -7,12 +7,12 @@
             </v-card-title>
             <v-divider horizontal class="mb-6"></v-divider>
             <v-col class="d-flex justify-center">
-                <h2 class="mr-3 ml-4 mb-2">You've reached the end of the character creation process!</h2>
+                <h2 class="mr-3 ml-4 mb-2 end-text">You've reached the end of the character creation process!</h2>
             </v-col>
         </v-row>
         <v-row>
             <v-col class="d-flex justify-center">
-                <h2 class="mr-3 ml-4 mb-12">You may click the button below to create your character.</h2>
+                <h2 class="mr-3 ml-4 mb-12 end-text">You may click the button below to create your character.</h2>
             </v-col>
         </v-row>
         <v-row>
@@ -45,7 +45,7 @@
 </script>
 
 <style>
-    h2 {
+    .end-text {
         font-size: clamp(1rem, calc(1.25vw + 0.5rem), 3rem);
     }
 </style>

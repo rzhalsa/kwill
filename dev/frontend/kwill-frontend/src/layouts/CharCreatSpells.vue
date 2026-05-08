@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, onBeforeMount, computed } from 'vue'
+    import { ref, onMounted, computed } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
     import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'
     import { required } from '../helpers/requiredField';
@@ -86,7 +86,6 @@
                 return
             } 
         }
-        
     }
 
     /**
@@ -137,10 +136,6 @@
         const spell_data = await fetchApiData('api/srd/spells')
         setCharCreateArrayData(spells, spell_data)
         trimSpells()
-    })
-
-    onBeforeMount(() => {
-        console.log(store.character_state.panels.spells)
     })
 </script>
 

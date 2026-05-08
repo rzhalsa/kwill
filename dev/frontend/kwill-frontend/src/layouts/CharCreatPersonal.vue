@@ -35,7 +35,6 @@
                                     <v-textarea rows="3" v-bind="props" v-model="store.character_state['text.bonds']" label="Bonds" no-resize clearable></v-textarea>
                                 </template>
                             </v-tooltip>
-                            
                         </v-col>
                     </v-row>
                     <v-row>

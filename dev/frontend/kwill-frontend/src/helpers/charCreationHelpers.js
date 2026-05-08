@@ -19,7 +19,6 @@ export function savePageData(data) {
 export async function fetchApiData(path) {
     try {
         const response = await api.get(`${path}`)
-        console.log(response.data)
         return response.data
     } catch (error) {
         console.error("Failed to fetch API data: ", error)
@@ -39,10 +38,20 @@ export function setCharCreateArrayData(arr, data) {
     }
 }
 
+// Same as setCharCreatArrayData but for races
 export function setRaceArrayData(arr, data) {
     for(let i = 0; i < data[0].races.length; i++) {
         if(!arr.value.includes(data[0].races[i].name)) {
             arr.value.push(data[0].races[i].name)
+        }
+    }
+}
+
+// Same as setCharCreatArrayData but for feats
+export function setFeatArrayData(arr, data) {
+    for(let i = 0; i < data[0].feats.length; i++) {
+        if(!arr.value.includes(data[0].feats[i].name)) {
+            arr.value.push(data[0].feats[i])
         }
     }
 }

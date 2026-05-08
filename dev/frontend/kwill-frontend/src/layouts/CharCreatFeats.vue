@@ -17,11 +17,12 @@
                             v-for="(item, index) in store.character_state.feat_amt"
                             :key="index"
                             v-model="store.character_state.panels.features[index]"
-                            :items="feats[0].feats"
+                            :items="features"
                             item-title="name"
                             :rules="[required]"
                             label="Feats"
                             class="ma-4"
+                            return-object
                         ></v-select>
                     </div>
                 </v-col>
@@ -33,12 +34,12 @@
 <script setup>
     import { ref, onMounted } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
-    import { fetchApiData, setCharCreateArrayData } from '../helpers/charCreationHelpers'
+    import { fetchApiData, setFeatArrayData } from '../helpers/charCreationHelpers'
     import { required } from '../helpers/requiredField';
     defineExpose({ validate })
     const store = useCharacterCreationStore()   // pinia store for character creation
     const form = ref(null)                      // for input validation
-    const feats = ref([])                       // array of all feats
+    const features = ref([])                       // array of all feats
 
     /**
      * Adds an additional feat slot
@@ -68,9 +69,7 @@
      */
     onMounted(async () => {
         const feat_data = await fetchApiData('api/srd/features')
-        console.log(feat_data)
-        setCharCreateArrayData(feats, feat_data)
-        console.log(feats.value[0].feats)
+        setFeatArrayData(features, feat_data)
     })
 </script>
 
