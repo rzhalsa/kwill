@@ -24,6 +24,10 @@
                             </v-radio-group>
                         </div>
                     </div>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="2">
                     <!-- Button to reset ability score radio buttons -->
                     <v-tooltip text="Reset your selected Ability Scores">
                         <template v-slot:activator="{ props }">
@@ -31,60 +35,50 @@
                         </template>
                     </v-tooltip>
                 </v-col>
-                <v-col class="mt-5 ml-4 mr-3">
-                    <v-row>
-                        <!-- Bullet points -->
-                        <p>{{ bullet_points[0].text }}</p>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            <!-- Standard Array btn -->
-                            <v-row class="mt-2 mb-6">
-                                <v-tooltip text="Use the following six scores for your abilities: 15, 14, 13, 12, 10, 8.">
-                                    <template v-slot:activator="{ props }">
-                                        <v-btn size="small" color="secondary" v-bind="props" @click="determineAbilityScores('standard_array')">Standard Array</v-btn>
-                                    </template>
-                                </v-tooltip>
-                            </v-row>
-                            <!-- Random Rolls btn-->
-                            <v-row class="mb-6">
-                                <v-tooltip text="Rolls 4d6 and sums the highest 3 dice. Does this until you have 6 scores.">
-                                    <template v-slot:activator="{ props }">
-                                        <v-btn size="small" color="secondary" v-bind="props" @click="determineAbilityScores('random_rolls')">Random Rolls</v-btn>
-                                    </template>
-                                </v-tooltip>
-                            </v-row>
-                            <!-- Point Buy btn-->
-                            <v-row>
-                                <v-tooltip text="You have 27 points to spend on ability scores as you wish.">
-                                    <template v-slot:activator="{ props }">
-                                        <v-btn size="small" color="secondary" v-bind="props" @click="determineAbilityScores('point_buy')">Point Buy</v-btn>
-                                    </template>
-                                </v-tooltip>
-                            </v-row>
-                        </v-col>
-                    </v-row>        
-                    <v-row>
-                        <v-col>
-                            <!-- Area to display scores -->
-                            <div v-if="(store.character_state.ability_score_method === 'standard_array' || store.character_state.ability_score_method === 'random_rolls')">
-                                <p>Your Scores:</p>
-                                <div class="score-grid">
-                                    <p v-for="score in store.character_state.ability_scores"> {{ score }} </p>
-                                </div>
+                <v-col cols="2">
+                    <!-- Bullet points -->
+                    <p class="ability-score-text">{{ bullet_points[0].text }}</p>
+                </v-col>
+                <v-col cols="2">
+                    <div class="d-flex flex-column">
+                        <!-- Standard Array btn -->
+                        <v-tooltip text="Use the following six scores for your abilities: 15, 14, 13, 12, 10, 8.">
+                            <template v-slot:activator="{ props }">
+                                <v-btn class="ma-1 ability-score-method-button" size="x-small" color="secondary" v-bind="props" @click="determineAbilityScores('standard_array')">Standard Array</v-btn>
+                            </template>
+                        </v-tooltip>
+                        <!-- Random Rolls btn-->
+                        <v-tooltip text="Rolls 4d6 and sums the highest 3 dice. Does this until you have 6 scores.">
+                            <template v-slot:activator="{ props }">
+                                <v-btn class="ma-1 ability-score-method-button" size="x-small" color="secondary" v-bind="props" @click="determineAbilityScores('random_rolls')">Random Rolls</v-btn>
+                            </template>
+                        </v-tooltip>
+                        <!-- Point Buy btn-->
+                        <v-tooltip text="You have 27 points to spend on ability scores as you wish.">
+                            <template v-slot:activator="{ props }">
+                                <v-btn class="ma-1 ability-score-method-button" size="x-small" color="secondary" v-bind="props" @click="determineAbilityScores('point_buy')">Point Buy</v-btn>
+                            </template>
+                        </v-tooltip>
+                    </div>
+                </v-col>
+                <v-col class="mb-2">
+                    <!-- Area to display scores -->
+                    <div v-if="(store.character_state.ability_score_method === 'standard_array' || store.character_state.ability_score_method === 'random_rolls')">
+                        <p class="ability-score-text">Your Scores:</p>
+                        <div class="score-grid">
+                            <p class="ability-score-text" v-for="score in store.character_state.ability_scores"> {{ score }} </p>
+                        </div>
+                    </div>
+                    <div v-else-if="store.character_state.ability_score_method === 'point_buy'">
+                        <p class="ability-score-text">{{ remaining_points }} points remaining</p>
+                        <div class="score-grid">
+                            <div v-for="(score, i) in store.character_state.ability_scores" :key="i">
+                                <v-btn rounded="xl" size="x-small" variant="text" @click="pointBuy(i, score - 1)" icon="mdi-minus"></v-btn>
+                                {{ score }}
+                                <v-btn rounded="xl" size="x-small" variant="text"  @click="pointBuy(i, score + 1)" icon="mdi-plus"></v-btn>
                             </div>
-                            <div v-else-if="store.character_state.ability_score_method === 'point_buy'">
-                                <p>{{ remaining_points }} points remaining</p>
-                                <div class="score-grid">
-                                    <div v-for="(score, i) in store.character_state.ability_scores" :key="i">
-                                        <v-btn rounded="xl" size="x-small" variant="text" @click="pointBuy(i, score - 1)" icon="mdi-minus"></v-btn>
-                                        {{ score }}
-                                        <v-btn rounded="xl" size="x-small" variant="text"  @click="pointBuy(i, score + 1)" icon="mdi-plus"></v-btn>
-                                    </div>
-                                </div> 
-                            </div>
-                        </v-col> 
-                    </v-row>
+                        </div> 
+                    </div>
                 </v-col>
             </v-row>
         </v-form>   
@@ -263,8 +257,12 @@
         gap: 16px;
     }
 
-    p, li {
-        font-size: clamp(0.8rem, calc(1vw + 0.1rem), 2rem);
+    .ability-score-text {
+        font-size: clamp(0.8rem, calc(0.8vw + 0.1rem), 4rem);
+    }   
+
+    .ability-score-method-button {
+        font-size: clamp(0.5rem, calc(0.5vw + 0.1rem), 4rem) !important;
     }
 
     .v-radio .v-field-label {

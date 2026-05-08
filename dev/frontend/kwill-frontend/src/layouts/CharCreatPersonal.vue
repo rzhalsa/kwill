@@ -24,7 +24,7 @@
                             <!-- Personality -->
                             <v-tooltip text="Your character's personality">
                                 <template v-slot:activator="{ props }">
-                                    <v-textarea rows="3" :rules="[required]" v-bind="props" v-model="store.character_state['text.personality']" label="Personality" no-resize clearable></v-textarea>
+                                    <v-textarea rows="3" v-bind="props" v-model="store.character_state['text.personality']" label="Personality" no-resize clearable></v-textarea>
                                 </template>
                             </v-tooltip>
                         </v-col>
@@ -32,7 +32,7 @@
                             <!-- Bonds -->
                             <v-tooltip text="Strong connections your character has to people, places, or things">
                                 <template v-slot:activator="{ props }">
-                                    <v-textarea rows="3" :rules="[required]" v-bind="props" v-model="store.character_state['text.bonds']" label="Bonds" no-resize clearable></v-textarea>
+                                    <v-textarea rows="3" v-bind="props" v-model="store.character_state['text.bonds']" label="Bonds" no-resize clearable></v-textarea>
                                 </template>
                             </v-tooltip>
                             
@@ -43,7 +43,7 @@
                             <!-- Ideals -->
                             <v-tooltip text="Your character's core values and beliefs">
                                 <template v-slot:activator="{ props }">
-                                    <v-textarea rows="3" :rules="[required]" v-bind="props" v-model="store.character_state['text.ideals']" label="Ideals" no-resize clearable></v-textarea>
+                                    <v-textarea rows="3" v-bind="props" v-model="store.character_state['text.ideals']" label="Ideals" no-resize clearable></v-textarea>
                                 </template>
                             </v-tooltip>           
                         </v-col>
@@ -51,7 +51,7 @@
                             <!-- Flaws -->
                             <v-tooltip text="Weaknesses or negative traits your character has">
                                 <template v-slot:activator="{ props }">
-                                    <v-textarea rows="3" :rules="[required]" v-bind="props" v-model="store.character_state['text.flaws']" label="Flaws" no-resize clearable></v-textarea>
+                                    <v-textarea rows="3" v-bind="props" v-model="store.character_state['text.flaws']" label="Flaws" no-resize clearable></v-textarea>
                                 </template>
                             </v-tooltip> 
                             
@@ -62,7 +62,7 @@
                     <!-- Backstory -->
                     <v-tooltip text="Your character's backstory before this adventure">
                         <template v-slot:activator="{ props }">
-                            <v-textarea class="mr-6" :rules="[required]" rows="8" v-bind="props" v-model="store.character_state.backstory" label="Backstory" no-resize clearable></v-textarea>
+                            <v-textarea class="mr-6" rows="8" v-bind="props" v-model="store.character_state.backstory" label="Backstory" no-resize clearable></v-textarea>
                         </template>
                     </v-tooltip>    
                 </v-col>
@@ -74,7 +74,6 @@
 <script setup>
     import { ref, onMounted } from 'vue'
     import { useCharacterCreationStore } from '../stores/character_creation_state'
-    import { required } from '../helpers/requiredField'
     defineExpose({ validate })
     const store = useCharacterCreationStore()   // pinia store for character creation
     const form = ref(null)                      // for input validation
