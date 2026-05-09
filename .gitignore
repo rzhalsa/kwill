@@ -13,3 +13,4 @@ dev/backend/Backend/bin
 .continue/
 .editorconfig
 usersecrets.json
+/Backup/.vs/kwill/v17
