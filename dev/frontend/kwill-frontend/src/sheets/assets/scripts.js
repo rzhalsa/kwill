@@ -1834,6 +1834,8 @@ function getDatabaseItemsForPanel(btn) {
         const spellFile = Object.values(database).find(f => f.Key === 'spells');
         if (!spellFile) return [];
 
+        
+
         items = Array.isArray(spellFile.spells) ? spellFile.spells : [];
 
         // Optionally filter to only spells in the class spell list
@@ -1846,8 +1848,9 @@ function getDatabaseItemsForPanel(btn) {
                     k.replace('.json', '').toLowerCase() === className)
             );
             if (classFile && Array.isArray(classFile.spells)) {
-                const allowed = new Set(classFile.spells.map(s => s.toLowerCase()));
-                items = items.filter(item => allowed.has((item.name || '').toLowerCase()));
+const allowed = new Set(
+    (classFile?.spells || []).map(s => String(s).toLowerCase())
+);                items = items.filter(item => allowed.has((item.name || '').toLowerCase()));
             }
         }
     }
