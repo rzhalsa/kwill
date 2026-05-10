@@ -164,40 +164,58 @@ const showDownloadDialog = ref(false);
 const selectedSheetType = ref('simple');
 
 async function downloadBlankSheet() {
-	const zip = new JSZip();
+    const zip = new JSZip();
 
-	if (selectedSheetType.value === 'simple') {
-		zip.file('KwillSimpleCharacterSheet.html', simpleSheetHTML);
-	} else if (selectedSheetType.value === 'smart') {
-		zip.file('KwillSmartCharacterSheet.html', smartSheetHTML);
-	}
+    // Add the appropriate sheet HTML
+    if (selectedSheetType.value === 'simple') {
+        zip.file('KwillSimpleCharacterSheet.html', simpleSheetHTML);
+    } else if (selectedSheetType.value === 'smart') {
+        zip.file('KwillSmartCharacterSheet.html', smartSheetHTML);
+    }
 
-	const assetsFolder = zip.folder('assets');
+    // Add assets folder and its contents
+    const assetsFolder = zip.folder('assets');
 
-	const kwillSvg = await import('../sheets/assets/kwill.svg?raw');
-	const scripts = await import('../sheets/assets/scripts.js?raw');
-	const stylesCss = await import('../sheets/assets/styles.css?raw');
+    // Import all assets
+    const kiwillSvg = await import('../sheets/assets/kwill.svg?raw');
+    const scripts = await import('../sheets/assets/scripts.js?raw');
+    const stylesCss = await import('../sheets/assets/styles.css?raw');
 
-	assetsFolder.file('kwill.svg', kwillSvg.default);
-	assetsFolder.file('scripts.js', scripts.default);
-	assetsFolder.file('styles.css', stylesCss.default);
+    assetsFolder.file('kwill.svg', kiwillSvg.default);
+    assetsFolder.file('scripts.js', scripts.default);
+    assetsFolder.file('styles.css', stylesCss.default);
 
-	zip.folder('characters');
+    // Add characters folder
+    const charactersFolder = zip.folder('characters');
 
-	const blob = await zip.generateAsync({ type: 'blob' });
-	const url = URL.createObjectURL(blob);
 
-	const link = document.createElement('a');
-	link.href = url;
-	link.download = `Kwill${selectedSheetType.value.charAt(0).toUpperCase() + selectedSheetType.value.slice(1)}BlankCharacterSheet.zip`;
+    // Add data folder 
+    const dataFolder = zip.folder('data');
+        
+    // Import all JSON files from data folder
+    const dataModules = import.meta.glob('../sheets/data/*.json', { as: 'raw' });
+        
+    for (const [path, importFn] of Object.entries(dataModules)) {
+        const content = await importFn();
+        const fileName = path.split('/').pop(); // Extract filename
+        dataFolder.file(fileName, content);
+    }
 
-	document.body.appendChild(link);
-	link.click();
+    // Generate and download zip
+    const blob = await zip.generateAsync({ type: 'blob' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Kwill${selectedSheetType.value.charAt(0).toUpperCase() + selectedSheetType.value.slice(1)}CharacterSheet.zip`;
+    document.body.appendChild(link);
+    link.click();
 
-	document.body.removeChild(link);
-	URL.revokeObjectURL(url);
+    // Clean up
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
 
-	showDownloadDialog.value = false;
+    // Close dialog
+    showDownloadDialog.value = false;
 }
 </script>
 
