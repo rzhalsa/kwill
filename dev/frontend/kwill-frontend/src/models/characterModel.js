@@ -190,10 +190,17 @@ function setValue(obj, keys, value) {
 
 export function copyJsonToCharacter(character, jsonData) {
     const sourceData = jsonData.character || jsonData;
-    
+
+    const blockedKeys = new Set([
+        "__proto__",
+        "prototype",
+        "constructor"
+    ]);
+
     function copyValues(target, source) {
         for (const key in source) {
             if (key === 'object_id') continue;
+            if (blockedKeys.has(key)) continue;
             
             if (source[key] !== null && typeof source[key] === 'object' && !Array.isArray(source[key])) {
                 if (source[key].object_id === 'operation') {
