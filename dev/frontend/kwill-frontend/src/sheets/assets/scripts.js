@@ -55,77 +55,75 @@ folderInput.addEventListener("click", () => {
 // stores the result in the global `characters` map.
 // populateDropdown() is called after each file finishes
 // loading so the dropdown updates incrementally as files parse.
-folderInput.addEventListener("change", () => {
+folderInput.addEventListener("change", async () => {
     const files = Array.from(folderInput.files);
-    if (files.length > 0) {
-        // webkitRelativePath looks like "FolderName/file.json";
-        // splitting on "/" and taking index 0 gives the folder name.
-        const folderid = files[0].webkitRelativePath.split("/")[0];
-        folderLabel.textContent = `Selected folder: ${folderid}`;
 
-        // Only process files that end in ".json"; ignore images,
-        // text files, sub-folders, etc.
-        const jsonFiles = files.filter(f => f.name.endsWith(".json"));
-
-        // Reset characters so stale data from a previous folder
-        // doesn't bleed through if the new folder has fewer files.
-        characters = {};
-
-        jsonFiles.forEach(file => {
-            const reader = new FileReader();
-
-            // onload fires asynchronously when the file has been
-            // fully read into memory. On success, the parsed object
-            // is stored under the original filename as the key.
-            reader.onload = (e) => {
-                try {
-                    characters[file.name] = JSON.parse(e.target.result);
-                    // Rebuild the dropdown each time a new file lands
-                    // so characters appear as soon as they are ready.
-                    populateDropdown();
-                } catch (err) {
-                    console.error(`Error parsing ${file.name}:`, err);
-                }
-            };
-            reader.readAsText(file);
-        });
-    } else {
-        // User cancelled or the folder was empty — reset everything.
+    if (files.length === 0) {
         folderLabel.textContent = "No folder selected";
         characters = {};
+        database = {};
         populateDropdown();
+        populateClassSelect();
+        return;
     }
-});
 
+    const rootFolder = files[0].webkitRelativePath.split("/")[0];
+    folderLabel.textContent = `Selected folder: ${rootFolder}`;
 
-// ── Database Folder Input ────────────────────────────────────
-
-const databaseFolderInput = document.getElementById("databaseFolderInput");
-
-databaseFolderInput.addEventListener("click", () => {
-    databaseFolderInput.value = null;
-});
-
-databaseFolderInput.addEventListener("change", () => {
-    const files = Array.from(databaseFolderInput.files);
+    // Reset state
+    characters = {};
     database = {};
-    if (files.length === 0) { /* populateClassSelect(); */ return; }
-    const jsonFiles = files.filter(f => f.name.endsWith(".json"));
-    let loaded = 0;
-    jsonFiles.forEach(file => {
+
+    const characterFiles = files.filter(f =>
+        f.webkitRelativePath.includes("/characters/") &&
+        f.name.endsWith(".json")
+    );
+
+    const databaseFiles = files.filter(f =>
+        f.webkitRelativePath.includes("/data/") &&
+        f.name.endsWith(".json")
+    );
+
+    // ── Load characters ─────────────────────────────
+    characterFiles.forEach(file => {
         const reader = new FileReader();
+
+        reader.onload = (e) => {
+            try {
+                characters[file.name] = JSON.parse(e.target.result);
+                populateDropdown();
+            } catch (err) {
+                console.error(`Character parse error ${file.name}:`, err);
+            }
+        };
+
+        reader.readAsText(file);
+    });
+
+    // ── Load database ───────────────────────────────
+    let dbLoaded = 0;
+
+    databaseFiles.forEach(file => {
+        const reader = new FileReader();
+
         reader.onload = (e) => {
             try {
                 database[file.name] = JSON.parse(e.target.result);
             } catch (err) {
-                console.error(`Error parsing database file ${file.name}:`, err);
+                console.error(`Database parse error ${file.name}:`, err);
             }
-            loaded++;
-            if (loaded === jsonFiles.length) { /* populateClassSelect(); */ }
+
+            dbLoaded++;
+            if (dbLoaded === databaseFiles.length) {
+                populateClassSelect();
+            }
         };
+
         reader.readAsText(file);
     });
 });
+
+
 
 // Rebuilds the spellcasting class <select> from all database files with Key === "classes".
 function populateClassSelect() {
