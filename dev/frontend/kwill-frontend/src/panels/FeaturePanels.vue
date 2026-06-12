@@ -8,7 +8,13 @@
             <v-btn class="ml-2" color="#e66c63" size="compact" icon="mdi-plus" @click="addFeature"></v-btn>
         </v-card-title>
         <v-card-item v-for="(feature, index) in character.panels.features" :key="index" class="d-flex flex-column gap-2">
-            <v-expansion-panels class="feature-panel" v-model="feature.expanded">
+            <v-expansion-panels
+    class="feature-panel"
+    v-model="feature.expanded"
+    @mouseenter="showTooltip($event, feature, feature.expanded)"
+    @mousemove="moveTooltip"
+    @mouseleave="hideTooltip"
+>
                 <v-expansion-panel>
                     <v-expansion-panel-title class="d-flex justify-between align-center">
                         {{ feature.name || 'New Feature' }}
@@ -54,7 +60,11 @@
                                         <option value="Per Turn">Per Turn</option>
                                         <option value="Per Round">Per Round</option>
                                     </select>
-                                </div>
+                                </div>                                
+                                <!-- Tooltip -->
+                                <textarea v-model="feature.tooltip" rows="1" placeholder="Tooltip (shown on hover)"
+                                    style="width:100%; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; resize:vertical;"
+                                ></textarea>
                                 <!-- Description -->
                                 <textarea v-model="feature.description" id="description_value" placeholder="Description"
                                     style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent;font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
@@ -73,9 +83,19 @@
         </v-card-item>
         <v-divider></v-divider>
     </v-card>
+    <div
+    v-if="tooltip.visible"
+    class="panel-tooltip"
+    :style="{
+        left: tooltip.x + 'px',
+        top: tooltip.y + 'px'
+    }"
+>
+    {{ tooltip.text }}
+</div>
 </template>
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, reactive } from 'vue';
 import {useSpellDialogStore} from '../stores/spells_state.js';
 import '../sheets/assets/styles.css';
 import api from '../services/api';
@@ -123,10 +143,57 @@ watch(() => spellStore.showFeatImport,
 function removeFeature(index) {
     emit('remove-feature', index);
 }
+
+// Feature Tooltips
+
+const tooltip = reactive({
+    visible: false,
+    x: 0,
+    y: 0,
+    text: ''
+});
+
+function showTooltip(e, feature, expanded) {
+    // Don't show while expanded
+    if (expanded === 0 || Array.isArray(expanded)) return;
+
+    const text = feature.tooltip?.trim();
+
+    if (!text) return;
+
+    tooltip.text = text;
+    tooltip.visible = true;
+
+    tooltip.x = e.clientX + 12;
+    tooltip.y = e.clientY + 12;
+}
+
+function moveTooltip(e) {
+    tooltip.x = e.clientX + 12;
+    tooltip.y = e.clientY + 12;
+}
+
+function hideTooltip() {
+    tooltip.visible = false;
+}
+
 </script>
 <style scoped>
 .v-expansion-panel :deep(.v-expansion-panel-title) {
     padding: 4px 24px !important;
     min-height: 32px !important;
+}
+
+.panel-tooltip {
+    position: fixed;
+    background: #333;
+    color: #fff;
+    font-size: 12px;
+    padding: 5px 8px;
+    border-radius: 4px;
+    max-width: 170px;
+    white-space: pre-wrap;
+    pointer-events: none;
+    z-index: 9999;
 }
 </style>

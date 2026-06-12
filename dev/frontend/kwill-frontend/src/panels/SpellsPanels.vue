@@ -1,26 +1,29 @@
 <template>
-    <v-card class="spell-card" variant="flat" style="overflow-y: auto;" theme="light"> 
+    <v-card class="spell-card" variant="flat" style="overflow-y: auto;" theme="light">
         <v-card-title class="d-flex justify-center text-subtitle-2">
-            <v-btn class="ml-2" color="grey-lighten" size="compact" icon="mdi-import" @click="spellImportHandle()"></v-btn>
-            <v-spacer/>
-             {{ title }}
+            <v-btn class="ml-2" color="grey-lighten" size="compact" icon="mdi-import"
+                @click="spellImportHandle()"></v-btn>
             <v-spacer />
-            <v-btn class="ml-2" color="#e66c63" size="compact" icon="mdi-plus" v-tooltip="'Add Spell'" @click="addSpell(); "></v-btn>
+            {{ title }}
+            <v-spacer />
+            <v-btn class="ml-2" color="#e66c63" size="compact" icon="mdi-plus" v-tooltip="'Add Spell'"
+                @click="addSpell();"></v-btn>
         </v-card-title>
         <div class="spell-content">
-            <v-card-item v-for="(spell, index) in character.panels.spells[level]" :key="index" class="d-flex flex-column gap-2">
-                <v-expansion-panels class="feature-panel" v-model="spell.expanded">
-                    <v-expansion-panel>
+            <v-card-item v-for="(spell, index) in character.panels.spells[level]" :key="index"
+                class="d-flex flex-column gap-2">
+                <v-expansion-panels class="feature-panel" v-model="spell.expanded"
+                    @mouseenter="showTooltip($event, spell, spell.expanded)" @mousemove="moveTooltip"
+                    @mouseleave="hideTooltip"> <v-expansion-panel>
                         <v-expansion-panel-title class="d-flex justify-between align-center">
-                            {{ spell.name || 'New '+title+' Spell' }}
+                            {{ spell.name || 'New ' + title + ' Spell' }}
                         </v-expansion-panel-title>
                         <v-expansion-panel-text>
                             <div class="panel-expanded" style="flex-direction:column; gap:4px;">
-                                <div  style="display:flex; align-items:center; gap:4px;">
-                                        <span
-                                            style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Name:</span>
-                                        <input type="text" id="name_value" placeholder="e.g. Fireball" v-model="spell.name"
-                                            style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
+                                <div style="display:flex; align-items:center; gap:4px;">
+                                    <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Name:</span>
+                                    <input type="text" id="name_value" placeholder="e.g. Fireball" v-model="spell.name"
+                                        style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                                 </div>
                                 <div style="display:flex; align-items:center; gap:4px;">
                                     <span style="font-size:11px; color:#555; flex-shrink:0;">School:</span>
@@ -91,17 +94,18 @@
                                         <option value="Thunder">Thunder</option>
                                     </select>
                                 </div>
-                                <div  style="display:flex; flex-direction:column; gap:4px;">
-                                    <div  style="display:flex; align-items:center; gap:4px;">
+                                <div style="display:flex; flex-direction:column; gap:4px;">
+                                    <div style="display:flex; align-items:center; gap:4px;">
                                         <span
                                             style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Range:</span>
-                                        <input type="text" id="range_value" placeholder="e.g. 60ft" v-model="spell.range"
+                                        <input type="text" id="range_value" placeholder="e.g. 60ft"
+                                            v-model="spell.range"
                                             style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                                     </div>
                                     <div style="display:flex; align-items:center; gap:4px;">
-                                        <span
-                                            style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
-                                        <input type="text" id="duration_value" placeholder="e.g. 1 min" v-model="spell.duration"
+                                        <span style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Dur:</span>
+                                        <input type="text" id="duration_value" placeholder="e.g. 1 min"
+                                            v-model="spell.duration"
                                             style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                                     </div>
                                 </div>
@@ -122,20 +126,29 @@
                                     <div style="display:flex; align-items:center; gap:4px;">
                                         <span
                                             style="font-size:11px; color:#555; flex-shrink:0; width:36px;">Size:</span>
-                                        <input type="text" id="areasize_value" placeholder="e.g. 30ft" v-model="spell.areasize"
+                                        <input type="text" id="areasize_value" placeholder="e.g. 30ft"
+                                            v-model="spell.areasize"
                                             style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px; box-sizing:border-box;">
                                     </div>
                                 </div>
+                                <textarea v-model="spell.tooltip" rows="1" placeholder="Tooltip (shown on hover)" 
+                                style="width:100%; border:1px solid #8b6914; background:transparent; font-size:12px; 
+                                font-family:inherit; padding:2px; resize:vertical;"
+                                ></textarea>
                                 <textarea id="description_value" placeholder="Description" v-model="spell.description"
                                     style="width:100%; min-height:60px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; resize:vertical; box-sizing:border-box; padding:3px;"></textarea>
                                 <div style="display:flex; align-items:center; gap:4px;">
-                                        <textarea id="formula_value" v-model="spell.formula" placeholder="field operation value" style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent;
-                                            font-size:12px; font-family:inherit; padding:2px; resize:height;" rows="1"></textarea>              
-                                    <input type="checkbox" id="formula_active_value" title="Active" v-model="spell.formula_active"
+                                    <textarea id="formula_value" v-model="spell.formula"
+                                        placeholder="field operation value" style="flex:1; min-width:0; border:1px solid #8b6914; background:transparent;
+                                            font-size:12px; font-family:inherit; padding:2px; resize:height;"
+                                        rows="1"></textarea>
+                                    <input type="checkbox" id="formula_active_value" title="Active"
+                                        v-model="spell.formula_active"
                                         style="width:14px; height:14px; cursor:pointer; accent-color:#8b6914; flex-shrink:0;">
                                 </div>
                                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                                    <v-btn color="error" class="ma-2" size="compact" icon="mdi-close" @click.stop="removeSpell(index)"></v-btn>
+                                    <v-btn color="error" class="ma-2" size="compact" icon="mdi-close"
+                                        @click.stop="removeSpell(index)"></v-btn>
                                 </div>
                             </div>
                         </v-expansion-panel-text>
@@ -146,16 +159,26 @@
         <v-divider></v-divider>
         <v-card-actions class="d-flex justify-center mt-1">
             <div>Slots:</div>
-            <input type="text" style="width:20px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;" placeholder="3">
+            <input type="text"
+                style="width:20px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;"
+                placeholder="3">
             <div>/</div>
-            <input type="text" style="width:20px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;" placeholder="3">
+            <input type="text"
+                style="width:20px; border:1px solid #8b6914; background:transparent; font-size:12px; font-family:inherit; padding:2px;"
+                placeholder="3">
         </v-card-actions>
     </v-card>
+    <div v-if="tooltip.visible" class="panel-tooltip" :style="{
+        left: tooltip.x + 'px',
+        top: tooltip.y + 'px'
+    }">
+        {{ tooltip.text }}
+    </div>
 </template>
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, reactive } from 'vue';
 import '../sheets/assets/styles.css';
-import {useSpellDialogStore} from '../stores/spells_state.js';
+import { useSpellDialogStore } from '../stores/spells_state.js';
 import api from '../services/api';
 const emit = defineEmits(['add-spell', 'remove-spell']);
 const spellStore = useSpellDialogStore();
@@ -200,8 +223,8 @@ async function fetchSpellData(level, classFilter) {
 }
 /**
  * Adds a new spell to the character model with default values. Emits an event to the parent component to handle the actual addition to the character data structure.
- */ 
-function addSpell(){
+ */
+function addSpell() {
     const newSpell = {
         level: "0",
         prepared: true,
@@ -229,6 +252,98 @@ function addSpell(){
 function removeSpell(index) {
     emit('remove-spell', props.level, index);
 }
+
+
+// Dynamic Tooltips
+
+const tooltip = reactive({
+    visible: false,
+    x: 0,
+    y: 0,
+    text: ''
+});
+
+function buildTooltipText(spell, character) {
+    const lines = [];
+
+    if (spell.showstats) {
+        if (spell.action) {
+            lines.push(spell.action);
+        }
+
+        if (spell.range) {
+            lines.push(`Range: ${spell.range}`);
+        }
+
+        if (spell.duration) {
+            lines.push(`Duration: ${spell.duration}`);
+        }
+
+        if (spell.attacksave === 'Spell Attack') {
+            lines.push(
+                `Spell Attack Bonus +${character.spell.attackBonus}`
+            );
+        }
+
+        if (spell.attacksave === 'Spell Save') {
+            lines.push(
+                `Spell Save DC ${character.spell.saveDc} ${spell.savetype || ''}`
+            );
+        }
+
+        const dmg = [
+            spell.damage,
+            spell.damagetype &&
+                spell.damagetype !== '—'
+                ? spell.damagetype
+                : ''
+        ].filter(Boolean).join(' ');
+
+        if (dmg) {
+            lines.push(dmg);
+        }
+
+        const aoe = [
+            spell.areasize,
+            spell.areashape
+        ].filter(Boolean).join(' ');
+
+        if (aoe) {
+            lines.push(`AOE: ${aoe}`);
+        }
+    }
+
+    if (spell.tooltip) {
+        lines.push(spell.tooltip);
+    }
+
+    return lines.join('\n');
+}
+
+function showTooltip(e, spell, expanded) {
+    if (expanded === 0 || Array.isArray(expanded)) return;
+
+    const text = buildTooltipText(spell, props.character);
+
+    if (!text) return;
+
+    tooltip.text = text;
+    tooltip.visible = true;
+
+    tooltip.x = e.clientX + 12;
+    tooltip.y = e.clientY + 12;
+}
+
+function moveTooltip(e) {
+    tooltip.x = e.clientX + 12;
+    tooltip.y = e.clientY + 12;
+}
+
+function hideTooltip() {
+    tooltip.visible = false;
+}
+
+
 </script>
 <style scoped>
 .panel-expanded {
@@ -265,23 +380,36 @@ function removeSpell(index) {
 }
 
 .spell-card {
-  display: flex;
-  flex-direction: column;
-  height: 100%; /* or fixed height like 600px */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* or fixed height like 600px */
 }
 
 .spell-content {
-  flex: 1;
-  overflow-y: auto;
+    flex: 1;
+    overflow-y: auto;
 }
 
 .v-card-actions {
-  position: sticky;
-  bottom: 0;
-  background: white;
-  z-index: 1;
-  padding: 2px 8px !important;
-  min-height: unset !important;
+    position: sticky;
+    bottom: 0;
+    background: white;
+    z-index: 1;
+    padding: 2px 8px !important;
+    min-height: unset !important;
 }
 
+.panel-tooltip {
+    position: fixed;
+    background: #333;
+    color: #fff;
+    font-size: 12px;
+    padding: 5px 8px;
+    border-radius: 4px;
+    max-width: 170px;
+    white-space: pre-wrap;
+    pointer-events: none;
+    z-index: 9999;
+}
 </style>
