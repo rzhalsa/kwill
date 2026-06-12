@@ -23,7 +23,6 @@
                         item-title="name"
                         label="Class"
                         class="ml-4 mr-12"
-                        required
                     ></v-select>
                     <!-- Class level -->
                     <v-select
